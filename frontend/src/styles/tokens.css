@@ -1,0 +1,78 @@
+/* AeroGrid design tokens — dark geospatial theme, 4/8 px spacing scale. */
+:root {
+  /* Surfaces */
+  --bg: #0a0f1c;
+  --bg-2: #0d1424;
+  --surface: #111a2c;
+  --surface-2: #162238;
+  --surface-3: #1c2a44;
+  --border: #1f2c45;
+  --border-strong: #2c3c5c;
+
+  /* Text */
+  --text: #e8eef8;
+  --text-2: #aebbd0;
+  --text-3: #8592ab;
+
+  /* Accent & status */
+  --accent: #38bdf8;
+  --accent-strong: #7dd3fc;
+  --accent-soft: rgba(56, 189, 248, 0.12);
+  --accent-line: rgba(56, 189, 248, 0.4);
+  --ok: #4ade80;
+  --warn: #f5b04a;
+  --warn-soft: rgba(245, 176, 74, 0.12);
+  --error: #f47272;
+  --error-soft: rgba(244, 114, 114, 0.1);
+  --demo: #f5b04a;
+
+  /* PM2.5 concentration bands (see utils/pm25Bands.ts) */
+  --band-1: #4caf7d;
+  --band-2: #a3c84a;
+  --band-3: #e8c547;
+  --band-4: #f0913a;
+  --band-5: #e5534b;
+  --band-6: #b0365a;
+  --band-none: #5b6780;
+
+  /* Chart series (comparison lines also differ by dash pattern) */
+  --series-1: #38bdf8;
+  --series-2: #f5b04a;
+  --series-3: #c084fc;
+  --series-4: #4ade80;
+
+  /* Spacing (4/8 scale) */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 12px;
+  --s-4: 16px;
+  --s-5: 20px;
+  --s-6: 24px;
+  --s-8: 32px;
+
+  /* Shape & depth */
+  --radius-sm: 6px;
+  --radius: 10px;
+  --radius-lg: 14px;
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-2: 0 8px 24px rgba(0, 0, 0, 0.35);
+
+  /* Type */
+  --font: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  --fs-xs: 0.75rem;
+  --fs-sm: 0.8125rem;
+  --fs-md: 0.875rem;
+  --fs-base: 0.9375rem;
+
+  /* Layout */
+  --sidebar-w: 232px;
+  --sidebar-w-collapsed: 64px;
+  --topbar-h: 56px;
+  --drawer-w: 360px;
+  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --t-fast: 140ms;
+  --t-med: 200ms;
+
+  color-scheme: dark;
+}

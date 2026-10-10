@@ -1,0 +1,50 @@
+import { createContext, useContext } from 'react'
+import type { CityConfig, DataMode, PollutantId } from '../config'
+import type { Resource } from '../hooks/useResource'
+import type { StationsResult } from '../services/stationsService'
+import type { ApiResult, HealthResponse, MetricsResponse, Station } from '../types/api'
+import type { Estimate, MapLayers, Selection, TimeRange } from '../types/app'
+
+export interface AppState {
+  dataMode: DataMode
+  city: CityConfig
+  setCityId: (id: string) => void
+  pollutant: PollutantId
+  setPollutant: (p: PollutantId) => void
+
+  stations: Resource<ApiResult<StationsResult>>
+  metrics: Resource<ApiResult<MetricsResponse>>
+  health: Resource<ApiResult<HealthResponse>>
+  refreshAll: () => void
+  isRefreshing: boolean
+
+  /** Valid stations from the latest successful load (empty while unavailable). */
+  stationList: Station[]
+  latestObservation: string | null
+
+  layers: MapLayers
+  setLayers: (layers: MapLayers) => void
+
+  selection: Selection
+  select: (selection: Selection) => void
+  selectedStation: Station | undefined
+  selectedEstimate: Estimate | undefined
+
+  estimates: Estimate[]
+  requestEstimate: (latitude: number, longitude: number) => void
+  retryEstimate: (id: string) => void
+  removeEstimate: (id: string) => void
+
+  timeRange: TimeRange
+  setTimeRange: (range: TimeRange) => void
+  comparisonIds: string[]
+  setComparisonIds: (ids: string[]) => void
+}
+
+export const AppContext = createContext<AppState | null>(null)
+
+export function useApp(): AppState {
+  const ctx = useContext(AppContext)
+  if (!ctx) throw new Error('useApp must be used inside <AppStateProvider>')
+  return ctx
+}

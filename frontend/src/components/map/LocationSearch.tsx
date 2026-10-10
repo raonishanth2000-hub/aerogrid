@@ -1,5 +1,5 @@
 import { Crosshair, MapPin, Search } from 'lucide-react'
-import { useId, useMemo, useState } from 'react'
+import { useEffect, useId, useMemo, useRef, useState } from 'react'
 import { useApp } from '../../app/appContext'
 import { formatConcentration, stationLabel } from '../../utils/formatters'
 import { parseCoordinateInput } from '../../utils/validation'
@@ -15,6 +15,20 @@ export function LocationSearch({ allowCoordinates = true }: { allowCoordinates?:
   const [open, setOpen] = useState(false)
   const [active, setActive] = useState(0)
   const listId = useId()
+  const inputRef = useRef<HTMLInputElement>(null)
+
+  // "/" focuses search from anywhere, unless the user is already typing in a field.
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      const t = e.target
+      const typing = t instanceof Element && t.closest('input, textarea, select, [contenteditable]')
+      if (e.key !== '/' || e.metaKey || e.ctrlKey || typing) return
+      e.preventDefault()
+      inputRef.current?.focus()
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [])
 
   const options = useMemo<Option[]>(() => {
     const q = query.trim().toLowerCase()
@@ -57,10 +71,11 @@ export function LocationSearch({ allowCoordinates = true }: { allowCoordinates?:
     <div className="search">
       <Search size={15} className="search-icon" aria-hidden="true" />
       <input
+        ref={inputRef}
         type="search"
         className="search-input"
         role="combobox"
-        aria-label={allowCoordinates ? 'Search stations or enter latitude, longitude' : 'Search stations'}
+        aria-label={allowCoordinates ? 'Search stations or enter latitude, longitude (shortcut: /)' : 'Search stations (shortcut: /)'}
         aria-expanded={showList}
         aria-controls={listId}
         aria-autocomplete="list"
@@ -85,10 +100,13 @@ export function LocationSearch({ allowCoordinates = true }: { allowCoordinates?:
             e.preventDefault()
             choose(options[active])
           } else if (e.key === 'Escape') {
+            if (query) setQuery('')
+            else e.currentTarget.blur()
             setOpen(false)
           }
         }}
       />
+      {!query && <kbd className="search-kbd" aria-hidden="true">/</kbd>}
       {showList && (
         <ul className="search-results" role="listbox" id={listId} aria-label="Search results">
           {options.length === 0 ? (

@@ -1,9 +1,9 @@
 import { lazy, Suspense } from 'react'
 import { LoadingState } from '../components/common/States'
 import { AboutPage } from '../pages/AboutPage'
-import { ExploreMapPage } from '../pages/ExploreMapPage'
 import { MonitoringGapsPage } from '../pages/MonitoringGapsPage'
 import { OverviewPage } from '../pages/OverviewPage'
+import { AmbientAir } from './AmbientAir'
 import { AppLayout } from './AppLayout'
 import { AppStateProvider } from './AppStateProvider'
 import type { RouteId } from './navigation'
@@ -15,8 +15,6 @@ const ModelPerformancePage = lazy(() => import('../pages/ModelPerformancePage').
 
 function Page({ route }: { route: RouteId }) {
   switch (route) {
-    case 'map':
-      return <ExploreMapPage />
     case 'analytics':
       return <AnalyticsPage />
     case 'model':
@@ -34,6 +32,7 @@ export default function App() {
   const route = useHashRoute()
   return (
     <AppStateProvider>
+      <AmbientAir />
       <AppLayout route={route}>
         <Suspense fallback={<LoadingState title="Loading page…" />}>
           <Page route={route} />

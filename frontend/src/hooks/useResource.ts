@@ -9,13 +9,21 @@ export type ResourceState<T> =
 export type Resource<T> = ResourceState<T> & { reload: () => void }
 
 /**
- * Fetches on mount and on `reload()`. In-flight requests are aborted when a new
- * one starts or the component unmounts. The last good data is kept during a
- * reload so the UI doesn't flash empty. `fetcher` must be a stable reference.
+ * Fetches on mount, on `reload()` and whenever `fetcher` changes. In-flight
+ * requests are aborted when a new one starts or the component unmounts.
+ * A manual reload keeps the last good data so the UI doesn't flash empty; a new
+ * `fetcher` (e.g. another city) clears it so stale data is never shown as current.
+ * `fetcher` must be memoised.
  */
 export function useResource<T>(fetcher: (signal: AbortSignal) => Promise<T>): Resource<T> {
   const [state, setState] = useState<ResourceState<T>>({ status: 'loading' })
   const [nonce, setNonce] = useState(0)
+  const [activeFetcher, setActiveFetcher] = useState(() => fetcher)
+
+  if (activeFetcher !== fetcher) {
+    setActiveFetcher(() => fetcher)
+    setState({ status: 'loading' })
+  }
 
   useEffect(() => {
     const controller = new AbortController()

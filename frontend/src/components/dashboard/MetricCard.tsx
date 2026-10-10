@@ -43,8 +43,8 @@ export function MetricCard({ label, icon: Icon, value, unit, description, info, 
       </div>
       {visual && <div className="metric-visual">{visual}</div>}
       <div className="metric-desc">
-        {description}
         {badges && <span className="metric-badges">{badges}</span>}
+        <span className="metric-desc-text">{description}</span>
       </div>
     </div>
   )

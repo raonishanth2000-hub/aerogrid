@@ -14,17 +14,19 @@ const MAX_ESTIMATES = 30
 let estimateSeq = 0
 
 export function AppStateProvider({ children }: { children: ReactNode }) {
-  const stations = useResource(fetchStations)
+  const [cityId, setCityId] = useState(config.defaultCityId)
+  const stationsFetcher = useCallback((signal: AbortSignal) => fetchStations(cityId, signal), [cityId])
+  const stations = useResource(stationsFetcher)
   const metrics = useResource(fetchMetrics)
   const health = useResource(fetchHealth)
 
-  const [cityId, setCityId] = useState(config.defaultCityId)
   const [pollutant, setPollutant] = useState<PollutantId>('PM2.5')
   const [layers, setLayers] = useState<MapLayers>({ stations: true, estimates: true })
   const [selection, setSelection] = useState<Selection>(null)
   const [estimates, setEstimates] = useState<Estimate[]>([])
   const [timeRange, setTimeRange] = useState<TimeRange>('7d')
   const [comparisonIds, setComparisonIds] = useState<string[]>([])
+  const [hiddenBands, setHiddenBands] = useState<string[]>([])
   const inflight = useRef(new Map<string, AbortController>())
 
   useEffect(() => {
@@ -39,7 +41,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
     inflight.current.get(id)?.abort()
     const controller = new AbortController()
     inflight.current.set(id, controller)
-    fetchPrediction(lat, lon, controller.signal).then(
+    fetchPrediction(lat, lon, cityId, controller.signal).then(
       (result) => setEstimates((prev) => prev.map((e) => (e.id === id ? { ...e, status: 'ready', result, error: undefined } : e))),
       (err: unknown) => {
         if (isAbortError(err)) return
@@ -49,7 +51,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
     ).finally(() => {
       if (inflight.current.get(id) === controller) inflight.current.delete(id)
     })
-  }, [])
+  }, [cityId])
 
   const requestEstimate = useCallback(
     (latitude: number, longitude: number) => {
@@ -85,15 +87,31 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
   const { reload: reloadStations } = stations
   const { reload: reloadMetrics } = metrics
   const { reload: reloadHealth } = health
+  const clearEstimates = useCallback(() => {
+    inflight.current.forEach((c) => c.abort())
+    inflight.current.clear()
+    setEstimates([])
+    setSelection((s) => (s?.kind === 'estimate' ? null : s))
+  }, [])
+
+  const toggleBand = useCallback((key: string) => {
+    setHiddenBands((prev) => (prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key]))
+  }, [])
+
   const refreshAll = useCallback(() => {
     reloadStations()
     reloadMetrics()
     reloadHealth()
   }, [reloadStations, reloadMetrics, reloadHealth])
 
+  // Selections, estimates and comparisons belong to one city, so they are cleared on change.
   const changeCity = useCallback((id: string) => {
+    inflight.current.forEach((c) => c.abort())
+    inflight.current.clear()
     setCityId(id)
     setSelection(null)
+    setEstimates([])
+    setComparisonIds([])
   }, [])
 
   const selectedStation = selection?.kind === 'station' ? stationList.find((s) => s.id === selection.id) : undefined
@@ -114,6 +132,8 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
     latestObservation,
     layers,
     setLayers,
+    hiddenBands,
+    toggleBand,
     selection,
     select: setSelection,
     selectedStation,
@@ -122,6 +142,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
     requestEstimate,
     retryEstimate,
     removeEstimate,
+    clearEstimates,
     timeRange,
     setTimeRange,
     comparisonIds,

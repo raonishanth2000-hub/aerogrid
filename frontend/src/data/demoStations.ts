@@ -10,6 +10,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import type { HistoryPoint, PredictionResponse, Station } from '../types/api'
+import { cityById } from '../config'
 import { haversineKm } from '../utils/geo'
 
 interface DemoSite {
@@ -25,6 +26,9 @@ interface DemoSite {
   lagHours?: number
 }
 
+/** Site layout around a reference centre; it is shifted onto each city's centre. */
+const LAYOUT_CENTER: [number, number] = [28.6139, 77.209]
+
 const SITES: DemoSite[] = [
   { letter: 'A', latitude: 28.655, longitude: 77.305, level: 1.3, historyHours: 720, stepHours: 1 },
   { letter: 'B', latitude: 28.625, longitude: 77.235, level: 1.1, historyHours: 720, stepHours: 1 },
@@ -39,6 +43,19 @@ const SITES: DemoSite[] = [
   { letter: 'L', latitude: 28.575, longitude: 76.94, level: 1.0, historyHours: 0, stepHours: 1, offline: true },
   { letter: 'M', latitude: 28.7, longitude: 77.27, level: 1.3, historyHours: 720, stepHours: 1 },
 ]
+
+/**
+ * Synthetic pollution multiplier per city, chosen only so the demo covers every
+ * concentration band (Good → Severe). It says nothing about real air quality there.
+ */
+const DEMO_CITY_LEVEL: Record<string, number> = {
+  bengaluru: 0.45,
+  chennai: 0.9,
+  mumbai: 1.35,
+  kolkata: 1.95,
+  delhi: 3.2,
+  lucknow: 5.4,
+}
 
 const HOUR = 3_600_000
 
@@ -66,16 +83,21 @@ function demoHistory(site: DemoSite, seed: number, end: number): HistoryPoint[] 
   return out
 }
 
-export function demoStations(): Station[] {
+export function demoStations(cityId: string): Station[] {
   const now = Math.floor(Date.now() / HOUR) * HOUR
+  const city = cityById(cityId)
+  const cityLevel = DEMO_CITY_LEVEL[city.id] ?? 1
+  const dLat = city.center[0] - LAYOUT_CENTER[0]
+  const dLon = city.center[1] - LAYOUT_CENTER[1]
   return SITES.map((site, i) => {
-    const history = site.offline ? [] : demoHistory(site, i + 1, now - (site.lagHours ?? 0) * HOUR)
+    const scaled = { ...site, level: site.level * cityLevel }
+    const history = site.offline ? [] : demoHistory(scaled, i + 1, now - (site.lagHours ?? 0) * HOUR)
     const latest = [...history].reverse().find((p) => p.value !== null)
     return {
-      id: `demo-site-${site.letter.toLowerCase()}`,
+      id: `demo-${city.id}-${site.letter.toLowerCase()}`,
       name: `Demo Site ${site.letter}`,
-      latitude: site.latitude,
-      longitude: site.longitude,
+      latitude: Math.round((site.latitude + dLat) * 1e4) / 1e4,
+      longitude: Math.round((site.longitude + dLon) * 1e4) / 1e4,
       pollutant: 'PM2.5',
       value: latest?.value ?? null,
       unit: 'µg/m³',
@@ -88,8 +110,8 @@ export function demoStations(): Station[] {
 }
 
 /** Inverse-distance weighting stands in for the model in demo mode. */
-export function demoPrediction(latitude: number, longitude: number): PredictionResponse {
-  const reporting = demoStations().filter((s) => s.value !== null)
+export function demoPrediction(latitude: number, longitude: number, cityId: string): PredictionResponse {
+  const reporting = demoStations(cityId).filter((s) => s.value !== null)
   const ranked = reporting.map((s) => ({ s, d: haversineKm({ latitude, longitude }, s) })).sort((a, b) => a.d - b.d)
   let wSum = 0
   let vSum = 0

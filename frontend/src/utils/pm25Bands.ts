@@ -37,6 +37,11 @@ export function bandFor(value: number | null | undefined): ConcentrationBand | n
   return PM25_BANDS.find((b) => v <= b.max) ?? PM25_BANDS[PM25_BANDS.length - 1]
 }
 
+/** Band key for filtering; 'none' when the value is unavailable. */
+export function bandKey(value: number | null | undefined): string {
+  return bandFor(value)?.key ?? 'none'
+}
+
 export function bandColor(value: number | null | undefined): string {
   return bandFor(value)?.color ?? UNAVAILABLE_COLOR
 }

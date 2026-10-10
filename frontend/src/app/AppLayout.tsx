@@ -1,8 +1,8 @@
-import { useCallback, useState, type ReactNode } from 'react'
+import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
 import { MobileNavigation } from '../components/layout/MobileNavigation'
 import { Sidebar } from '../components/layout/Sidebar'
 import { Topbar } from '../components/layout/Topbar'
-import type { RouteId } from './navigation'
+import { NAV_ITEMS, type RouteId } from './navigation'
 
 const COLLAPSE_KEY = 'aerogrid.sidebarCollapsed'
 
@@ -17,6 +17,19 @@ function readCollapsed(): boolean {
 export function AppLayout({ route, children }: { route: RouteId; children: ReactNode }) {
   const [collapsed, setCollapsed] = useState(readCollapsed)
   const [menuOpen, setMenuOpen] = useState(false)
+  const mainRef = useRef<HTMLElement>(null)
+  const firstRender = useRef(true)
+
+  // Per-page tab title, and move focus to the new page for keyboard and screen-reader users.
+  useEffect(() => {
+    const label = NAV_ITEMS.find((n) => n.id === route)?.label
+    document.title = label ? `${label} · AeroGrid` : 'AeroGrid'
+    if (firstRender.current) {
+      firstRender.current = false
+      return
+    }
+    mainRef.current?.focus({ preventScroll: true })
+  }, [route])
 
   const toggle = () =>
     setCollapsed((c) => {
@@ -38,7 +51,7 @@ export function AppLayout({ route, children }: { route: RouteId; children: React
       <MobileNavigation open={menuOpen} route={route} onClose={closeMenu} />
       <div className="shell-main">
         <Topbar route={route} onOpenMenu={() => setMenuOpen(true)} />
-        <main id="main" className="content" tabIndex={-1}>
+        <main id="main" className="content" tabIndex={-1} ref={mainRef}>
           {children}
         </main>
       </div>

@@ -1,7 +1,8 @@
 import { Menu, RefreshCw } from 'lucide-react'
 import { NAV_ITEMS, type RouteId } from '../../app/navigation'
 import { useApp } from '../../app/appContext'
-import { CITIES, POLLUTANTS, type PollutantId } from '../../config'
+import { POLLUTANTS, availableCities, type PollutantId } from '../../config'
+import { CityAirChip } from '../dashboard/CityAirChip'
 import { DataFreshness } from '../dashboard/DataFreshness'
 import { DemoBadge } from '../common/StatusBadge'
 
@@ -13,6 +14,7 @@ interface TopbarProps {
 export function Topbar({ route, onOpenMenu }: TopbarProps) {
   const { city, setCityId, pollutant, setPollutant, refreshAll, isRefreshing, dataMode } = useApp()
   const page = NAV_ITEMS.find((n) => n.id === route)
+  const cities = availableCities()
 
   return (
     <header className="topbar">
@@ -33,12 +35,19 @@ export function Topbar({ route, onOpenMenu }: TopbarProps) {
               className="select"
               value={city.id}
               onChange={(e) => setCityId(e.target.value)}
-              disabled={CITIES.length < 2}
-              title={CITIES.length < 2 ? 'Only one city is configured' : undefined}
+              disabled={cities.length < 2}
+              title={
+                cities.length < 2
+                  ? 'Only one city is available from the API'
+                  : dataMode === 'mock'
+                    ? 'Demo mode: each city uses synthetic data at a different pollution level'
+                    : undefined
+              }
             >
-              {CITIES.map((c) => (
+              {cities.map((c) => (
                 <option key={c.id} value={c.id}>
                   {c.name}
+                  {dataMode === 'mock' ? ' (demo)' : ''}
                 </option>
               ))}
             </select>
@@ -60,6 +69,7 @@ export function Topbar({ route, onOpenMenu }: TopbarProps) {
             </select>
           </label>
         </div>
+        <CityAirChip />
         <DataFreshness />
         {dataMode === 'mock' && <DemoBadge />}
         <button

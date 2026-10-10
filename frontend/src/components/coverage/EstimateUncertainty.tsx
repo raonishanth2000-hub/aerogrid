@@ -13,7 +13,7 @@ export function EstimateUncertainty() {
   })
 
   if (!rows.length) {
-    return <EmptyState compact title="No estimates yet" message="Request estimates on the Overview or Explore Map page; their reported uncertainty is listed here." />
+    return <EmptyState compact title="No estimates yet" message="Click the map on the Overview page to request estimates; their reported uncertainty is listed here." />
   }
   if (!withUnc.length) {
     return <EmptyState compact title="Uncertainty not supplied" message="The prediction API has not returned uncertainty for the estimates made so far." />

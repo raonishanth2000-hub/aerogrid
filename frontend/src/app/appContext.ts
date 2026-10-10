@@ -24,6 +24,9 @@ export interface AppState {
 
   layers: MapLayers
   setLayers: (layers: MapLayers) => void
+  /** Concentration band keys (or 'none' for unavailable) hidden via the legend. */
+  hiddenBands: string[]
+  toggleBand: (key: string) => void
 
   selection: Selection
   select: (selection: Selection) => void
@@ -34,6 +37,7 @@ export interface AppState {
   requestEstimate: (latitude: number, longitude: number) => void
   retryEstimate: (id: string) => void
   removeEstimate: (id: string) => void
+  clearEstimates: () => void
 
   timeRange: TimeRange
   setTimeRange: (range: TimeRange) => void

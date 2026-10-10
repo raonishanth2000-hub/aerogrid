@@ -16,11 +16,17 @@
   --text-2: #b3c0d6;
   --text-3: #8391ab;
 
-  /* Accent: restrained cyan-teal */
-  --accent: #2dd4f0;
-  --accent-strong: #8be9fb;
-  --accent-soft: rgba(45, 212, 240, 0.1);
-  --accent-line: rgba(45, 212, 240, 0.38);
+  /* Accent: sky blue, with a warm sunset orange as its contrast colour.
+     --accent, --glow-sky, --glow-haze and --bg shift with the city's air (see [data-air] below). */
+  --accent: #38bdf8;
+  --accent-strong: #bae6fd;
+  --sky-light: #7dd3fc;
+  --accent-soft: color-mix(in srgb, var(--accent) 12%, transparent);
+  --accent-line: color-mix(in srgb, var(--accent) 40%, transparent);
+  --contrast: #fb923c;
+  --contrast-soft: rgba(251, 146, 60, 0.12);
+  --glow-sky: rgba(56, 189, 248, 0.08);
+  --glow-haze: rgba(251, 146, 60, 0.02);
   --ok: #4ade80;
   --warn: #f5b04a;
   --warn-soft: rgba(245, 176, 74, 0.1);
@@ -38,7 +44,7 @@
   --band-none: #56627a;
 
   /* Chart series (comparison lines also differ by dash pattern) */
-  --series-1: #2dd4f0;
+  --series-1: #38bdf8;
   --series-2: #f5b04a;
   --series-3: #c084fc;
   --series-4: #4ade80;
@@ -79,4 +85,71 @@
   --t-med: 220ms;
 
   color-scheme: dark;
+  transition:
+    --accent 700ms var(--ease),
+    --glow-sky 900ms var(--ease),
+    --glow-haze 900ms var(--ease),
+    --bg 900ms var(--ease);
+}
+
+/* Registered so the ambient colours fade instead of snapping when the air band changes. */
+@property --accent {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #38bdf8;
+}
+@property --glow-sky {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: rgba(56, 189, 248, 0.08);
+}
+@property --glow-haze {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: rgba(251, 146, 60, 0.02);
+}
+@property --bg {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #070b14;
+}
+
+/* Ambient sky, driven by the median of the latest measured station readings
+   (data-air is set in app/AmbientAir.tsx). Cleaner air = lighter, clearer sky;
+   worse air = darker, duller sky with a warm haze. All accents stay ≥ 4.5:1 on --bg and --surface. */
+:root[data-air='b1'] {
+  --accent: #7dd3fc;
+  --glow-sky: rgba(125, 211, 252, 0.2);
+  --glow-haze: rgba(251, 146, 60, 0);
+  --bg: #0b1424;
+}
+:root[data-air='b2'] {
+  --accent: #38bdf8;
+  --glow-sky: rgba(56, 189, 248, 0.14);
+  --glow-haze: rgba(251, 146, 60, 0.02);
+  --bg: #08101d;
+}
+:root[data-air='b3'] {
+  --accent: #2ea8e6;
+  --glow-sky: rgba(46, 168, 230, 0.09);
+  --glow-haze: rgba(251, 146, 60, 0.07);
+  --bg: #070b14;
+}
+:root[data-air='b4'] {
+  --accent: #4f9ad0;
+  --glow-sky: rgba(79, 154, 208, 0.06);
+  --glow-haze: rgba(251, 146, 60, 0.11);
+  --bg: #06090f;
+}
+:root[data-air='b5'] {
+  --accent: #5a97c4;
+  --glow-sky: rgba(90, 151, 196, 0.045);
+  --glow-haze: rgba(236, 110, 70, 0.14);
+  --bg: #05060b;
+}
+:root[data-air='b6'] {
+  --accent: #5a8db5;
+  --glow-sky: rgba(90, 141, 181, 0.03);
+  --glow-haze: rgba(190, 80, 90, 0.17);
+  --bg: #040408;
 }

@@ -1,6 +1,6 @@
-import { Activity, Info, LayoutDashboard, LineChart, Map, Radar, type LucideIcon } from 'lucide-react'
+import { Activity, Info, LayoutDashboard, LineChart, Radar, type LucideIcon } from 'lucide-react'
 
-export type RouteId = 'overview' | 'map' | 'analytics' | 'model' | 'gaps' | 'about'
+export type RouteId = 'overview' | 'analytics' | 'model' | 'gaps' | 'about'
 
 export interface NavItem {
   id: RouteId
@@ -11,8 +11,7 @@ export interface NavItem {
 }
 
 export const NAV_ITEMS: NavItem[] = [
-  { id: 'overview', label: 'Overview', icon: LayoutDashboard, description: 'Summary and city map', group: 'Workspace' },
-  { id: 'map', label: 'Explore Map', icon: Map, description: 'Full-screen map and station list', group: 'Workspace' },
+  { id: 'overview', label: 'Overview', icon: LayoutDashboard, description: 'City map and summary', group: 'Workspace' },
   { id: 'analytics', label: 'Air Quality Analytics', icon: LineChart, description: 'Station history and comparison', group: 'Insights' },
   { id: 'model', label: 'Model Performance', icon: Activity, description: 'Validation results', group: 'Insights' },
   { id: 'gaps', label: 'Monitoring Gaps', icon: Radar, description: 'Network coverage', group: 'Insights' },

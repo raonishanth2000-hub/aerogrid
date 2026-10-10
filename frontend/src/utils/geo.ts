@@ -42,3 +42,16 @@ export function median(values: number[]): number | null {
   const mid = Math.floor(s.length / 2)
   return s.length % 2 ? s[mid] : (s[mid - 1] + s[mid]) / 2
 }
+
+export type BoundsTuple = [[number, number], [number, number]]
+
+/** Bounding box of the points (slightly padded), or `fallback` when there are fewer than two. */
+export function extentOf(points: LatLon[], fallback: BoundsTuple, pad = 0.02): BoundsTuple {
+  if (points.length < 2) return fallback
+  const lats = points.map((p) => p.latitude)
+  const lons = points.map((p) => p.longitude)
+  return [
+    [Math.min(...lats) - pad, Math.min(...lons) - pad],
+    [Math.max(...lats) + pad, Math.max(...lons) + pad],
+  ]
+}

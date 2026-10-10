@@ -95,3 +95,17 @@ export function earliestTime(isos: Array<string | null | undefined>): string | n
 export function stationLabel(s: { name: string | null; id: string }): string {
   return s.name ?? `Station ${s.id}`
 }
+
+/** "10 Oct, 08:30 – 14:30 GMT+5:30", collapsing the date when both ends fall on the same day. */
+export function formatPeriod(startIso: string | null, endIso: string | null): string {
+  const start = parseTime(startIso)
+  const end = parseTime(endIso)
+  if (start === null || end === null) return 'Unavailable'
+  const day = new Intl.DateTimeFormat(undefined, { day: 'numeric', month: 'short' })
+  const time = new Intl.DateTimeFormat(undefined, { hour: '2-digit', minute: '2-digit' })
+  const zone = new Intl.DateTimeFormat(undefined, { timeZoneName: 'short' }).formatToParts(end).find((p) => p.type === 'timeZoneName')?.value ?? ''
+  if (start === end) return `${day.format(end)}, ${time.format(end)} ${zone}`.trim()
+  return day.format(start) === day.format(end)
+    ? `${day.format(end)}, ${time.format(start)} – ${time.format(end)} ${zone}`.trim()
+    : `${day.format(start)} ${time.format(start)} – ${day.format(end)} ${time.format(end)} ${zone}`.trim()
+}

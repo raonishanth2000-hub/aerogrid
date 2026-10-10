@@ -1,5 +1,5 @@
-import { Diamond, LineChart, RadioTower, Trash2, X } from 'lucide-react'
-import { useEffect, type CSSProperties, type ReactNode } from 'react'
+import { Check, Copy, Diamond, LineChart, LocateFixed, RadioTower, Trash2, X } from 'lucide-react'
+import { useEffect, useState, type CSSProperties, type ReactNode } from 'react'
 import { useApp } from '../../app/appContext'
 import { hrefFor } from '../../app/navigation'
 import { config, type CityConfig, type DataMode } from '../../config'
@@ -176,11 +176,36 @@ function EstimateBody({ estimate }: { estimate: Estimate }) {
   )
 }
 
-interface LocationDetailsDrawerProps {
-  onClose: () => void
+function DrawerActions({ lat, lon, onZoomTo }: { lat: number; lon: number; onZoomTo: (lat: number, lon: number) => void }) {
+  const [copied, setCopied] = useState(false)
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(`${lat.toFixed(5)}, ${lon.toFixed(5)}`)
+      setCopied(true)
+      window.setTimeout(() => setCopied(false), 1500)
+    } catch {
+      /* clipboard unavailable (e.g. insecure context) — nothing to do */
+    }
+  }
+  return (
+    <div className="drawer-actions">
+      <button type="button" className="btn btn-secondary btn-sm" onClick={() => onZoomTo(lat, lon)}>
+        <LocateFixed size={14} aria-hidden="true" /> Zoom to
+      </button>
+      <button type="button" className="btn btn-secondary btn-sm" onClick={copy} aria-live="polite">
+        {copied ? <Check size={14} aria-hidden="true" /> : <Copy size={14} aria-hidden="true" />}
+        {copied ? 'Copied' : 'Copy coordinates'}
+      </button>
+    </div>
+  )
 }
 
-export function LocationDetailsDrawer({ onClose }: LocationDetailsDrawerProps) {
+interface LocationDetailsDrawerProps {
+  onClose: () => void
+  onZoomTo: (lat: number, lon: number) => void
+}
+
+export function LocationDetailsDrawer({ onClose, onZoomTo }: LocationDetailsDrawerProps) {
   const { selectedStation, selectedEstimate, stations } = useApp()
   const open = !!(selectedStation || selectedEstimate)
 
@@ -216,6 +241,13 @@ export function LocationDetailsDrawer({ onClose }: LocationDetailsDrawerProps) {
             </button>
           </header>
           <div className="drawer-body">
+            {(selectedStation ?? selectedEstimate) && (
+              <DrawerActions
+                lat={(selectedStation ?? selectedEstimate)!.latitude}
+                lon={(selectedStation ?? selectedEstimate)!.longitude}
+                onZoomTo={onZoomTo}
+              />
+            )}
             {selectedStation ? (
               <StationBody station={selectedStation} mode={stations.data?.mode} />
             ) : selectedEstimate ? (

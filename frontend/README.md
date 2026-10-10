@@ -21,6 +21,12 @@ npm run dev                   # http://localhost:5173
 | `npm test` | Vitest unit tests (formatters, response validation, API error handling) |
 | `npm run build` | Type-check + production build to `dist/` |
 
+## Using the map
+
+- Click anywhere for a model estimate, or press `/` to search a station or type `lat, lon`.
+- Click legend bands to hide or show markers in that band.
+- `Esc` closes the details card. "Zoom to" and "Copy coordinates" are in the card.
+
 ## Environment variables
 
 | Variable | Required | Meaning |
@@ -28,6 +34,7 @@ npm run dev                   # http://localhost:5173
 | `VITE_DATA_MODE` | no | `mock` (synthetic DEMO data) or `api`. Unset → `mock` in dev, `api` in production builds. |
 | `VITE_API_BASE_URL` | in api mode | Backend base URL, no trailing slash. |
 | `VITE_DEFAULT_CITY` | no | City id from `CITIES` in `src/config/index.ts` (default `delhi`). |
+| `VITE_API_CITIES` | no | API mode: comma-separated city ids the backend serves (default: the default city only). |
 | `VITE_STALE_AFTER_MINUTES` | no | Age at which observations are flagged stale (default 180). |
 | `VITE_TILE_URL`, `VITE_TILE_ATTRIBUTION` | no | Basemap override. Default: Esri dark-grey canvas (keyless). Check provider terms before production traffic. |
 
@@ -36,6 +43,7 @@ npm run dev                   # http://localhost:5173
 ## Data modes
 
 - **mock**: data comes from `src/data/demoStations.ts` and `src/data/demoMetrics.ts`. Sites are labelled "Demo Site A…", not real stations. A DEMO DATA badge appears on everything sourced from them. Mock metrics are all `null`, so the Model Performance page shows its "not available yet" state. A "Preview layout with placeholder numbers" toggle exists only in mock mode, behind a banner saying the numbers are not evaluation results.
+- Mock mode offers six demo cities (Delhi, Mumbai, Bengaluru, Kolkata, Chennai, Lucknow). They share one synthetic site layout, scaled so that between them they cover every concentration band from Good to Severe. This makes it easy to check the band-driven ambient theme. The levels say nothing about real air quality in those cities.
 - **api**: every request goes to the backend. Failures show error/retry states and **never** fall back to demo data. Missing values stay missing (shown as "—" / "Unavailable", never 0).
 
 ## Backend contract
@@ -105,7 +113,7 @@ Error responses: any non-2xx status. A JSON body with `detail` or `message` is s
 - Validation metrics, baselines and held-out predictions.
 - A coverage / under-monitored-area analysis. The Monitoring Gaps page shows "Coverage analysis pending" and computes only station counts and spacing.
 - AWS architecture and dataset attribution for the About page. Edit `src/data/projectInfo.ts`; it is empty rather than guessed.
-- Additional cities: add to `CITIES` in `src/config/index.ts` once the backend serves them. Additional pollutants: add to `POLLUTANTS` in the same file.
+- Multi-city data: the stations contract has no city parameter yet. Agree one (e.g. `?city=`), then list served cities in `VITE_API_CITIES`. Additional pollutants: add to `POLLUTANTS` in the same file.
 
 ## Structure
 
@@ -119,7 +127,7 @@ src/
   data/         DEMO fixtures, illustrative metrics, About-page project facts
   utils/        formatters, validation, PM2.5 bands, geo, time-series helpers (+ tests)
   components/   layout/ common/ dashboard/ map/ analytics/ model/ coverage/ about/
-  pages/        Overview, ExploreMap, Analytics, ModelPerformance, MonitoringGaps, About
+  pages/        Overview, Analytics, ModelPerformance, MonitoringGaps, About
   styles/       tokens.css, globals.css
 ```
 

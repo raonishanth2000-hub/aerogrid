@@ -49,7 +49,7 @@ export function Sparkline({ points, width = 120, height = 32, color = 'var(--acc
           </g>
         )
       })}
-      <circle cx={x(last.t)} cy={y(last.value)} r="2.6" style={{ fill: color }} />
+      <circle cx={x(last.t)} cy={y(last.value)} r="3" style={{ fill: 'var(--contrast)' }} />
     </svg>
   )
 }

@@ -2,7 +2,8 @@ import { Clock3, Crosshair, Diamond, RadioTower } from 'lucide-react'
 import type { CSSProperties, ReactNode } from 'react'
 import { useApp } from '../../app/appContext'
 import { config } from '../../config'
-import { formatConcentration, formatDateTime, formatRelative, isStale, stationLabel } from '../../utils/formatters'
+import { formatConcentration, formatDateTime, formatRelative, formatShortDateTime, isStale, stationLabel } from '../../utils/formatters'
+import { cityAirSummary } from '../../utils/airSummary'
 import { bandFor } from '../../utils/pm25Bands'
 import { toSeries, windowSeries } from '../../utils/series'
 import { ScaleBar } from '../common/ScaleBar'
@@ -19,13 +20,27 @@ export function OverviewGrid() {
   const validEstimates = estimates.filter((e) => e.status === 'ready' && e.result?.data.value !== null)
   const estimatesMode = validEstimates[0]?.result?.mode
 
-  // Selected location
+  // Selected location — falls back to the measured city median when nothing is selected.
+  const summary = cityAirSummary(stationList)
+  let selLabel = 'Selected area PM2.5'
   let selValue: number | null = null
   let selDisplay: ReactNode = '—'
   let selUnit: string | undefined
   let selDesc: ReactNode = 'Select a station or click anywhere on the map'
   let selBadges: ReactNode = null
   let spark: ReactNode = null
+  if (!selectedStation && !selectedEstimate && summary) {
+    selLabel = 'City median PM2.5'
+    selValue = summary.median
+    selDisplay = formatConcentration(summary.median)
+    selUnit = 'µg/m³'
+    selDesc = (
+      <>
+        <SourceBadge kind="measured" /> median of {summary.count} stations
+      </>
+    )
+    selBadges = <ModeBadge mode={stations.data?.mode} />
+  }
   if (selectedStation) {
     selValue = selectedStation.value
     selDisplay = formatConcentration(selValue)
@@ -66,7 +81,7 @@ export function OverviewGrid() {
       <MetricCard
         emphasis
         icon={Crosshair}
-        label="Selected area PM2.5"
+        label={selLabel}
         value={
           <>
             {selDisplay}
@@ -82,7 +97,7 @@ export function OverviewGrid() {
         visual={<ScaleBar value={selValue} />}
         description={selDesc}
         badges={selBadges}
-        info="Concentration at the selected station (measured) or map point (model estimate). Bands use CPCB 24-hour breakpoints and are indicative for shorter averaging periods."
+        info="With nothing selected: the median of the latest measured station readings. Otherwise the selected station (measured) or map point (model estimate). Bands use CPCB 24-hour breakpoints and are indicative for shorter averaging periods."
       />
       <MetricCard
         icon={RadioTower}
@@ -90,15 +105,15 @@ export function OverviewGrid() {
         loading={loading}
         value={unavailable ? '—' : stationList.length}
         visual={<BandDistribution stations={stationList} />}
-        description={unavailable ? 'Station data unavailable' : `${reporting} reporting · ${stationList.length - reporting} without a valid reading`}
+        description={unavailable ? 'Station data unavailable' : `${reporting} reporting · ${stationList.length - reporting} no data`}
         badges={<ModeBadge mode={stations.data?.mode} />}
         info="Stations returned by the API with valid coordinates. The bar shows how their latest measured readings fall across concentration bands."
       />
       <MetricCard
         icon={Diamond}
-        label="Valid estimates"
+        label="Estimates"
         value={validEstimates.length}
-        description={validEstimates.length ? 'Model estimates requested this session' : 'Click the map to request a model estimate'}
+        description={validEstimates.length ? 'Valid, this session' : 'Click the map'}
         badges={<ModeBadge mode={estimatesMode} />}
         info="Points where the model returned a numeric estimate during this session. Failed or empty predictions are not counted."
       />
@@ -118,11 +133,10 @@ export function OverviewGrid() {
         }
         description={
           latestObservation ? (
-            stale ? (
-              <span className="warn-text">Stale · {formatDateTime(latestObservation)}</span>
-            ) : (
-              formatDateTime(latestObservation)
-            )
+            <span title={formatDateTime(latestObservation)} className={stale ? 'warn-text' : undefined}>
+              {stale ? 'Stale · ' : ''}
+              {formatShortDateTime(Date.parse(latestObservation))}
+            </span>
           ) : unavailable ? (
             'Station data unavailable'
           ) : (

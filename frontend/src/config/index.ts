@@ -12,18 +12,23 @@ export interface CityConfig {
   bounds: [[number, number], [number, number]]
 }
 
-/** Cities the frontend is configured for. Only add a city once the backend serves data for it. */
+function city(id: string, name: string, lat: number, lon: number, zoom = 11): CityConfig {
+  return { id, name, center: [lat, lon], zoom, bounds: [[lat - 0.22, lon - 0.25], [lat + 0.22, lon + 0.25]] }
+}
+
+/**
+ * Cities known to the frontend. In API mode only those listed in VITE_API_CITIES
+ * (default: the default city) are offered, because the current /api/stations
+ * contract has no city parameter. In mock mode every city is available with
+ * synthetic DEMO data, so the UI can be tested across air-quality levels.
+ */
 export const CITIES: CityConfig[] = [
-  {
-    id: 'delhi',
-    name: 'Delhi',
-    center: [28.6139, 77.209],
-    zoom: 11,
-    bounds: [
-      [28.4, 76.84],
-      [28.88, 77.35],
-    ],
-  },
+  { ...city('delhi', 'Delhi', 28.6139, 77.209), bounds: [[28.4, 76.84], [28.88, 77.35]] },
+  city('mumbai', 'Mumbai', 19.076, 72.8777),
+  city('bengaluru', 'Bengaluru', 12.9716, 77.5946),
+  city('kolkata', 'Kolkata', 22.5726, 88.3639),
+  city('chennai', 'Chennai', 13.0827, 80.2707),
+  city('lucknow', 'Lucknow', 26.8467, 80.9462),
 ]
 
 export const POLLUTANTS = [{ id: 'PM2.5', label: 'PM2.5', unit: 'µg/m³' }] as const
@@ -66,4 +71,12 @@ export const config = {
 
 export function cityById(id: string): CityConfig {
   return CITIES.find((c) => c.id === id) ?? CITIES[0]
+}
+
+/** Cities the selector may offer in the current data mode. */
+export function availableCities(): CityConfig[] {
+  if (config.dataMode === 'mock') return CITIES
+  const ids = (env.VITE_API_CITIES ?? '').split(',').map((c) => c.trim().toLowerCase()).filter(Boolean)
+  const allowed = CITIES.filter((c) => (ids.length ? ids.includes(c.id) : c.id === config.defaultCityId))
+  return allowed.length ? allowed : [cityById(config.defaultCityId)]
 }

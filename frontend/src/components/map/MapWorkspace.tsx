@@ -16,7 +16,7 @@ interface MapWorkspaceProps {
   allowEstimates?: boolean
 }
 
-const DRAWER_WIDTH = 360
+const DRAWER_WIDTH = 396
 
 export function MapWorkspace({ className = '', allowEstimates = true }: MapWorkspaceProps) {
   const { stations, stationList, select, selection, layers } = useApp()
@@ -35,15 +35,13 @@ export function MapWorkspace({ className = '', allowEstimates = true }: MapWorks
 
   return (
     <section className={`workspace ${className}`} aria-label="Air quality map">
-      <div className="workspace-toolbar">
-        <MapFilters showEstimatesToggle={allowEstimates} />
-        <LocationSearch allowCoordinates={allowEstimates} />
-      </div>
-
-      <div className="workspace-frame">
+      <div className={`workspace-frame ${drawerOpen ? 'has-drawer' : ''}`}>
         <AirQualityMap onMapReady={setMap} drawerInset={inset} allowEstimates={allowEstimates} />
-        <MapControls map={map} />
-        <MapLegend />
+
+        <div className="map-top">
+          <MapFilters showEstimatesToggle={allowEstimates} />
+          <LocationSearch allowCoordinates={allowEstimates} />
+        </div>
 
         <div className="map-status" aria-live="polite">
           {stations.status === 'loading' && !stations.data && (
@@ -70,12 +68,15 @@ export function MapWorkspace({ className = '', allowEstimates = true }: MapWorks
               {stations.data.data.dropped} station record(s) were skipped because their coordinates or IDs were invalid.
             </div>
           )}
-          {noLayers && <div className="map-banner">All layers are hidden. Enable a layer above to see markers.</div>}
+          {noLayers && <div className="map-banner">All layers are hidden. Turn a layer back on to see markers.</div>}
         </div>
+
+        <MapLegend />
+        <MapControls map={map} />
 
         {allowEstimates && !drawerOpen && stations.data && (
           <p className="map-hint">
-            <MousePointerClick size={14} aria-hidden="true" /> Click anywhere on the map to request a model estimate
+            <MousePointerClick size={14} aria-hidden="true" /> Click anywhere to estimate PM2.5 at that point
           </p>
         )}
 

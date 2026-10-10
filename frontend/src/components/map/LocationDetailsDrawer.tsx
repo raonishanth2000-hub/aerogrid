@@ -1,4 +1,4 @@
-import { LineChart, Trash2, X } from 'lucide-react'
+import { Diamond, LineChart, RadioTower, Trash2, X } from 'lucide-react'
 import { useEffect, type CSSProperties, type ReactNode } from 'react'
 import { useApp } from '../../app/appContext'
 import { hrefFor } from '../../app/navigation'
@@ -8,6 +8,9 @@ import type { Estimate } from '../../types/app'
 import { formatConcentration, formatCoordinate, formatDateTime, formatRelative, isStale, stationLabel } from '../../utils/formatters'
 import { nearest } from '../../utils/geo'
 import { bandFor } from '../../utils/pm25Bands'
+import { seriesStats, toSeries, windowSeries } from '../../utils/series'
+import { ScaleBar } from '../common/ScaleBar'
+import { Sparkline } from '../common/Sparkline'
 import { ErrorState, LoadingState } from '../common/States'
 import { ModeBadge, SourceBadge } from '../common/StatusBadge'
 
@@ -25,14 +28,17 @@ const Unavailable = ({ why }: { why: string }) => <span className="muted">Unavai
 function Reading({ value, unit }: { value: number | null; unit: string }) {
   const band = bandFor(value)
   return (
-    <div className="reading">
-      <span className="reading-value">{formatConcentration(value)}</span>
-      {value !== null && <span className="reading-unit">{unit}</span>}
-      {band && (
-        <span className="band-chip" style={{ '--band': band.color } as CSSProperties} title="Concentration band (CPCB 24-h breakpoints)">
-          {band.label} band
-        </span>
-      )}
+    <div className="reading-card" style={{ '--band': band?.color ?? 'var(--band-none)' } as CSSProperties}>
+      <div className="reading">
+        <span className="reading-value">{formatConcentration(value)}</span>
+        {value !== null && <span className="reading-unit">{unit}</span>}
+        {band && (
+          <span className="band-chip" title="Concentration band (CPCB 24-h breakpoints)">
+            {band.label}
+          </span>
+        )}
+      </div>
+      <ScaleBar value={value} showLabels />
     </div>
   )
 }
@@ -44,6 +50,9 @@ function inCity(city: CityConfig, lat: number, lon: number) {
 
 function StationBody({ station, mode }: { station: Station; mode?: DataMode }) {
   const hasHistory = !!station.history?.some((p) => p.value !== null)
+  const series = toSeries(station.history)
+  const last24 = series.length ? windowSeries(series, series[series.length - 1].t, '24h') : []
+  const stats24 = seriesStats(last24)
   const stale = station.timestamp !== null && isStale(station.timestamp, config.staleAfterMinutes)
   return (
     <>
@@ -58,6 +67,18 @@ function StationBody({ station, mode }: { station: Station; mode?: DataMode }) {
           : 'Measured concentration of fine particulate matter (PM2.5) at this monitoring station.'}
       </p>
       {stale && <p className="notice notice-warn">This observation is {formatRelative(station.timestamp)} — it may not reflect current conditions.</p>}
+      {stats24.count > 1 && (
+        <div className="trend-card">
+          <div className="trend-text">
+            <span className="eyebrow">Last 24 h · measured</span>
+            <span className="trend-range">
+              {formatConcentration(stats24.min)}–{formatConcentration(stats24.max)} <span className="muted">µg/m³</span>
+            </span>
+            <span className="muted small">{stats24.count} observations</span>
+          </div>
+          <Sparkline points={last24} width={132} height={44} />
+        </div>
+      )}
       <dl className="field-list">
         <Field label="Observed at">
           {station.timestamp ? (
@@ -183,7 +204,10 @@ export function LocationDetailsDrawer({ onClose }: LocationDetailsDrawerProps) {
       {open && (
         <>
           <header className="drawer-header">
-            <div>
+            <span className={`drawer-icon ${selectedStation ? '' : 'is-estimate'}`} aria-hidden="true">
+              {selectedStation ? <RadioTower size={16} /> : <Diamond size={16} />}
+            </span>
+            <div className="drawer-heading">
               <p className="eyebrow">{selectedStation ? 'Monitoring station' : 'Estimated location'}</p>
               <h2 className="drawer-title">{title}</h2>
             </div>

@@ -44,3 +44,14 @@ export function bandColor(value: number | null | undefined): string {
 export function bandRangeLabel(b: ConcentrationBand): string {
   return Number.isFinite(b.max) ? `${b.min}–${b.max}` : `${b.min}+`
 }
+
+/** Position (0–1) of a concentration on an equal-width band scale. */
+export function scalePosition(value: number): number {
+  const band = bandFor(value)
+  if (!band) return 0
+  const i = PM25_BANDS.indexOf(band)
+  const lo = i === 0 ? 0 : PM25_BANDS[i - 1].max
+  const hi = Number.isFinite(band.max) ? band.max : band.min + 250
+  const frac = Math.min(Math.max((value - lo) / (hi - lo), 0), 1)
+  return (i + frac) / PM25_BANDS.length
+}

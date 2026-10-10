@@ -12,7 +12,17 @@ interface SidebarProps {
 
 export function Sidebar({ route, collapsed, onToggle }: SidebarProps) {
   const { dataMode, health } = useApp()
-  const apiLabel = health.status === 'error' ? 'API mode · unreachable' : health.status === 'loading' ? 'API mode · checking…' : `API mode · ${health.data?.data.status ?? 'unknown'}`
+  const tone = dataMode === 'mock' ? 'is-demo' : health.status === 'error' ? 'is-down' : health.status === 'loading' ? 'is-checking' : 'is-api'
+  const title = dataMode === 'mock' ? 'Demo data' : 'Live API'
+  const detail =
+    dataMode === 'mock'
+      ? 'Synthetic fixtures for development'
+      : health.status === 'error'
+        ? 'Backend unreachable'
+        : health.status === 'loading'
+          ? 'Checking backend…'
+          : `Backend status: ${health.data?.data.status ?? 'unknown'}`
+
   return (
     <aside className={`sidebar ${collapsed ? 'is-collapsed' : ''}`} aria-label="Primary">
       <div className="sidebar-top">
@@ -22,12 +32,15 @@ export function Sidebar({ route, collapsed, onToggle }: SidebarProps) {
         <NavList route={route} collapsed={collapsed} />
       </nav>
       <div className="sidebar-bottom">
-        {!collapsed && (
-          <p className="sidebar-mode">
-            <span className={`mode-dot ${dataMode === 'mock' ? 'is-demo' : health.status === 'error' ? 'is-down' : 'is-api'}`} aria-hidden="true" />
-            {dataMode === 'mock' ? 'Demo data mode' : apiLabel}
-          </p>
-        )}
+        <div className={`status-card ${tone}`} title={collapsed ? `${title} — ${detail}` : undefined}>
+          <span className="mode-dot" aria-hidden="true" />
+          {!collapsed && (
+            <span className="status-text">
+              <span className="status-title">{title}</span>
+              <span className="status-detail">{detail}</span>
+            </span>
+          )}
+        </div>
         <button
           type="button"
           className="btn btn-ghost btn-icon sidebar-toggle"

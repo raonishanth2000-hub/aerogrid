@@ -56,7 +56,7 @@ export function AirQualityMap({ onMapReady, drawerInset, allowEstimates = true }
       minZoom={8}
       maxZoom={17}
       className="map"
-      zoomControl
+      zoomControl={false}
       keyboard
     >
       <TileLayer url={config.tiles.url} attribution={config.tiles.attribution} maxNativeZoom={16} />
@@ -69,8 +69,9 @@ export function AirQualityMap({ onMapReady, drawerInset, allowEstimates = true }
           const selected = selection?.kind === 'station' && selection.id === s.id
           const label = `${stationLabel(s)}, measured ${s.value === null ? 'value unavailable' : `${formatConcentration(s.value)} ${s.unit}`}`
           return (
+            // react-leaflet doesn't update title/alt after creation, so the key includes the value.
             <Marker
-              key={s.id}
+              key={`${s.id}:${s.value}`}
               position={[s.latitude, s.longitude]}
               icon={stationIcon(s, selected)}
               title={label}
@@ -96,7 +97,7 @@ export function AirQualityMap({ onMapReady, drawerInset, allowEstimates = true }
             e.status === 'loading' ? 'requesting…' : e.status === 'error' ? 'request failed' : v === null ? 'no estimate available' : `${formatConcentration(v)} µg/m³`
           return (
             <Marker
-              key={e.id}
+              key={`${e.id}:${e.status}:${v}`}
               position={[e.latitude, e.longitude]}
               icon={estimateIcon(e, selected)}
               title={`Model estimate, ${text}`}

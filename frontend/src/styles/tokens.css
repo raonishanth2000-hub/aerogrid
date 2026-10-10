@@ -1,42 +1,44 @@
 /* AeroGrid design tokens — dark geospatial theme, 4/8 px spacing scale. */
 :root {
-  /* Surfaces */
-  --bg: #0a0f1c;
-  --bg-2: #0d1424;
-  --surface: #111a2c;
-  --surface-2: #162238;
-  --surface-3: #1c2a44;
-  --border: #1f2c45;
-  --border-strong: #2c3c5c;
+  /* Surfaces: deep navy, each step slightly lifted */
+  --bg: #070b14;
+  --bg-2: #0a101d;
+  --surface: #0f1726;
+  --surface-2: #142033;
+  --surface-3: #1a2840;
+  --surface-glass: rgba(13, 20, 34, 0.86);
+  --border: #1b2740;
+  --border-strong: #273756;
+  --highlight: rgba(255, 255, 255, 0.04);
 
   /* Text */
-  --text: #e8eef8;
-  --text-2: #aebbd0;
-  --text-3: #8592ab;
+  --text: #eef3fb;
+  --text-2: #b3c0d6;
+  --text-3: #8391ab;
 
-  /* Accent & status */
-  --accent: #38bdf8;
-  --accent-strong: #7dd3fc;
-  --accent-soft: rgba(56, 189, 248, 0.12);
-  --accent-line: rgba(56, 189, 248, 0.4);
+  /* Accent: restrained cyan-teal */
+  --accent: #2dd4f0;
+  --accent-strong: #8be9fb;
+  --accent-soft: rgba(45, 212, 240, 0.1);
+  --accent-line: rgba(45, 212, 240, 0.38);
   --ok: #4ade80;
   --warn: #f5b04a;
-  --warn-soft: rgba(245, 176, 74, 0.12);
+  --warn-soft: rgba(245, 176, 74, 0.1);
   --error: #f47272;
   --error-soft: rgba(244, 114, 114, 0.1);
   --demo: #f5b04a;
 
   /* PM2.5 concentration bands (see utils/pm25Bands.ts) */
-  --band-1: #4caf7d;
-  --band-2: #a3c84a;
-  --band-3: #e8c547;
-  --band-4: #f0913a;
-  --band-5: #e5534b;
-  --band-6: #b0365a;
-  --band-none: #5b6780;
+  --band-1: #3fbf86;
+  --band-2: #a6cf45;
+  --band-3: #f0cf45;
+  --band-4: #f59a3c;
+  --band-5: #ec5a50;
+  --band-6: #b23a6a;
+  --band-none: #56627a;
 
   /* Chart series (comparison lines also differ by dash pattern) */
-  --series-1: #38bdf8;
+  --series-1: #2dd4f0;
   --series-2: #f5b04a;
   --series-3: #c084fc;
   --series-4: #4ade80;
@@ -51,14 +53,16 @@
   --s-8: 32px;
 
   /* Shape & depth */
-  --radius-sm: 6px;
-  --radius: 10px;
-  --radius-lg: 14px;
-  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.3);
-  --shadow-2: 0 8px 24px rgba(0, 0, 0, 0.35);
+  --radius-sm: 8px;
+  --radius: 12px;
+  --radius-lg: 16px;
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.35);
+  --shadow-2: 0 10px 30px -8px rgba(0, 0, 0, 0.55), 0 2px 6px rgba(0, 0, 0, 0.3);
+  --shadow-float: 0 12px 40px -10px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.03);
 
   /* Type */
   --font: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-display: 'Space Grotesk', 'Inter', ui-sans-serif, system-ui, sans-serif;
   --mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
   --fs-xs: 0.75rem;
   --fs-sm: 0.8125rem;
@@ -66,13 +70,13 @@
   --fs-base: 0.9375rem;
 
   /* Layout */
-  --sidebar-w: 232px;
-  --sidebar-w-collapsed: 64px;
-  --topbar-h: 56px;
-  --drawer-w: 360px;
+  --sidebar-w: 240px;
+  --sidebar-w-collapsed: 68px;
+  --topbar-h: 60px;
+  --drawer-w: 372px;
   --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
   --t-fast: 140ms;
-  --t-med: 200ms;
+  --t-med: 220ms;
 
   color-scheme: dark;
 }

@@ -56,6 +56,7 @@ export function ModelPerformancePage() {
   return (
     <div className="page">
       <PageHeader
+        eyebrow="Validation"
         title="Model Performance"
         subtitle="How well the model predicts PM2.5 at monitoring stations it was not trained on."
         actions={previewToggle}

@@ -14,7 +14,7 @@ import { RANGE_LABEL, RANGE_MS, rangeAvailable, seriesStats, spanMs, toSeries, w
 const RANGES: TimeRange[] = ['24h', '7d', '30d']
 
 export function AnalyticsPage() {
-  const { stations, stationList, selectedStation, select, timeRange, setTimeRange } = useApp()
+  const { city, stations, stationList, selectedStation, select, timeRange, setTimeRange } = useApp()
 
   const withHistory = useMemo(() => stationList.filter((s) => s.history?.some((p) => p.value !== null)), [stationList])
   const station = selectedStation && withHistory.includes(selectedStation) ? selectedStation : withHistory[0]
@@ -80,6 +80,7 @@ export function AnalyticsPage() {
   return (
     <div className="page">
       <PageHeader
+        eyebrow={`${city.name} · Measured history`}
         title="Air Quality Analytics"
         subtitle="Measured PM2.5 history at monitoring stations. Model estimates have no observation record and are not shown here."
       />

@@ -26,38 +26,40 @@ export function Topbar({ route, onOpenMenu }: TopbarProps) {
       </nav>
 
       <div className="topbar-controls">
-        <label className="field">
-          <span className="field-label">City</span>
-          <select
-            className="select"
-            value={city.id}
-            onChange={(e) => setCityId(e.target.value)}
-            disabled={CITIES.length < 2}
-            title={CITIES.length < 2 ? 'Only one city is configured' : undefined}
-          >
-            {CITIES.map((c) => (
-              <option key={c.id} value={c.id}>
-                {c.name}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label className="field">
-          <span className="field-label">Pollutant</span>
-          <select
-            className="select"
-            value={pollutant}
-            onChange={(e) => setPollutant(e.target.value as PollutantId)}
-            disabled={POLLUTANTS.length < 2}
-            title={POLLUTANTS.length < 2 ? 'PM2.5 is the only pollutant currently supported' : undefined}
-          >
-            {POLLUTANTS.map((p) => (
-              <option key={p.id} value={p.id}>
-                {p.label}
-              </option>
-            ))}
-          </select>
-        </label>
+        <div className="context-group">
+          <label className="field">
+            <span className="field-label">City</span>
+            <select
+              className="select"
+              value={city.id}
+              onChange={(e) => setCityId(e.target.value)}
+              disabled={CITIES.length < 2}
+              title={CITIES.length < 2 ? 'Only one city is configured' : undefined}
+            >
+              {CITIES.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.name}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label className="field">
+            <span className="field-label">Pollutant</span>
+            <select
+              className="select"
+              value={pollutant}
+              onChange={(e) => setPollutant(e.target.value as PollutantId)}
+              disabled={POLLUTANTS.length < 2}
+              title={POLLUTANTS.length < 2 ? 'PM2.5 is the only pollutant currently supported' : undefined}
+            >
+              {POLLUTANTS.map((p) => (
+                <option key={p.id} value={p.id}>
+                  {p.label}
+                </option>
+              ))}
+            </select>
+          </label>
+        </div>
         <DataFreshness />
         {dataMode === 'mock' && <DemoBadge />}
         <button

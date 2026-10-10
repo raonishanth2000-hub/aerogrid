@@ -1,4 +1,5 @@
-import { CartesianGrid, Legend, Line, LineChart, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
+import { useId } from 'react'
+import { Area, AreaChart, CartesianGrid, Legend, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import type { TimeRange } from '../../types/app'
 import { formatConcentration, formatDateTime } from '../../utils/formatters'
 import { NAAQS_24H_PM25 } from '../../utils/pm25Bands'
@@ -18,6 +19,7 @@ const tickFormat = (range: TimeRange) =>
 
 export function PM25TrendChart({ points, stationName, range, start, end }: PM25TrendChartProps) {
   const theme = chartTheme()
+  const gradientId = `trend-${useId().replace(/[^a-zA-Z0-9-]/g, '')}`
   const fmt = tickFormat(range)
   const valid = points.filter((p) => p.value !== null).length
   // Show individual observations when the record is sparse, so irregular sampling is visible.
@@ -30,7 +32,13 @@ export function PM25TrendChart({ points, stationName, range, start, end }: PM25T
       </figcaption>
       <div className="chart-box" style={{ height: 300 }}>
         <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={points} margin={{ top: 8, right: 16, bottom: 4, left: 0 }}>
+          <AreaChart data={points} margin={{ top: 8, right: 16, bottom: 4, left: 0 }}>
+            <defs>
+              <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor={theme.accent} stopOpacity={0.28} />
+                <stop offset="100%" stopColor={theme.accent} stopOpacity={0} />
+              </linearGradient>
+            </defs>
             <CartesianGrid {...theme.grid} vertical={false} />
             <XAxis
               dataKey="t"
@@ -60,18 +68,19 @@ export function PM25TrendChart({ points, stationName, range, start, end }: PM25T
               ifOverflow="extendDomain"
               label={{ value: `NAAQS 24-h standard (${NAAQS_24H_PM25})`, fill: theme.warn, fontSize: 11, position: 'insideTopRight' }}
             />
-            <Line
+            <Area
               type="linear"
               dataKey="value"
               name="Measured PM2.5"
               stroke={theme.accent}
+              fill={`url(#${gradientId})`}
               strokeWidth={1.8}
               dot={showDots ? { r: 2.5, fill: theme.accent, strokeWidth: 0 } : false}
               activeDot={{ r: 4 }}
               connectNulls={false}
               isAnimationActive={false}
             />
-          </LineChart>
+          </AreaChart>
         </ResponsiveContainer>
       </div>
       <p className="sr-only">

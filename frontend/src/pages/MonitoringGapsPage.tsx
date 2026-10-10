@@ -7,10 +7,11 @@ import { PageHeader } from '../components/layout/PageHeader'
 import { MapWorkspace } from '../components/map/MapWorkspace'
 
 export function MonitoringGapsPage() {
-  const { stations } = useApp()
+  const { city, stations } = useApp()
   return (
     <div className="page">
       <PageHeader
+        eyebrow={`${city.name} · Station network`}
         title="Monitoring Gaps"
         subtitle="Where the station network is sparse, more of the city depends on model estimates rather than direct measurement."
       />

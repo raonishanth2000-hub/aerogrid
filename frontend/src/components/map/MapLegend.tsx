@@ -1,38 +1,53 @@
+import { ChevronDown } from 'lucide-react'
 import { useState } from 'react'
 import { BAND_SOURCE, PM25_BANDS, bandRangeLabel } from '../../utils/pm25Bands'
+import { ScaleBar } from '../common/ScaleBar'
+import { InfoTip } from '../common/Tooltip'
+
+const SHORT: Record<string, string> = { b1: 'Good', b2: 'Satisf.', b3: 'Moderate', b4: 'Poor', b5: 'V. poor', b6: 'Severe' }
 
 export function MapLegend() {
-  const [open, setOpen] = useState(() => !window.matchMedia('(max-width: 767px), (max-height: 760px)').matches)
+  const [open, setOpen] = useState(() => !window.matchMedia('(max-width: 767px)').matches)
   return (
-    <details className="legend" open={open} onToggle={(e) => setOpen(e.currentTarget.open)}>
-      <summary className="legend-summary">Legend · PM2.5 µg/m³</summary>
-      <div className="legend-body">
-        <ul className="legend-kinds" aria-label="Marker types">
-          <li>
-            <span className="mk mk-station mk-legend" style={{ ['--c' as string]: 'var(--text-2)' }} aria-hidden="true" />
-            Measured observation
-          </li>
-          <li>
-            <span className="mk mk-estimate mk-legend is-ready" style={{ ['--c' as string]: 'var(--text-2)' }} aria-hidden="true" />
-            Model estimate
-          </li>
-          <li>
-            <span className="mk mk-station mk-legend is-unavailable" aria-hidden="true" />
-            Value unavailable
-          </li>
-        </ul>
-        <p className="legend-heading">Concentration bands</p>
-        <ul className="legend-bands" aria-label="Concentration bands in µg/m³">
-          {PM25_BANDS.map((b) => (
-            <li key={b.key}>
-              <span className="swatch" style={{ background: b.color }} aria-hidden="true" />
-              <span className="legend-range">{bandRangeLabel(b)}</span>
-              <span className="muted">{b.label}</span>
-            </li>
-          ))}
-        </ul>
-        <p className="legend-note">{BAND_SOURCE}</p>
+    <div className={`legend ${open ? 'is-open' : ''}`}>
+      <div className="legend-head">
+        <button type="button" className="legend-toggle" aria-expanded={open} onClick={() => setOpen((o) => !o)}>
+          PM2.5 <span className="muted">µg/m³</span>
+          <ChevronDown size={14} aria-hidden="true" className="legend-chevron" />
+        </button>
+        <InfoTip label="concentration bands">{BAND_SOURCE}</InfoTip>
       </div>
-    </details>
+      {open && (
+        <div className="legend-body">
+          <ScaleBar value={null} showLabels />
+          <div className="legend-names" aria-hidden="true">
+            {PM25_BANDS.map((b) => (
+              <span key={b.key}>{SHORT[b.key]}</span>
+            ))}
+          </div>
+          <ul className="sr-only">
+            {PM25_BANDS.map((b) => (
+              <li key={b.key}>
+                {b.label}: {bandRangeLabel(b)} µg/m³
+              </li>
+            ))}
+          </ul>
+          <ul className="legend-kinds" aria-label="Marker types">
+            <li>
+              <span className="mk mk-station mk-legend" style={{ ['--c' as string]: 'var(--text-2)' }} aria-hidden="true" />
+              Measured
+            </li>
+            <li>
+              <span className="mk mk-estimate mk-legend" style={{ ['--c' as string]: 'var(--text-2)' }} aria-hidden="true" />
+              Estimate
+            </li>
+            <li>
+              <span className="mk mk-station mk-legend is-unavailable" aria-hidden="true" />
+              No value
+            </li>
+          </ul>
+        </div>
+      )}
+    </div>
   )
 }

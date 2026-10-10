@@ -8,7 +8,7 @@ import { AWS_ARCHITECTURE, DATA_SOURCES, FRONTEND_ATTRIBUTION } from '../data/pr
 export function AboutPage() {
   return (
     <div className="page page-about">
-      <PageHeader title="About AeroGrid" subtitle="Understand air quality beyond the monitoring station." />
+      <PageHeader eyebrow="Project" title="About AeroGrid" subtitle="Understand air quality beyond the monitoring station." />
 
       <div className="grid-2">
         <Panel id="problem" title="The problem">

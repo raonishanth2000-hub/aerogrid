@@ -3,24 +3,30 @@ import { useApp } from '../../app/appContext'
 export function MapFilters({ showEstimatesToggle = true }: { showEstimatesToggle?: boolean }) {
   const { layers, setLayers } = useApp()
   return (
-    <fieldset className="layer-filters">
-      <legend className="sr-only">Map layers</legend>
-      <label className="check">
-        <input type="checkbox" checked={layers.stations} onChange={(e) => setLayers({ ...layers, stations: e.target.checked })} />
+    <div className="layer-chips" role="group" aria-label="Map layers">
+      <button
+        type="button"
+        className="layer-chip"
+        aria-pressed={layers.stations}
+        onClick={() => setLayers({ ...layers, stations: !layers.stations })}
+      >
         <span className="glyph glyph-circle" aria-hidden="true" />
-        Monitoring stations
-      </label>
+        Stations
+      </button>
       {showEstimatesToggle && (
-        <label className="check">
-          <input type="checkbox" checked={layers.estimates} onChange={(e) => setLayers({ ...layers, estimates: e.target.checked })} />
+        <button
+          type="button"
+          className="layer-chip"
+          aria-pressed={layers.estimates}
+          onClick={() => setLayers({ ...layers, estimates: !layers.estimates })}
+        >
           <span className="glyph glyph-diamond" aria-hidden="true" />
-          Estimated PM2.5
-        </label>
+          Estimates
+        </button>
       )}
-      <label className="check is-disabled" title="Coverage analysis has not been provided by the backend yet">
-        <input type="checkbox" checked={false} disabled readOnly />
-        Monitoring gaps <span className="tag">Pending</span>
-      </label>
-    </fieldset>
+      <button type="button" className="layer-chip" aria-pressed={false} disabled title="Coverage analysis has not been provided by the backend yet">
+        Gaps <span className="tag">Pending</span>
+      </button>
+    </div>
   )
 }

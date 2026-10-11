@@ -1,5 +1,6 @@
 import json
 import math
+import os
 import time
 from pathlib import Path
 import requests
@@ -19,30 +20,43 @@ def haversine(lat1, lon1, lat2, lon2):
     return 2 * R * math.asin(math.sqrt(a))
 
 
+# Public Overpass endpoints, tried in order. Failures are reported as unknown (NaN), never as
+# "no roads", so a network error can't masquerade as a real feature value.
+OVERPASS_URLS = [
+    "https://overpass-api.de/api/interpreter",
+    "https://overpass.kumi.systems/api/interpreter",
+]
+
+
 def fetch_overpass_features(lat, lon, radius_m=1000):
-    """Fetch road network data from OSM and calculate density and distance to major roads."""
-    url = "https://overpass-api.de/api/interpreter"
+    """Fetch road network data from OSM and calculate density and distance to major roads.
+
+    Returns None if every endpoint fails, so callers can treat the features as missing.
+    """
     # Query for major roads within a smaller radius to prevent 504 timeouts
     query = f'[out:json];way["highway"~"motorway|trunk|primary"](around:{radius_m},{lat},{lon});out geom;'
-    
+
     # Send as raw bytes to avoid improper Content-Type urlencoding which triggers 406
     headers = {"User-Agent": "AeroGrid-Research/1.0", "Content-Type": "application/x-www-form-urlencoded"}
-    
-    for attempt in range(3):
-        try:
-            resp = requests.post(url, data=query.encode('utf-8'), headers=headers, timeout=15)
-            if resp.status_code == 429:
-                time.sleep(5)
-                continue
-            resp.raise_for_status()
-            data = resp.json()
+
+    data = None
+    for url in OVERPASS_URLS:
+        for attempt in range(3):
+            try:
+                resp = requests.post(url, data=query.encode('utf-8'), headers=headers, timeout=(10, 40))
+                if resp.status_code in (429, 504):
+                    time.sleep(5 * (attempt + 1))
+                    continue
+                resp.raise_for_status()
+                data = resp.json()
+                break
+            except Exception as e:
+                time.sleep(2)
+        if data is not None:
             break
-        except Exception as e:
-            if attempt == 2:
-                print(f"Failed to fetch geo features for {lat}, {lon}: {e}")
-                # Fallback values if API fails
-                return {"road_density_2km": 0.0, "dist_to_major_road_m": radius_m}
-            time.sleep(2)
+    if data is None:
+        print(f"Failed to fetch geo features for {lat}, {lon}; treating them as unknown.")
+        return None
 
     total_length = 0.0
     min_distance = float(radius_m)
@@ -86,12 +100,18 @@ def get_geo_features(lat, lon):
     key = f"{round(float(lat), 4)},{round(float(lon), 4)}"
 
     if key not in cache:
+        if os.getenv("GEO_OFFLINE", "").strip().lower() in {"1", "true", "yes"}:
+            # Cache-only mode (CI, bulk training): unknown roads stay unknown instead of waiting on Overpass.
+            return {"road_density_2km": float("nan"), "dist_to_major_road_m": float("nan")}
         print(f"Fetching OpenStreetMap data for location {key}...")
         features = fetch_overpass_features(lat, lon)
+        # Be polite to the Overpass API by pacing requests
+        time.sleep(1)
+        if features is None:
+            # Not cached, so a later call can retry; NaN lets the model's imputer handle it.
+            return {"road_density_2km": float("nan"), "dist_to_major_road_m": float("nan")}
         cache[key] = features
         with open(GEO_CACHE_FILE, "w") as f:
             json.dump(cache, f, indent=2)
-        # Be polite to the Overpass API by pacing requests
-        time.sleep(1)
 
     return cache[key]

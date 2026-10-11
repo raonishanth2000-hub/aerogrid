@@ -9,12 +9,13 @@ import { EmptyState, ErrorState, LoadingState } from '../components/common/State
 import { PageHeader } from '../components/layout/PageHeader'
 import type { TimeRange } from '../types/app'
 import { formatDuration, stationLabel } from '../utils/formatters'
+import { KIND_ADJECTIVE, KIND_LABEL } from '../utils/stationKind'
 import { RANGE_LABEL, RANGE_MS, rangeAvailable, seriesStats, spanMs, toSeries, windowSeries, withGapBreaks } from '../utils/series'
 
 const RANGES: TimeRange[] = ['24h', '7d', '30d']
 
 export function AnalyticsPage() {
-  const { city, stations, stationList, selectedStation, select, timeRange, setTimeRange } = useApp()
+  const { city, stations, stationList, stationKind, selectedStation, select, timeRange, setTimeRange } = useApp()
 
   const withHistory = useMemo(() => stationList.filter((s) => s.history?.some((p) => p.value !== null)), [stationList])
   const station = selectedStation && withHistory.includes(selectedStation) ? selectedStation : withHistory[0]
@@ -68,7 +69,7 @@ export function AnalyticsPage() {
           <span className="muted small">Record length: {formatDuration(view.span)}</span>
         </div>
         <div className="analytics-grid">
-          <PM25TrendChart points={view.points} stationName={stationLabel(station)} range={view.range} start={view.start} end={view.end} />
+          <PM25TrendChart points={view.points} stationName={stationLabel(station)} range={view.range} start={view.start} end={view.end} kind={station.source_type} />
           <div>
             <h3 className="subhead">Summary · last {RANGE_LABEL[view.range]}</h3>
             <SummaryStatistics stats={view.stats} gaps={view.gaps} rangeLabel={RANGE_LABEL[view.range]} />
@@ -80,11 +81,11 @@ export function AnalyticsPage() {
   return (
     <div className="page">
       <PageHeader
-        eyebrow={`${city.name} · Measured history`}
+        eyebrow={`${city.name} · ${KIND_LABEL[stationKind]} history`}
         title="Air Quality Analytics"
-        subtitle="Measured PM2.5 history at monitoring stations. Model estimates have no observation record and are not shown here."
+        subtitle={`PM2.5 history at monitoring stations (${KIND_ADJECTIVE[stationKind]} values). AeroGrid estimates have no record and are not shown here.`}
       />
-      <Panel id="trend" title="Historical PM2.5" subtitle="Measured observations only" mode={stations.data?.mode}>
+      <Panel id="trend" title="Historical PM2.5" subtitle={`${KIND_LABEL[stationKind]} station values only`} mode={stations.data?.mode}>
         {body}
       </Panel>
       {withHistory.length > 1 && (

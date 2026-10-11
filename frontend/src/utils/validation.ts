@@ -3,6 +3,7 @@
 
 import type {
   BaselineResult,
+  CityInfo,
   HealthResponse,
   HeldOutPrediction,
   HistoryPoint,
@@ -51,6 +52,23 @@ export function parseHealth(body: unknown): HealthResponse {
   return { status: body.status }
 }
 
+/** Study areas served by the backend; entries without an id, name or valid centre are dropped. */
+export function parseCities(body: unknown): CityInfo[] {
+  if (!isObj(body) || !Array.isArray(body.cities)) throw new ResponseShapeError('Cities response is missing a "cities" array.')
+  return body.cities
+    .filter((c): c is Obj => isObj(c) && typeof c.id === 'string' && typeof c.name === 'string' && isValidCoordinate(c.latitude, c.longitude))
+    .map((c) => ({
+      id: (c.id as string).toLowerCase(),
+      name: c.name as string,
+      latitude: c.latitude as number,
+      longitude: c.longitude as number,
+      data_kind: c.data_kind === 'measured' ? 'measured' : 'modelled',
+      data_source: strOrNull(c.data_source),
+      station_data_available: c.station_data_available === true,
+      prediction_available: c.prediction_available === true,
+    }))
+}
+
 function parseHistory(v: unknown): HistoryPoint[] | null {
   if (!Array.isArray(v)) return null
   return v
@@ -76,7 +94,7 @@ export function parseStations(body: unknown): { stations: Station[]; dropped: nu
       pollutant: strOrNull(s.pollutant) ?? 'PM2.5',
       value: numOrNull(s.value),
       unit: strOrNull(s.unit) ?? 'µg/m³',
-      source_type: 'measured',
+      source_type: s.source_type === 'modelled' ? 'modelled' : 'measured',
       timestamp: strOrNull(s.timestamp),
       data_source: strOrNull(s.data_source),
       history: parseHistory(s.history),

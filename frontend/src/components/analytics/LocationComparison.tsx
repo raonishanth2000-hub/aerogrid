@@ -57,7 +57,7 @@ export function LocationComparison({ stations, range }: { stations: Station[]; r
       </fieldset>
 
       {!data || chosen.length === 0 ? (
-        <EmptyState compact title="Select stations to compare" message="Compare measured PM2.5 across stations over the same time window." />
+        <EmptyState compact title="Select stations to compare" message="Compare PM2.5 across stations over the same time window." />
       ) : (
         <>
           <div className="chart-box" style={{ height: 280 }}>

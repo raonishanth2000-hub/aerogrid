@@ -10,9 +10,9 @@ export APP_ENV=production
 export PORT=8000
 
 # Stop any lingering previous instances
-pkill -f "uvicorn backend.app.main:app" || true
+pkill -f "uvicorn aerogrid.api:app" || true
 
-nohup /opt/aerogrid/venv/bin/uvicorn backend.app.main:app \
+nohup /opt/aerogrid/venv/bin/uvicorn aerogrid.api:app \
   --host 0.0.0.0 \
   --port 8000 \
   --workers 2 \

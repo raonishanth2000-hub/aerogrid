@@ -5,6 +5,7 @@ import { useApp } from '../../app/appContext'
 import { config } from '../../config'
 import { formatConcentration, formatRelative, stationLabel } from '../../utils/formatters'
 import { extentOf, type BoundsTuple } from '../../utils/geo'
+import { KIND_ADJECTIVE, KIND_LABEL } from '../../utils/stationKind'
 import { bandKey } from '../../utils/pm25Bands'
 import { estimateIcon, stationIcon } from './markers'
 
@@ -80,7 +81,7 @@ export function AirQualityMap({ onMapReady, drawerInset, allowEstimates = true }
         stationList.map((s) => {
           const selected = selection?.kind === 'station' && selection.id === s.id
           if (!visible(s.value) && !selected) return null
-          const label = `${stationLabel(s)}, measured ${s.value === null ? 'value unavailable' : `${formatConcentration(s.value)} ${s.unit}`}`
+          const label = `${stationLabel(s)}, ${KIND_ADJECTIVE[s.source_type]} ${s.value === null ? 'value unavailable' : `${formatConcentration(s.value)} ${s.unit}`}`
           return (
             // react-leaflet doesn't update title/alt after creation, so the key includes the value.
             <Marker
@@ -95,7 +96,7 @@ export function AirQualityMap({ onMapReady, drawerInset, allowEstimates = true }
               <Tooltip direction="top" offset={[0, -12]}>
                 <strong>{stationLabel(s)}</strong>
                 <br />
-                Measured · {s.value === null ? 'unavailable' : `${formatConcentration(s.value)} ${s.unit}`}
+                {KIND_LABEL[s.source_type]} · {s.value === null ? 'unavailable' : `${formatConcentration(s.value)} ${s.unit}`}
                 <br />
                 <span className="tip-muted">{s.timestamp ? formatRelative(s.timestamp) : 'no timestamp'}</span>
               </Tooltip>

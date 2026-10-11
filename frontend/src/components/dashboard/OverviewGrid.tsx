@@ -4,6 +4,7 @@ import { useApp } from '../../app/appContext'
 import { config } from '../../config'
 import { formatConcentration, formatDateTime, formatRelative, formatShortDateTime, isStale, stationLabel } from '../../utils/formatters'
 import { cityAirSummary } from '../../utils/airSummary'
+import { KIND_ADJECTIVE } from '../../utils/stationKind'
 import { bandFor } from '../../utils/pm25Bands'
 import { toSeries, windowSeries } from '../../utils/series'
 import { ScaleBar } from '../common/ScaleBar'
@@ -13,7 +14,7 @@ import { BandDistribution } from './BandDistribution'
 import { MetricCard } from './MetricCard'
 
 export function OverviewGrid() {
-  const { stations, stationList, estimates, selectedStation, selectedEstimate, latestObservation } = useApp()
+  const { stations, stationList, stationKind, estimates, selectedStation, selectedEstimate, latestObservation } = useApp()
   const loading = stations.status === 'loading' && !stations.data
   const unavailable = !stations.data && stations.status === 'error'
   const reporting = stationList.filter((s) => s.value !== null).length
@@ -36,7 +37,7 @@ export function OverviewGrid() {
     selUnit = 'µg/m³'
     selDesc = (
       <>
-        <SourceBadge kind="measured" /> median of {summary.count} stations
+        <SourceBadge kind={stationKind} /> median of {summary.count} stations
       </>
     )
     selBadges = <ModeBadge mode={stations.data?.mode} />
@@ -47,7 +48,7 @@ export function OverviewGrid() {
     selUnit = selValue !== null ? selectedStation.unit : undefined
     selDesc = (
       <>
-        <SourceBadge kind="measured" /> {stationLabel(selectedStation)}
+        <SourceBadge kind={selectedStation.source_type} /> {stationLabel(selectedStation)}
       </>
     )
     selBadges = <ModeBadge mode={stations.data?.mode} />
@@ -97,7 +98,7 @@ export function OverviewGrid() {
         visual={<ScaleBar value={selValue} />}
         description={selDesc}
         badges={selBadges}
-        info="With nothing selected: the median of the latest measured station readings. Otherwise the selected station (measured) or map point (model estimate). Bands use CPCB 24-hour breakpoints and are indicative for shorter averaging periods."
+        info={`With nothing selected: the median of the latest ${KIND_ADJECTIVE[stationKind]} station values. Otherwise the selected station (measured) or map point (model estimate). Bands use CPCB 24-hour breakpoints and are indicative for shorter averaging periods.`}
       />
       <MetricCard
         icon={RadioTower}
@@ -107,7 +108,7 @@ export function OverviewGrid() {
         visual={<BandDistribution stations={stationList} />}
         description={unavailable ? 'Station data unavailable' : `${reporting} reporting · ${stationList.length - reporting} no data`}
         badges={<ModeBadge mode={stations.data?.mode} />}
-        info="Stations returned by the API with valid coordinates. The bar shows how their latest measured readings fall across concentration bands."
+        info="Stations returned by the API with valid coordinates. The bar shows how their latest values fall across concentration bands."
       />
       <MetricCard
         icon={Diamond}

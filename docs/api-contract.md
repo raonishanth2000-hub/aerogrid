@@ -1,88 +1,83 @@
-# AeroGrid REST API Contract Specifications
+# AeroGrid API contract
 
-All endpoints are versioned under `/api/v1` and mirrored under `/api` for backward compatibility. Responses include `X-Request-ID` tracing headers.
+Served by `aerogrid/api.py` (`uvicorn aerogrid.api:app --port 8000`). All endpoints are `GET` unless
+noted, return JSON, and allow CORS. Interactive docs: `http://localhost:8000/docs`.
+Only PM2.5 is supported; any `pollutant=pm10` request returns `404` with the reason it was removed.
 
----
+Every endpoint below takes an optional `city` (e.g. `?city=bengaluru`). Without it, the default city
+is used (`AEROGRID_CITY`, Delhi). An unknown city returns `404`.
 
-## 1. System Endpoints
-
-### `GET /api/v1/health`
-Returns system health, readiness, active data modes, and deployment metadata. Zero secrets exposed.
-- **Status Codes**: `200 OK`
-- **Response**:
+## `GET /api/cities`
 ```json
 {
-  "status": "ok",
-  "app_name": "AeroGrid",
-  "app_version": "1.0.0",
-  "environment": "production",
-  "data_mode": "demo",
-  "data_provider_health": "healthy",
-  "ml_connected": true,
-  "appconfig_connected": false,
-  "database_connected": true,
-  "deployment": {
-    "image_tag": "latest",
-    "commit_hash": "a1b2c3d",
-    "build_id": "build-42",
-    "pipeline_stage": "production"
-  }
+  "cities": [{
+    "id": "bengaluru", "name": "Bengaluru", "latitude": 12.9716, "longitude": 77.5946,
+    "data_kind": "measured", "data_source": "OpenAQ (CPCB / KSPCB sensors)",
+    "model_available": true, "station_data_available": true, "prediction_available": true
+  }]
+}
+```
+Each city has its own station dataset and model. The website's city selector is built from this list.
+
+## `GET /api/health`
+```json
+{ "status": "ok", "model_available": true, "station_data_available": true, "prediction_available": true }
+```
+`status` is `"ok"` only when all three components are available, otherwise `"degraded"`.
+
+## `GET /api/stations?pollutant=pm25&history_days=30`
+Latest value per station from the city's dataset, with up to 90 days of history.
+Rows dated after the current time (forecasts) are excluded. Returns `503` if the dataset is missing.
+```json
+{
+  "stations": [{
+    "id": "delhi_anand_vihar", "name": "Anand Vihar, Delhi",
+    "latitude": 28.6476, "longitude": 77.3158,
+    "pollutant": "PM2.5", "value": 87.8, "unit": "µg/m³",
+    "source_type": "modelled",
+    "timestamp": "2026-10-11T14:00:00+00:00",
+    "data_source": "CAMS model (Copernicus) via Open-Meteo",
+    "history": [{ "timestamp": "…", "value": 84.5 }]
+  }]
+}
+```
+`source_type` is `"measured"` for sensor data (Bengaluru) or `"modelled"` for model output such as
+CAMS (Delhi). It comes from the city's `data_kind` in `aerogrid/config.py`, because the dataset itself
+has no provenance column.
+
+## `GET /api/predict?lat={lat}&lon={lon}[&city=id][&timestamp=ISO]`
+An AeroGrid model estimate, never a measurement. Without `timestamp`, it is for the latest hour with
+station data (the current hour for live data; 31 Dec 2025 for Bengaluru). That hour is returned as
+`observation_timestamp`. `422` for invalid coordinates or points more than
+(search radius + 15 km) from the study-area centre; `503` if the prediction pipeline is unavailable.
+```json
+{
+  "location": { "name": null, "latitude": 28.61, "longitude": 77.21 },
+  "pollutant": "PM2.5", "value": 72.4, "unit": "µg/m³",
+  "source_type": "estimated",
+  "timestamp": "2026-10-11T16:20:00+00:00",
+  "uncertainty": { "lower": 61.2, "upper": 86.0, "confidence_level": 0.9 },
+  "model_version": "pm25-hgb-2026-10-11",
+  "observation_timestamp": "2026-10-11T16:00:00+00:00"
+}
+```
+`uncertainty` is an empirical 90% interval calibrated on held-out stations (see
+[model-evaluation.md](model-evaluation.md)); it is `null` when no calibration has been published.
+
+## `GET /api/metrics?pollutant=pm25`
+Station-held-out cross-validation from `models/pm25_validation.json` when present (otherwise the
+single split recorded at training time).
+```json
+{
+  "model_name": "AeroGrid model (gradient boosting)", "model_version": "pm25-hgb-…",
+  "evaluation_method": "grouped 5-fold spatial cross-validation (every station held out once); 38 stations",
+  "sample_count": 7068, "mae": 3.00, "rmse": 9.42, "bias": -1.16, "r2": 0.891,
+  "evaluated_at": "…", "training_period": "2026-10-07 – 2026-10-11",
+  "baselines": [{ "method": "Nearest station", "mae": 1.44, "rmse": 8.19, "bias": 1.23, "r2": 0.918 }],
+  "held_out_predictions": [{ "station_id": "…", "station_name": "…", "actual": 87.8, "predicted": 85.1 }]
 }
 ```
 
-### `GET /api/v1/health/readiness`
-Deep dependency readiness probe used by AWS CodeDeploy and ALB target groups.
-- **Status Codes**: `200 OK` (Ready), `503 Service Unavailable` (Dependency failure)
-
-### `GET /api/v1/meta`
-Public application metadata, CPCB regulatory standards, and supported geographic regions.
-
----
-
-## 2. Stations & Telemetry
-
-### `GET /api/v1/stations`
-Retrieve monitoring station directory with optional filtering and pagination.
-- **Query Parameters**:
-  - `city` (string, default: "Delhi"): Monitoring region
-  - `q` (string, optional): Substring search on station name
-  - `pollutant` (string, optional): Specific pollutant filter (e.g. "PM2.5")
-  - `is_stale` (boolean, optional): Filter by observation age (>3 hours)
-  - `limit` (integer, default: 50): Number of stations per page
-  - `offset` (integer, default: 0): Page offset
-- **Status Codes**: `200 OK`
-
-### `GET /api/v1/stations/{id}/readings`
-Historical observation time-series and sensor data provenance.
-- **Status Codes**: `200 OK`, `404 Not Found`
-
----
-
-## 3. Spatial ML & Metrics
-
-### `GET /api/v1/predict`
-Executes Spatial Random Forest spatial interpolation with calibrated 95% confidence bounds.
-- **Query Parameters**:
-  - `latitude` (float, required): -90.0 to 90.0
-  - `longitude` (float, required): -180.0 to 180.0
-  - `pollutant` (string, default: "PM2.5")
-- **Status Codes**: `200 OK`, `422 Unprocessable Content` (out-of-bounds coordinates)
-
-### `GET /api/v1/metrics`
-Genuine 5-Fold Spatial Station Cross-Validation benchmark metrics and baseline comparisons (IDW, Nearest Station).
-- **Status Codes**: `200 OK`
-
-### `GET /api/v1/coverage`
-Spatial monitoring coverage gaps, unmonitored zones, and ranked candidate coordinates.
-- **Status Codes**: `200 OK`
-
----
-
-## 4. Standard Error Codes
-
-| Error Code | HTTP Status | Meaning |
-| :--- | :--- | :--- |
-| `NOT_FOUND` | 404 | Station or resource does not exist |
-| `VALIDATION_ERROR` | 422 | Out-of-bounds coordinates or invalid parameters |
-| `PROVIDER_UNAVAILABLE`| 503 | Underlying ML model or data provider is unconfigured |
-| `INTERNAL_ERROR` | 500 | Unhandled server exception |
+## Kept for other clients
+- `POST /api/predict` with `{ "latitude", "longitude", "pollutant", "timestamp" }`: original response shape.
+- `GET /api/metrics/{pollutant}`: the raw training-time metrics file.

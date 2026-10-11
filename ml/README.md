@@ -1,3 +1,14 @@
+> **Experimental — not used by the AeroGrid API or website.** The served model is built by the
+> `aerogrid/` package (`python -m aerogrid.train`, validated with `python -m aerogrid.experiments`).
+>
+> Known issues with this folder:
+> - It does not run: `ml/geo.py` imports `backend.app.config` (the `backend/` package was never
+>   committed) and `ml/evaluate.py` imports a `build_dataset` function that does not exist.
+> - The metrics in `ml/artifacts/metrics.json` (R² 0.95) were computed on the Delhi dataset, which is
+>   CAMS model output from Open-Meteo, not sensor measurements. Nearest-station copying scores
+>   almost the same there because stations share CAMS grid cells, so these numbers say how well a
+>   model interpolates the CAMS field, not real-world accuracy.
+
 # AeroGrid ML System: Spatial Air-Quality Interpolation
 
 ## 1. Problem Formulation

@@ -2,6 +2,7 @@ import { X } from 'lucide-react'
 import { useEffect, useRef } from 'react'
 import type { RouteId } from '../../app/navigation'
 import { Brand } from './Brand'
+import { DataSourceSwitch } from './DataSourceSwitch'
 import { NavList } from './NavList'
 
 interface MobileNavigationProps {
@@ -35,6 +36,10 @@ export function MobileNavigation({ open, route, onClose }: MobileNavigationProps
         <nav aria-label="Main navigation">
           <NavList route={route} onNavigate={onClose} />
         </nav>
+        <div className="mobile-nav-source">
+          <p className="nav-group-label">Data source</p>
+          <DataSourceSwitch />
+        </div>
       </div>
     </div>
   )

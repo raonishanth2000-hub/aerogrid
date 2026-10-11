@@ -3,7 +3,7 @@ const STEPS = [
   { title: 'Preprocessing', text: 'Clean records, remove invalid readings, align timestamps and attach features to each observation.' },
   { title: 'Baselines', text: 'Establish simple reference methods — nearest station and inverse-distance weighting — to beat.' },
   { title: 'Training', text: 'Fit the machine-learning model on observations from the training stations.' },
-  { title: 'Evaluation', text: 'Predict at held-out stations and compare with what they measured (MAE, RMSE, bias).' },
+  { title: 'Evaluation', text: 'Predict at held-out stations and compare with their actual values (MAE, RMSE, bias).' },
   { title: 'Prediction', text: 'Serve estimates for arbitrary coordinates through the API, labelled as model output.' },
 ]
 

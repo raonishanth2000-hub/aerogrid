@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import os
+from dataclasses import dataclass
 from pathlib import Path
 from dotenv import load_dotenv
 
@@ -14,9 +15,62 @@ DATA_DIR.mkdir(exist_ok=True)
 MODEL_DIR.mkdir(exist_ok=True)
 
 OPENAQ_API_KEY = os.getenv("OPENAQ_API_KEY", "").strip()
-CENTER_LAT = float(os.getenv("CENTER_LAT", "12.9716"))
-CENTER_LON = float(os.getenv("CENTER_LON", "77.5946"))
+
+
+@dataclass(frozen=True)
+class City:
+    """A study area with its own station dataset and trained model."""
+
+    id: str
+    name: str
+    latitude: float
+    longitude: float
+    dataset_path: Path
+    model_dir: Path
+    # "measured" for sensor readings, "modelled" for model output such as CAMS.
+    data_kind: str
+    data_source: str
+    # Suffix for per-city files written to data/ (held-out predictions, experiment reports).
+    file_suffix: str = ""
+
+
+# Delhi keeps the original file locations, so the AWS/SageMaker scripts work unchanged.
+CITIES: dict[str, City] = {
+    "delhi": City(
+        "delhi", "Delhi", 28.6139, 77.2090,
+        dataset_path=DATA_DIR / "training_dataset.csv",
+        model_dir=MODEL_DIR,
+        # Collected by data/ingest.py from Open-Meteo, which serves the CAMS atmospheric model.
+        data_kind="modelled",
+        data_source="CAMS model (Copernicus) via Open-Meteo",
+    ),
+    "bengaluru": City(
+        "bengaluru", "Bengaluru", 12.9716, 77.5946,
+        dataset_path=DATA_DIR / "bengaluru_openaq_2025.csv",
+        model_dir=MODEL_DIR / "bengaluru",
+        data_kind="measured",
+        data_source="OpenAQ (CPCB / KSPCB sensors)",
+        file_suffix="_bengaluru",
+    ),
+}
+DEFAULT_CITY_ID = os.getenv("AEROGRID_CITY", "delhi").strip().lower()
+if DEFAULT_CITY_ID not in CITIES:
+    raise ValueError(f"AEROGRID_CITY must be one of {sorted(CITIES)}, not {DEFAULT_CITY_ID!r}.")
+
+
+def get_city(city_id: str | None = None) -> City:
+    """The city with this id, or the default city (AEROGRID_CITY) when None."""
+    key = (city_id or DEFAULT_CITY_ID).strip().lower()
+    if key not in CITIES:
+        raise KeyError(f"Unknown city {city_id!r}. Available: {', '.join(sorted(CITIES))}.")
+    return CITIES[key]
+
+
+# Study-area centre used by fetch_data and as the default for the features (the default city's).
+CENTER_LAT = float(os.getenv("CENTER_LAT", str(CITIES[DEFAULT_CITY_ID].latitude)))
+CENTER_LON = float(os.getenv("CENTER_LON", str(CITIES[DEFAULT_CITY_ID].longitude)))
 SEARCH_RADIUS_M = min(int(os.getenv("SEARCH_RADIUS_M", "25000")), 25000)
+
 LOCAL_TIMEZONE = os.getenv("LOCAL_TIMEZONE", "Asia/Kolkata")
 
 # AWS Configuration (Amazon S3 and Amazon SageMaker AI)

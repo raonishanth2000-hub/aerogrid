@@ -1,0 +1,10 @@
+.venv
+.venv.nosync
+frontend
+.git
+**/__pycache__
+data/scratch
+reports
+ml
+docs
+.env

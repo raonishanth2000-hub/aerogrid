@@ -15,7 +15,7 @@ def handler(event, context):
     deployment_id = event.get("DeploymentId")
     lifecycle_event_hook_execution_id = event.get("LifecycleEventHookExecutionId")
     
-    test_endpoint = os.getenv("TEST_HEALTH_ENDPOINT", "http://localhost:8080/api/v1/health")
+    test_endpoint = os.getenv("TEST_HEALTH_ENDPOINT", "http://localhost:8080/api/health")
     status = "Failed"
 
     print(f"Beginning CodeDeploy lifecycle hook validation for Deployment: {deployment_id}")

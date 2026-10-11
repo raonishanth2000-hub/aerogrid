@@ -17,14 +17,14 @@ phases:
       - echo "=== [AWS CodeBuild] Step 1: Installing Runtime Dependencies ==="
       - python --version
       - python -m pip install --upgrade pip
-      - pip install -r backend/requirements.txt pytest-cov ruff
+      - pip install -r requirements-dev.txt
       - echo "Dependencies successfully installed."
 
   pre_build:
     commands:
       - echo "=== [AWS CodeBuild] Step 2: Pre-Build Quality Gates & Linting ==="
-      - python -m compileall backend/app backend/tests
-      - ruff check backend/app || echo "Ruff linting completed with warnings (non-fatal)"
+      - python -m compileall aerogrid tests
+      - ruff check aerogrid || echo "Ruff linting completed with warnings (non-fatal)"
       - echo "=== [AWS CodeBuild] Setting up ECR Authentication ==="
       - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
       - export IMAGE_TAG=${COMMIT_HASH:=latest}
@@ -42,9 +42,9 @@ phases:
     commands:
       - echo "=== [AWS CodeBuild] Step 3: Executing Automated Backend Test Suite ==="
       - mkdir -p reports
-      - pytest backend/tests --junitxml=reports/test-results.xml --cov=backend/app --cov-report=xml:reports/coverage.xml --cov-report=term-missing
+      - pytest tests --junitxml=reports/test-results.xml --cov=aerogrid --cov-report=xml:reports/coverage.xml --cov-report=term-missing
       - echo "=== [AWS CodeBuild] Step 4: Building Backend Container Image ==="
-      - docker build -t $REPOSITORY_URI:latest -t $REPOSITORY_URI:$IMAGE_TAG -f backend/Dockerfile .
+      - docker build -t $REPOSITORY_URI:latest -t $REPOSITORY_URI:$IMAGE_TAG -f Dockerfile .
 
   post_build:
     commands:

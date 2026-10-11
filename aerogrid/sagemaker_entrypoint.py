@@ -25,7 +25,7 @@ from aerogrid.train import train
 
 def parse_args():
     parser = argparse.ArgumentParser(description="SageMaker Training Entry Point for AeroGrid")
-    parser.add_argument("--pollutant", type=str, default="pm25", choices=["pm25", "pm10"])
+    parser.add_argument("--pollutant", type=str, default="pm25", choices=["pm25"])
 
     # SageMaker standard environment variables
     parser.add_argument(

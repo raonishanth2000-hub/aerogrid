@@ -4,7 +4,7 @@ set -e
 echo "=== [CodeDeploy Hook: ValidateService] Performing Health Check ==="
 MAX_RETRIES=15
 WAIT_SECONDS=3
-ENDPOINT="http://localhost:8000/api/v1/health"
+ENDPOINT="http://localhost:8000/api/health"
 
 for i in $(seq 1 $MAX_RETRIES); do
     echo "Attempt $i/$MAX_RETRIES: Checking $ENDPOINT ..."

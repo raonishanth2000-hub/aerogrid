@@ -24,15 +24,17 @@ OPEN_METEO_AQ_URL = "https://air-quality-api.open-meteo.com/v1/air-quality"
 
 
 def create_ssl_context():
-    """Create SSL context with fallback for systems with missing local CA roots."""
+    """Create a verifying SSL context, using certifi's CA bundle when available.
+
+    Certificate verification is never disabled: an unverified connection would let anyone on
+    the network substitute data. If local CA roots are missing, install certifi
+    (`pip install certifi`) or run the macOS "Install Certificates.command".
+    """
     try:
         import certifi
         return ssl.create_default_context(cafile=certifi.where())
-    except Exception:
-        ctx = ssl.create_default_context()
-        ctx.check_hostname = False
-        ctx.verify_mode = ssl.CERT_NONE
-        return ctx
+    except ImportError:
+        return ssl.create_default_context()
 
 
 def validate_coordinates(lat: float, lon: float) -> bool:
@@ -120,7 +122,12 @@ def process_and_clean_observations(stations: List[Dict[str, Any]], raw_data_map:
                             "measurement_timestamp": iso_time,
                             "ingestion_timestamp": ingestion_ts,
                             "quality_flag": "VALID",
-                            "is_verified_measurement": True,
+                            # Open-Meteo's air-quality API serves CAMS model output (forecast and
+                            # analysis on a ~40 km grid), not readings from the station's sensor.
+                            "is_verified_measurement": False,
+                            "data_kind": "modelled",
+                            "model_source": "CAMS (Copernicus) via Open-Meteo air-quality API",
+                            "is_forecast": iso_time > ingestion_ts,
                             "source_name": station["source_name"],
                             "extra_pollutants": {
                                 "pm10": round(float(pm10_vals[idx]), 2) if idx < len(pm10_vals) and pm10_vals[idx] is not None else None,

@@ -4,7 +4,7 @@ export function ValidationExplanation() {
       <p>
         AeroGrid’s purpose is to estimate PM2.5 where there is no monitor, so it is evaluated the same way: whole monitoring
         stations are held out of training, the model predicts their values, and those predictions are compared with what the
-        stations actually measured. This estimates how well the model generalises to locations it has not seen.
+        stations actually recorded. This estimates how well the model generalises to locations it has not seen.
       </p>
       <h3 className="subhead">Limitations</h3>
       <ul>

@@ -1,4 +1,4 @@
-"""Train and evaluate a spatial/weather baseline for PM2.5 or PM10."""
+"""Train and evaluate a spatial/weather baseline for PM2.5."""
 from __future__ import annotations
 
 import argparse
@@ -16,8 +16,8 @@ from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 from sklearn.model_selection import GroupShuffleSplit, train_test_split
 from sklearn.pipeline import Pipeline
 
-from aerogrid.config import DATA_DIR, FEATURE_COLUMNS, LOCAL_TIMEZONE, MODEL_DIR
-from aerogrid.features import make_model_features
+from aerogrid.config import CITIES, DATA_DIR, FEATURE_COLUMNS, LOCAL_TIMEZONE, City, get_city
+from aerogrid.features import drop_future_rows, make_model_features
 
 
 def normalize_pollutant(value: str) -> str:
@@ -25,8 +25,8 @@ def normalize_pollutant(value: str) -> str:
     if compact in {"pm25", "pm2"}:
         return "pm25"
     if compact == "pm10":
-        return "pm10"
-    raise ValueError("Pollutant must be 'pm25' or 'pm10'.")
+        raise ValueError("PM10 has been removed: under station-held-out validation it was no better than predicting the typical value.")
+    raise ValueError("Pollutant must be 'pm25'.")
 
 
 def metrics(y_true: np.ndarray, y_pred: np.ndarray) -> dict[str, float]:
@@ -55,9 +55,11 @@ def make_model() -> Pipeline:
     ])
 
 
-def train(pollutant: str) -> dict:
+def train(pollutant: str, city: City | None = None) -> dict:
     pollutant = normalize_pollutant(pollutant)
-    dataset_path = DATA_DIR / "training_dataset.csv"
+    city = city or get_city()
+    center = (city.latitude, city.longitude)
+    dataset_path = city.dataset_path
     if not dataset_path.exists():
         raise FileNotFoundError(
             f"{dataset_path} was not found. First run: python -m aerogrid.fetch_data"
@@ -76,6 +78,7 @@ def train(pollutant: str) -> dict:
     frame = frame.dropna(subset=["timestamp_utc", "value_ugm3", "latitude", "longitude", "location_id"])
     frame = frame.replace([np.inf, -np.inf], np.nan)
     frame = frame.loc[frame["value_ugm3"] >= 0]
+    frame = drop_future_rows(frame)
 
     n_rows = len(frame)
     n_locations = int(frame["location_id"].nunique())
@@ -113,8 +116,8 @@ def train(pollutant: str) -> dict:
     test_frame = frame.iloc[test_idx].copy()
     # Critical for a fair station holdout: validation rows can only use readings
     # from training stations as neighbour features.
-    X_train = make_model_features(train_frame, train_frame, LOCAL_TIMEZONE)
-    X_test = make_model_features(test_frame, train_frame, LOCAL_TIMEZONE)
+    X_train = make_model_features(train_frame, train_frame, LOCAL_TIMEZONE, center)
+    X_test = make_model_features(test_frame, train_frame, LOCAL_TIMEZONE, center)
     evaluation_model = make_model()
     evaluation_model.fit(X_train, y[train_idx])
     test_pred = np.maximum(0, evaluation_model.predict(X_test))
@@ -128,6 +131,7 @@ def train(pollutant: str) -> dict:
     eval_metrics["evaluation_type"] = evaluation_type
     eval_metrics["spatially_validated"] = spatially_validated
     eval_metrics["pollutant"] = pollutant
+    eval_metrics["city"] = city.id
     eval_metrics["unit"] = "µg/m³"
     eval_metrics["data_start_utc"] = frame["timestamp_utc"].min().isoformat()
     eval_metrics["data_end_utc"] = frame["timestamp_utc"].max().isoformat()
@@ -138,29 +142,32 @@ def train(pollutant: str) -> dict:
     ]].copy()
     predictions["predicted_ugm3"] = test_pred
     predictions["absolute_error_ugm3"] = np.abs(predictions["predicted_ugm3"] - predictions["value_ugm3"])
-    predictions_path = DATA_DIR / f"holdout_predictions_{pollutant}.csv"
+    predictions_path = DATA_DIR / f"holdout_predictions_{pollutant}{city.file_suffix}.csv"
     predictions.to_csv(predictions_path, index=False)
 
     # Fit the model used by the app on all available observations after recording holdout metrics.
-    X_all = make_model_features(frame, frame, LOCAL_TIMEZONE)
+    X_all = make_model_features(frame, frame, LOCAL_TIMEZONE, center)
     final_model = make_model()
     final_model.fit(X_all, y)
     bundle = {
         "model": final_model,
         "feature_columns": FEATURE_COLUMNS,
         "pollutant": pollutant,
+        "city": city.id,
+        "center": center,
         "timezone": LOCAL_TIMEZONE,
         "metrics": eval_metrics,
         "training_median": float(np.median(y)),
         "trained_at_utc": datetime.now(timezone.utc).isoformat(),
         "training_data_path": str(dataset_path),
     }
-    model_path = MODEL_DIR / f"{pollutant}_model.joblib"
-    metrics_path = MODEL_DIR / f"{pollutant}_metrics.json"
+    city.model_dir.mkdir(parents=True, exist_ok=True)
+    model_path = city.model_dir / f"{pollutant}_model.joblib"
+    metrics_path = city.model_dir / f"{pollutant}_metrics.json"
     joblib.dump(bundle, model_path)
     metrics_path.write_text(json.dumps(eval_metrics, indent=2, allow_nan=True), encoding="utf-8")
 
-    print(f"\nTrained {pollutant.upper()} model.")
+    print(f"\nTrained {pollutant.upper()} model for {city.name}.")
     print(f"Rows: {n_rows:,} | independent locations: {n_locations}")
     print(f"Evaluation: {evaluation_type}")
     print(f"MAE: {eval_metrics['mae_ugm3']:.2f} µg/m³")
@@ -178,9 +185,10 @@ def train(pollutant: str) -> dict:
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--pollutant", choices=["pm25", "pm10"], default="pm25")
+    parser.add_argument("--pollutant", choices=["pm25"], default="pm25")
+    parser.add_argument("--city", choices=sorted(CITIES), default=None, help="Study area (default: AEROGRID_CITY or delhi)")
     args = parser.parse_args()
-    train(args.pollutant)
+    train(args.pollutant, get_city(args.city))
 
 
 if __name__ == "__main__":

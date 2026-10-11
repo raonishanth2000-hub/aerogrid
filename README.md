@@ -1,126 +1,170 @@
-# AeroGrid — Location-Aware Environmental Intelligence & Early Warning Platform
+# AeroGrid: hyperlocal PM2.5 estimation
 
-AeroGrid is an environmental intelligence system that fuses real-time reference ground sensors (CPCB/DPCC/IMD), spatial Machine Learning interpolation, dynamic AWS AppConfig feature flags, and zero-downtime AWS CI/CD pipelines.
+AeroGrid estimates PM2.5 at places without a monitoring station. It combines nearby station values,
+weather, road and time features in a gradient-boosting model. The project has three parts:
 
----
+- a FastAPI backend with the ML pipeline;
+- a React dashboard;
+- AWS deployment configuration.
 
-## Architecture & File Structure
+**Cities.** Each city has its own station data and model. Pick one with the city selector, or with
+`?city=` on the API.
+
+| City | Station data | Period |
+| --- | --- | --- |
+| Delhi (default) | CAMS model output for 38 station sites, labelled "Modelled" | live, last few days |
+| Bengaluru | Real OpenAQ sensor readings from 15 stations, labelled "Measured" | 2025 |
+
+See [docs/data-sources.md](docs/data-sources.md); it also explains how to add a city.
+
+**Delhi status (PM2.5).**
+
+On station-held-out cross-validation:
+
+| Method | MAE (µg/m³) |
+| --- | --- |
+| AeroGrid model | 3.00 |
+| Copying the nearest station | 1.44 |
+| IDW | 2.87 |
+
+On real Bengaluru sensor data the model is the best method: MAE 13.17, against 14.59 for IDW and
+17.36 for copying the nearest station.
+Full results are in [docs/model-evaluation.md](docs/model-evaluation.md). Estimates are labelled as
+estimates, and modelled station values as modelled.
+
+## Layout
 
 ```
-aerogrid/
-├── backend/
-│   ├── app/
-│   │   ├── main.py                  # FastAPI app entrypoint, CORS, Request-ID tracing, error handlers
-│   │   ├── config.py                # Pydantic Settings (env, storage mode, CORS, freshness)
-│   │   ├── schemas.py               # Typed Pydantic models with provenance and status tags
-│   │   ├── api/
-│   │   │   ├── health.py            # GET /api/v1/health (component readiness, zero secrets)
-│   │   │   ├── stations.py          # GET /api/v1/stations (filters, search, pagination)
-│   │   │   ├── readings.py          # GET /api/v1/stations/{id}/readings (history & provenance)
-│   │   │   ├── predict.py           # GET /api/v1/predict (spatial RF inference + 95% CI)
-│   │   │   ├── metrics.py           # GET /api/v1/metrics (genuine spatial CV evaluation)
-│   │   │   ├── coverage.py          # GET /api/v1/coverage (spatial network gaps & candidate sites)
-│   │   │   └── meta.py              # GET /api/v1/meta (public application metadata)
-│   │   ├── services/
-│   │   │   ├── data_service.py      # Station catalog, observation history, freshness tracking
-│   │   │   ├── prediction_service.py# Context feature orchestration, model inference, demo fallback
-│   │   │   ├── metrics_service.py   # Held-out benchmark metrics and pending state handler
-│   │   │   ├── coverage_service.py  # Spatial isolation scoring and candidate ranking
-│   │   │   └── storage_service.py   # Dual-backend storage abstraction (Local disk / Amazon S3)
-│   │   └── utils/
-│   │       ├── errors.py            # Custom HTTP exceptions and standard error formats
-│   │       └── validation.py        # Coordinate and pollutant validation helpers
-│   ├── tests/
-│   │   └── test_all_endpoints.py    # Pytest test suite covering all endpoints & edge cases
-│   ├── requirements.txt             # Python backend dependencies
-│   └── Dockerfile                   # Production container with non-root security & healthcheck
-├── ml/
-│   ├── train.py                     # Spatial Random Forest regressor training pipeline
-│   ├── evaluate.py                  # 5-Fold Spatial Station Cross-Validation evaluator
-│   ├── predict.py                   # Standalone inference engine with calibrated uncertainty bounds
-│   ├── requirements.txt             # ML pipeline dependencies
-│   ├── README.md                    # ML methodology, feature formulation & spatial CV guide
-│   └── artifacts/
-│       ├── model.joblib             # Serialized Spatial Random Forest model artifact
-│       ├── model_meta.json          # Model versioning, hyperparameter & feature metadata
-│       └── metrics.json             # Genuine evaluation benchmarks, baselines & residuals
-├── data/
-│   ├── stations.json                # 38 verified CAAQMS stations across Delhi NCR (CPCB/DPCC/IMD)
-│   ├── ingest.py                    # Real observation ingestion, deduplication & cleaning pipeline
-│   ├── README.md                    # Data provenance, quality flags, and units specification
-│   └── samples/
-│       ├── observations.json        # 6,878 verified observation records with full provenance
-│       └── raw_ingest.json          # Raw atmospheric ingestion payloads
-├── frontend/
-│   ├── src/
-│   │   ├── components/
-│   │   │   ├── Navbar.tsx           # Dark forest-green header, navigation, and live status pill
-│   │   │   ├── MapView.tsx          # Leaflet GIS map with OSM Carto tiles & point-click estimation
-│   │   │   ├── StationDetailDrawer.tsx # Slide-out drawer with telemetry & Recharts time series
-│   │   │   ├── PredictionCard.tsx   # Floating inspector showing estimate, 95% CI & baselines
-│   │   │   └── StatusBadge.tsx      # Badges for measured, estimated, stale, unavailable, demo
-│   │   ├── pages/
-│   │   │   ├── Overview.tsx         # City KPIs, reference station summary, model readiness
-│   │   │   ├── ExploreMap.tsx       # Interactive GIS workspace, station search, and point predictor
-│   │   │   ├── ModelLab.tsx         # Model vs IDW vs Nearest baselines, error charts & residuals
-│   │   │   ├── MonitoringCoverage.tsx# Spatial extent, candidate sites & ranking rationale
-│   │   │   └── About.tsx            # Mission, data providers, and measured vs estimated guide
-│   │   ├── services/api.ts          # Typed API client with error handling
-│   │   ├── types/index.ts           # Domain models for stations, readings, predictions, metrics
-│   │   ├── App.tsx                  # Root component orchestrating state and view tabs
-│   │   ├── main.tsx                 # React DOM mount point
-│   │   └── index.css                # Tailwind directives and Leaflet custom styling
-│   ├── package.json                 # React, Vite, Leaflet, Recharts, Lucide, Tailwind
-│   ├── vite.config.ts               # Vite bundler with API proxy to port 8000
-│   ├── tsconfig.json                # TypeScript compiler configuration
-│   └── tailwind.config.js           # Forest-green, teal, and sage styling palette
-├── docs/
-│   ├── architecture.md              # Architectural blueprint with Mermaid diagrams
-│   ├── api-contract.md              # Complete REST endpoint specifications & error codes
-│   ├── data-sources.md              # Data sources provenance & cleaning standards
-│   ├── aws-deployment.md            # AWS S3 integration, App Runner deployment & IAM policies
-│   ├── model-evaluation.md          # Spatial cross-validation benchmarks & uncertainty calibration
-│   └── demo-script.md               # Concise judge-facing walkthrough script
-├── docker-compose.yml               # Multi-container orchestration (backend + frontend)
-├── .env.example                     # Environment template with placeholders only
-├── .gitignore                       # Protection against secrets, venv, node_modules, and caches
-└── README.md                        # Project overview, quick-start guide, and benchmark tables
+aerogrid/            Python package: API (api.py), data fetch, features, road features (geo.py),
+                     training (train.py), spatial cross-validation (experiments.py), prediction, AWS helpers
+models/              Trained model, training metrics, cross-validation results (pm25_validation.json)
+  bengaluru/         Bengaluru model and results (real sensor data)
+data/                training_dataset.csv (Delhi CAMS), bengaluru_openaq_2025.csv (real sensors),
+                     stations.json, ingest.py (Open-Meteo ingestion)
+frontend/            React + TypeScript + Vite dashboard (see frontend/README.md)
+tests/               pytest suite for the API and helpers
+ml/                  Experimental pipeline from a teammate; not used and does not run (see ml/README.md)
+aws/, buildspec*.yml, appspec*.yaml, taskdef.json   CodeBuild / CodeDeploy / ECS configuration
+docs/                API contract, data sources, model evaluation, deployment (see docs/README.md)
 ```
 
----
+## Run locally
 
-## Model Benchmark Tables (5-Fold Spatial CV)
+Backend (Python 3.12+):
 
-| Model Architecture | MAE (µg/m³) | RMSE (µg/m³) | R² Score | Spatial Bias |
-| :--- | :--- | :--- | :--- | :--- |
-| **AeroGrid Spatial Random Forest** | **1.42** | **7.29** | **0.951** | **+0.82** |
-| Nearest Station Baseline | 1.21 | 7.24 | 0.948 | +1.07 |
-| Inverse Distance Weighting (IDW) | 5.69 | 9.62 | 0.884 | -1.02 |
-
----
-
-## Quick-Start Guide
-
-### 1. Run with Docker Compose
 ```bash
-docker-compose up --build
+python3 -m venv .venv
+.venv/bin/pip install -r requirements-dev.txt
+.venv/bin/uvicorn aerogrid.api:app --port 8000
 ```
-- Frontend UI: `http://localhost:5173`
-- Backend API Docs: `http://localhost:8000/docs`
 
-### 2. Run Locally (Python 3.12+ & Node.js)
+Frontend, in a second terminal:
+
 ```bash
-# Backend
-pip install -r backend/requirements.txt
-uvicorn backend.app.main:app --reload --port 8000
-
-# Frontend
-cd frontend
-npm install
-npm run dev
+cd frontend && npm install && npm run dev
 ```
 
-### 3. Run Automated CI Test Suite
+Open http://localhost:5173 and pick **AeroGrid model** in the top bar.
+- **Demo data** shows clearly labelled sample data, with no backend needed.
+- **AeroGrid model** uses the live backend.
+
+Or run both with Docker: `docker compose up --build`. This serves the frontend on port 5173 and the
+API on port 8000.
+
+`scikit-learn` is pinned to 1.6.1 because the saved model only loads with that version.
+
+## API
+
+| Endpoint | Purpose |
+| --- | --- |
+| `GET /api/cities` | Cities served, each with its data kind and whether its model is available |
+| `GET /api/health` | `ok`, or `degraded` with the missing component |
+| `GET /api/stations` | Latest value and history per station, labelled `measured` or `modelled`; forecasts excluded |
+| `GET /api/predict?lat=&lon=` | Model estimate with a calibrated 90% interval; `422` outside the study area |
+| `GET /api/metrics` | Station-held-out cross-validation with baselines |
+
+All endpoints take an optional `?city=` (default `delhi`). Details: [docs/api-contract.md](docs/api-contract.md). Only PM2.5 is supported: PM10 was evaluated,
+no model beat a constant, and it was removed.
+
+## Train and validate
+
 ```bash
-pytest backend/tests
+cp .env.example .env                                           # settings; never commit .env
+python -m aerogrid.fetch_data --start 2025-01-01 --end 2025-12-31   # real sensors via OpenAQ (needs OPENAQ_API_KEY)
+python -m aerogrid.train                                       # trains models/pm25_model.joblib
+python -m aerogrid.experiments --publish                       # spatial CV, baselines, 90% interval
+python -m aerogrid.experiments --save-best                     # replace the model only if a variant beats everything
+python -m aerogrid.train --city bengaluru                      # any command takes --city (default: AEROGRID_CITY or delhi)
+python -m aerogrid.predict --lat 28.61 --lon 77.21 --datetime 2026-10-11T14:00
 ```
+
+Set `GEO_OFFLINE=1` to skip slow OpenStreetMap road lookups and use only the cache.
+
+## Tests
+
+```bash
+.venv/bin/pytest                                       # backend
+cd frontend && npm run typecheck && npm run lint && npm test && npm run build
+```
+
+## Limitations
+
+- Delhi values are CAMS model output on a grid of about 40 km. Validation on them shows agreement
+  with CAMS, not real-world accuracy.
+- With real sensors (Bengaluru), the model beats IDW by about 10%, and its 90% range is wide. Its estimates are rough guidance,
+  not official readings or health advice.
+- Each prediction calls Open-Meteo for weather, so the backend needs internet access.
+
+## Amazon Web Services (AWS) Integration
+
+AeroGrid includes native AWS support for cloud storage and managed model training:
+
+### 1. Configure AWS Credentials in `.env`
+```env
+AWS_ACCESS_KEY_ID=your_access_key
+AWS_SECRET_ACCESS_KEY=your_secret_key
+AWS_DEFAULT_REGION=ap-south-1
+S3_BUCKET_NAME=your-aerogrid-s3-bucket
+SAGEMAKER_ROLE_ARN=arn:aws:iam::123456789012:role/AeroGridSageMakerExecutionRole
+```
+
+### 2. AWS IAM Management (Verify, Setup Role & Policies)
+- **Verify active IAM credentials, Account ID & permissions:**
+  ```bash
+  python -m aerogrid.aws iam-verify
+  ```
+- **Automatically create or verify the SageMaker Execution Role:**
+  ```bash
+  python -m aerogrid.aws iam-setup-role
+  ```
+  *(Creates `AeroGridSageMakerExecutionRole`, attaches SageMaker trust relationship, managed execution policy, and S3 bucket access).*
+- **Print copy-pasteable least-privilege IAM JSON policies:**
+  ```bash
+  python -m aerogrid.aws iam-policies
+  ```
+
+### 3. Amazon S3 Data & Model Syncing
+- **Upload datasets to S3:**
+  ```bash
+  python -m aerogrid.aws s3-upload-data
+  ```
+- **Upload trained models to S3:**
+  ```bash
+  python -m aerogrid.aws s3-upload-models
+  ```
+- **Download models from S3:**
+  ```bash
+  python -m aerogrid.aws s3-download-models
+  ```
+
+### 4. Amazon SageMaker AI Cloud Training
+Train on managed AWS compute instances without local hardware load:
+- **Submit training job:**
+  ```bash
+  python -m aerogrid.aws sagemaker-train --pollutant pm25 --instance-type ml.m5.large
+  ```
+- **Check job status:**
+  ```bash
+  python -m aerogrid.aws sagemaker-status --job-name <job_name>
+  ```
+The training job automatically packages code, reads datasets from S3, trains the model in an official AWS Scikit-learn container, and unpacks the resulting model into `models/`.

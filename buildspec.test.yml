@@ -12,19 +12,19 @@ phases:
     commands:
       - echo "=== [AWS CodeBuild PR-Gate] Installing Test Dependencies ==="
       - python -m pip install --upgrade pip
-      - pip install -r backend/requirements.txt pytest-cov ruff
+      - pip install -r requirements-dev.txt
 
   pre_build:
     commands:
       - echo "=== [AWS CodeBuild PR-Gate] Python Syntax & Lint Verification ==="
-      - python -m compileall backend/app backend/tests
-      - ruff check backend/app || true
+      - python -m compileall aerogrid tests
+      - ruff check aerogrid || true
 
   build:
     commands:
       - echo "=== [AWS CodeBuild PR-Gate] Running Pytest Suite ==="
       - mkdir -p reports
-      - pytest backend/tests --junitxml=reports/test-results.xml --cov=backend/app --cov-report=xml:reports/coverage.xml --cov-report=term
+      - pytest tests --junitxml=reports/test-results.xml --cov=aerogrid --cov-report=xml:reports/coverage.xml --cov-report=term
 
 reports:
   pr-test-reports:

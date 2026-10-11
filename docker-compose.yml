@@ -1,34 +1,26 @@
-version: '3.8'
-
 services:
   backend:
     build:
       context: .
-      dockerfile: backend/Dockerfile
+      dockerfile: Dockerfile
     container_name: aerogrid-backend
     ports:
       - "8000:8000"
     environment:
-      - APP_ENV=production
-      - DATA_MODE=demo
-      - ML_PROVIDER=unavailable
-      - STORAGE_PROVIDER=local
-      - AWS_REGION=ap-south-1
-      - DB_PATH=/app/backend/aerogrid.sqlite3
-    volumes:
-      - ./backend_data:/app/backend/data_storage
+      # Default city when a request has no ?city= (see GET /api/cities).
+      - AEROGRID_CITY=delhi
     restart: unless-stopped
 
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+      args:
+        VITE_DATA_MODE: api
+        VITE_API_BASE_URL: http://localhost:8000
     container_name: aerogrid-frontend
     ports:
       - "5173:80"
-    environment:
-      - VITE_DATA_MODE=api
-      - VITE_API_BASE_URL=http://localhost:8000
     depends_on:
       - backend
     restart: unless-stopped

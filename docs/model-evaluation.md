@@ -1,31 +1,85 @@
-# AeroGrid Model Evaluation & Spatial Cross-Validation
+# Model evaluation
 
-## 1. Evaluation Methodology
+Reproduce with:
 
-Standard random train/test splits overestimate spatial interpolation accuracy due to spatial autocorrelation between adjacent stations. AeroGrid implements **5-Fold Spatial Station Leave-Out Cross-Validation**:
-- Entire physical monitoring stations are held out during training.
-- The model must interpolate unseen locations using regional atmospheric context and distant ground truth.
+```bash
+GEO_OFFLINE=1 python -m aerogrid.experiments --pollutant pm25 --publish
+```
 
----
+## Method
 
-## 2. Benchmark Comparisons
+**Grouped 5-fold spatial cross-validation.** Every station is held out once, so the model is always
+scored on stations it never saw. A random row split would leak each station's own history into
+training and overstate accuracy.
 
-Evaluated across 6,878 verified ground observations:
+**Baselines.** Each model is compared on the same folds with three simple methods:
+- the training median, a constant;
+- copying the nearest station;
+- inverse-distance weighting (IDW) of the other stations.
 
-| Model Architecture | MAE (µg/m³) | RMSE (µg/m³) | R² Score | Spatial Bias |
-| :--- | :--- | :--- | :--- | :--- |
-| **AeroGrid Spatial Random Forest** | **1.42** | **7.29** | **0.951** | **+0.82** |
-| Nearest Station Baseline | 1.21 | 7.24 | 0.948 | +1.07 |
-| Inverse Distance Weighting (IDW) | 5.69 | 9.62 | 0.884 | -1.02 |
+**Saving rule.** `--save-best` replaces `models/pm25_model.joblib` only when the candidate beats both
+the current model and every baseline.
 
----
+**Published file.** `--publish` writes `models/pm25_validation.json`, which `/api/metrics` and the
+Model Performance page read.
 
-## 3. Calibrated Uncertainty Intervals
+## Current results: Delhi, CAMS model data
 
-AeroGrid provides honest 95% confidence intervals rather than point estimates:
-$$\text{Margin} = 1.96 \times \sigma_{\text{residual}} \times \left(1.0 + 0.05 \times d_{\text{nearest}}\right)$$
+38 stations, 7,068 station-hours, 4–11 Oct 2026, PM2.5 in µg/m³. Rows dated in the future (forecasts) are
+excluded.
 
-Where:
-- $\sigma_{\text{residual}} \approx 7.5\ \mu\text{g/m}^3$ calibrated standard residual error.
-- $d_{\text{nearest}}$ is the distance in kilometers to the closest active monitoring sensor.
-- When distant from physical ground truth (>25 km), the uncertainty bound expands defensively to signal degraded confidence to urban planners.
+| Method | MAE | RMSE | Bias | R² |
+| --- | --- | --- | --- | --- |
+| Nearest station (baseline) | **1.44** | 8.19 | +1.23 | 0.918 |
+| IDW interpolation (baseline) | 2.87 | **7.33** | −0.19 | **0.934** |
+| AeroGrid model (gradient boosting) | 3.00 | 9.42 | −1.16 | 0.891 |
+| Training median (baseline) | 22.10 | 29.53 | −7.30 | −0.070 |
+
+Other variants tried on the same folds, by MAE:
+- residual on nearest station: 2.39
+- without location identity: 3.24
+- residual on IDW: 3.48
+
+None beat the nearest-station baseline, so no new model was saved.
+
+**Why the model doesn't beat nearest station.** The target is CAMS model output on a grid of about
+40 km. Neighbouring "stations" usually sit in the same grid cell and get identical values: there are
+only 2–3 distinct values per hour across all 38 stations. Copying the nearest station is therefore
+almost exact. These numbers measure how well AeroGrid reproduces the CAMS field, not how accurate
+it is against real air. The website shows this caveat on the Model Performance page.
+
+## Uncertainty interval
+
+Estimates carry an empirical 90% interval. It is calibrated from the out-of-fold ratio of actual
+to predicted values, using the 5th and 95th percentiles:
+- lower bound = 0.965 × estimate
+- upper bound = 1.156 × estimate
+- held-out coverage: 90.0%
+
+When no calibration has been published, `uncertainty` is `null`; the API never invents a range.
+
+## Bengaluru, real sensors (OpenAQ)
+
+15 stations, 70,500 station-hours, 2025. Artefacts are in `models/bengaluru/`, served as `?city=bengaluru`.
+Reproduce with `python -m aerogrid.experiments --city bengaluru --publish`.
+
+| Method | MAE | RMSE | Bias | R² |
+| --- | --- | --- | --- | --- |
+| AeroGrid model | **13.17** | **26.05** | −3.05 | **0.068** |
+| IDW interpolation | 14.59 | 28.78 | −1.20 | −0.137 |
+| Training median | 14.87 | 27.42 | −4.27 | −0.032 |
+| Nearest station | 17.36 | 34.13 | +0.93 | −0.600 |
+
+On real measurements the model is the best method: its error is 10% lower than IDW. That is a
+real but modest gain. Copying the nearest station is worst, because real PM2.5 varies a lot
+between nearby sites. The model and these results use the same inputs:
+- weather, time and neighbour readings;
+- no road, elevation or aerosol values, which this dataset doesn't have (`GEO_OFFLINE=1`).
+
+The 90% interval is wide: 0.30× to 2.87× the estimate. That is the honest spread for real
+sensors. Bengaluru data ends on 31 Dec 2025, so estimates are for that hour.
+
+An earlier version of this model (MAE 14.28) was trained with different road-feature inputs than
+its validation; it was retrained so the deployed model is exactly the one evaluated.
+
+PM10 was dropped after the same evaluation: no model beat predicting the median.

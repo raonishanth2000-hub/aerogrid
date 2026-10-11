@@ -1,4 +1,4 @@
-import { config } from '../config'
+import type { DataMode } from '../config'
 import type { ApiResult, StationsResponse } from '../types/api'
 import { parseStations } from '../utils/validation'
 import { demoDelay, getJson, wrap } from './api'
@@ -8,12 +8,12 @@ export interface StationsResult extends StationsResponse {
   dropped: number
 }
 
-/** `cityId` selects demo fixtures; the API contract has no city parameter yet, so it is not sent. */
-export async function fetchStations(cityId: string, signal?: AbortSignal): Promise<ApiResult<StationsResult>> {
-  if (config.dataMode === 'mock') {
+/** `cityId` selects the demo fixtures or, in API mode, the backend study area. */
+export async function fetchStations(mode: DataMode, cityId: string, signal?: AbortSignal): Promise<ApiResult<StationsResult>> {
+  if (mode === 'mock') {
     const { demoStations } = await import('../data/demoStations')
     await demoDelay(signal)
     return wrap({ stations: demoStations(cityId), dropped: 0 }, 'mock')
   }
-  return wrap(await getJson('/api/stations', parseStations, { signal }), 'api')
+  return wrap(await getJson(`/api/stations?${new URLSearchParams({ city: cityId })}`, parseStations, { signal }), 'api')
 }

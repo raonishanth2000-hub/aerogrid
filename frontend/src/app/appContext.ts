@@ -4,10 +4,15 @@ import type { Resource } from '../hooks/useResource'
 import type { StationsResult } from '../services/stationsService'
 import type { ApiResult, HealthResponse, MetricsResponse, Station } from '../types/api'
 import type { Estimate, MapLayers, Selection, TimeRange } from '../types/app'
+import type { StationKind } from '../utils/stationKind'
 
 export interface AppState {
   dataMode: DataMode
+  /** Switch between demo fixtures and the AeroGrid model backend. */
+  setDataMode: (mode: DataMode) => void
   city: CityConfig
+  /** Cities the selector offers: every demo city, or those the backend serves in model mode. */
+  cities: CityConfig[]
   setCityId: (id: string) => void
   pollutant: PollutantId
   setPollutant: (p: PollutantId) => void
@@ -20,6 +25,8 @@ export interface AppState {
 
   /** Valid stations from the latest successful load (empty while unavailable). */
   stationList: Station[]
+  /** Measured sensor data or modelled values, as reported by the station data. */
+  stationKind: StationKind
   latestObservation: string | null
 
   layers: MapLayers

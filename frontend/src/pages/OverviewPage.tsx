@@ -15,7 +15,7 @@ export function OverviewPage() {
       <PageHeader
         eyebrow={`${city.name} · PM2.5`}
         title="Air Quality Overview"
-        subtitle="Explore measured air quality and model-based estimates across the city."
+        subtitle="Explore station data and model-based estimates across the city."
         actions={
           <span className="period-pill" title="Time range of the latest reading from each station">
             <Clock3 size={14} aria-hidden="true" />

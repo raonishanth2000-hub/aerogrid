@@ -12,7 +12,7 @@ import type { MetricsResponse } from '../types/api'
 import { hasEvaluationResults } from '../utils/validation'
 
 export function ModelPerformancePage() {
-  const { metrics, dataMode } = useApp()
+  const { metrics, dataMode, stationKind } = useApp()
   const [preview, setPreview] = useState(false)
   const [illustrative, setIllustrative] = useState<MetricsResponse | null>(null)
 
@@ -65,6 +65,13 @@ export function ModelPerformancePage() {
         <div className="illustrative-banner" role="note">
           <strong>Illustrative layout preview.</strong> The numbers below are placeholders for reviewing the page design. They are
           not evaluation results and say nothing about model accuracy.
+        </div>
+      )}
+
+      {!preview && stationKind === 'modelled' && m && (
+        <div className="notice notice-warn" role="note">
+          These results are validated against <strong>modelled station values</strong> (CAMS via Open-Meteo), not sensor
+          measurements. They show how well AeroGrid reproduces the CAMS field at unseen stations, not real-world accuracy.
         </div>
       )}
 

@@ -1,0 +1,46 @@
+{
+  "pollutant": "pm10",
+  "evaluation_type": "grouped 5-fold spatial cross-validation (every station held out once)",
+  "n_rows": 79045,
+  "n_locations": 15,
+  "neighbour_coverage": 0.996887848693782,
+  "results": {
+    "current (all features)": {
+      "mae_ugm3": 34.99740755757857,
+      "rmse_ugm3": 60.99681175550687,
+      "bias_ugm3": -3.436591812655879,
+      "r2": 0.01774036270032986
+    },
+    "without location identity": {
+      "mae_ugm3": 36.823195351206415,
+      "rmse_ugm3": 62.10956727875193,
+      "bias_ugm3": -7.023925930232534,
+      "r2": -0.01842495992254256
+    },
+    "residual on IDW": {
+      "mae_ugm3": 35.84367606272046,
+      "rmse_ugm3": 62.55639701453563,
+      "bias_ugm3": -11.071429159394876,
+      "r2": -0.03313121164086308
+    },
+    "baseline: training median": {
+      "mae_ugm3": 35.572959333291166,
+      "rmse_ugm3": 63.070791017342735,
+      "bias_ugm3": -10.59152418875324,
+      "r2": -0.050191704099507906
+    },
+    "baseline: nearest station": {
+      "mae_ugm3": 40.66208063761149,
+      "rmse_ugm3": 77.86710027093618,
+      "bias_ugm3": -7.952957214245051,
+      "r2": -0.6007371781606043
+    },
+    "baseline: IDW": {
+      "mae_ugm3": 36.05143822253787,
+      "rmse_ugm3": 70.23120112652087,
+      "bias_ugm3": -3.3291546040875786,
+      "r2": -0.3021835944572573
+    }
+  },
+  "created_at_utc": "2026-10-11T16:41:04.042830+00:00"
+}

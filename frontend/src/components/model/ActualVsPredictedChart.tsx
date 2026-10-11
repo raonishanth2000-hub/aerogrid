@@ -14,7 +14,7 @@ export function ActualVsPredictedChart({ points }: { points: HeldOutPrediction[]
         <ResponsiveContainer width="100%" height="100%">
           <ScatterChart margin={{ top: 8, right: 16, bottom: 16, left: 4 }}>
             <CartesianGrid {...theme.grid} />
-            <XAxis type="number" dataKey="actual" name="Measured" domain={[0, max]} {...theme.axis} label={{ value: 'Measured PM2.5 (µg/m³)', fill: theme.text3, fontSize: 11, position: 'insideBottom', dy: 14 }} />
+            <XAxis type="number" dataKey="actual" name="Actual" domain={[0, max]} {...theme.axis} label={{ value: 'Actual PM2.5 (µg/m³)', fill: theme.text3, fontSize: 11, position: 'insideBottom', dy: 14 }} />
             <YAxis type="number" dataKey="predicted" name="Predicted" domain={[0, max]} {...theme.axis} width={48} label={{ value: 'Predicted (µg/m³)', angle: -90, fill: theme.text3, fontSize: 11, position: 'insideLeft', dy: 50 }} />
             <ReferenceLine segment={[{ x: 0, y: 0 }, { x: max, y: max }]} stroke={theme.warn} strokeDasharray="5 4" ifOverflow="hidden" label={{ value: 'Perfect agreement', fill: theme.warn, fontSize: 11, position: 'insideTopLeft' }} />
             <Tooltip
@@ -26,7 +26,7 @@ export function ActualVsPredictedChart({ points }: { points: HeldOutPrediction[]
                 return (
                   <div style={theme.tooltip.contentStyle as CSSProperties} className="chart-tooltip">
                     {p.station_name && <strong>{p.station_name}</strong>}
-                    <div>Measured: {formatConcentration(p.actual)} µg/m³</div>
+                    <div>Actual: {formatConcentration(p.actual)} µg/m³</div>
                     <div>Predicted: {formatConcentration(p.predicted)} µg/m³</div>
                     <div>Error: {formatConcentration(p.predicted - p.actual)} µg/m³</div>
                   </div>

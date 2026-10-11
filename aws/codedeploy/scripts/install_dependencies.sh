@@ -10,6 +10,6 @@ fi
 
 source /opt/aerogrid/venv/bin/activate
 pip install --upgrade pip
-pip install -r /opt/aerogrid/backend/requirements.txt
+pip install -r /opt/aerogrid/requirements-api.txt
 
 echo "Dependencies successfully installed in /opt/aerogrid/venv"

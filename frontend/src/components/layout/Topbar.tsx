@@ -4,7 +4,7 @@ import { useApp } from '../../app/appContext'
 import { POLLUTANTS, availableCities, type PollutantId } from '../../config'
 import { CityAirChip } from '../dashboard/CityAirChip'
 import { DataFreshness } from '../dashboard/DataFreshness'
-import { DemoBadge } from '../common/StatusBadge'
+import { DataSourceSwitch } from './DataSourceSwitch'
 
 interface TopbarProps {
   route: RouteId
@@ -14,7 +14,7 @@ interface TopbarProps {
 export function Topbar({ route, onOpenMenu }: TopbarProps) {
   const { city, setCityId, pollutant, setPollutant, refreshAll, isRefreshing, dataMode } = useApp()
   const page = NAV_ITEMS.find((n) => n.id === route)
-  const cities = availableCities()
+  const cities = availableCities(dataMode)
 
   return (
     <header className="topbar">
@@ -38,7 +38,7 @@ export function Topbar({ route, onOpenMenu }: TopbarProps) {
               disabled={cities.length < 2}
               title={
                 cities.length < 2
-                  ? 'Only one city is available from the API'
+                  ? 'The AeroGrid model is trained for this city only'
                   : dataMode === 'mock'
                     ? 'Demo mode: each city uses synthetic data at a different pollution level'
                     : undefined
@@ -71,7 +71,7 @@ export function Topbar({ route, onOpenMenu }: TopbarProps) {
         </div>
         <CityAirChip />
         <DataFreshness />
-        {dataMode === 'mock' && <DemoBadge />}
+        <DataSourceSwitch />
         <button
           type="button"
           className="btn btn-secondary btn-icon"

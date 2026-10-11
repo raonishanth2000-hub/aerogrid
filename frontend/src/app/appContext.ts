@@ -7,6 +7,8 @@ import type { Estimate, MapLayers, Selection, TimeRange } from '../types/app'
 
 export interface AppState {
   dataMode: DataMode
+  /** Switch between demo fixtures and the AeroGrid model backend. */
+  setDataMode: (mode: DataMode) => void
   city: CityConfig
   setCityId: (id: string) => void
   pollutant: PollutantId

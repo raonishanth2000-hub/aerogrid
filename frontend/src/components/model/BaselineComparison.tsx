@@ -10,9 +10,24 @@ export function BaselineComparison({ m }: { m: MetricsResponse }) {
     ...(m.baselines ?? []).map((b) => ({ method: b.method, mae: b.mae, rmse: b.rmse, bias: b.bias ?? null, isModel: false })),
   ].filter((r) => r.mae !== null || r.rmse !== null)
 
+  // Plain-language comparison with the strongest simple method, by average error.
+  const best = rows
+    .filter((r) => !r.isModel && r.mae !== null)
+    .reduce<(typeof rows)[number] | null>((acc, r) => (acc === null || r.mae! < acc.mae! ? r : acc), null)
+  const change = best && m.mae !== null && best.mae ? ((best.mae - m.mae) / best.mae) * 100 : null
+
   return (
     <div className="baseline">
-      <div className="chart-box" style={{ height: 220 }}>
+      {change !== null && best && (
+        <p className="baseline-summary">
+          The model&rsquo;s average error is{' '}
+          <strong>
+            {Math.abs(change).toFixed(1)}% {change >= 0 ? 'lower' : 'higher'}
+          </strong>{' '}
+          than the best simple method ({best.method}).
+        </p>
+      )}
+      <div className="chart-box" style={{ height: 40 + rows.length * 48 }}>
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={rows} layout="vertical" margin={{ top: 4, right: 24, bottom: 4, left: 8 }} barGap={2}>
             <CartesianGrid {...theme.grid} horizontal={false} />

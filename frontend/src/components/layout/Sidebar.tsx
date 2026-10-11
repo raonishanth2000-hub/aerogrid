@@ -13,7 +13,7 @@ interface SidebarProps {
 export function Sidebar({ route, collapsed, onToggle }: SidebarProps) {
   const { dataMode, health } = useApp()
   const tone = dataMode === 'mock' ? 'is-demo' : health.status === 'error' ? 'is-down' : health.status === 'loading' ? 'is-checking' : 'is-api'
-  const title = dataMode === 'mock' ? 'Demo data' : 'Live API'
+  const title = dataMode === 'mock' ? 'Demo data' : 'AeroGrid model'
   const detail =
     dataMode === 'mock'
       ? 'Synthetic fixtures for development'
@@ -21,7 +21,9 @@ export function Sidebar({ route, collapsed, onToggle }: SidebarProps) {
         ? 'Backend unreachable'
         : health.status === 'loading'
           ? 'Checking backend…'
-          : `Backend status: ${health.data?.data.status ?? 'unknown'}`
+          : health.data?.data.status === 'ok'
+            ? 'Backend connected'
+            : 'Backend partly available'
 
   return (
     <aside className={`sidebar ${collapsed ? 'is-collapsed' : ''}`} aria-label="Primary">

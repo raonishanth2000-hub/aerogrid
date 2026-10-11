@@ -1,10 +1,10 @@
-import { config } from '../config'
+import type { DataMode } from '../config'
 import type { ApiResult, MetricsResponse } from '../types/api'
 import { parseMetrics } from '../utils/validation'
 import { demoDelay, getJson, wrap } from './api'
 
-export async function fetchMetrics(signal?: AbortSignal): Promise<ApiResult<MetricsResponse>> {
-  if (config.dataMode === 'mock') {
+export async function fetchMetrics(mode: DataMode, signal?: AbortSignal): Promise<ApiResult<MetricsResponse>> {
+  if (mode === 'mock') {
     const { demoMetricsResponse } = await import('../data/demoMetrics')
     await demoDelay(signal)
     return wrap(demoMetricsResponse, 'mock')

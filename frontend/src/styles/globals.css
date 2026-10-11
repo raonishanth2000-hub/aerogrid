@@ -2825,3 +2825,94 @@ code {
 .chip {
   border-radius: var(--radius-sm);
 }
+
+/* ── Data source switch (Demo data / AeroGrid model) ──── */
+
+.source-switch {
+  display: inline-flex;
+  padding: 3px;
+  gap: 2px;
+  border-radius: var(--radius);
+  background: var(--surface);
+  border: 1px solid var(--border);
+}
+.source-option {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 28px;
+  padding: 0 var(--s-3);
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-3);
+  font: inherit;
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background var(--t-fast), color var(--t-fast);
+}
+.source-option:hover:not(:disabled) {
+  color: var(--text);
+}
+.source-option:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.source-option.is-active.is-demo {
+  background: var(--warn-soft);
+  color: var(--demo);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--demo) 45%, transparent);
+}
+.source-option.is-active.is-model {
+  background: var(--accent-soft);
+  color: var(--text);
+  box-shadow: inset 0 0 0 1px var(--accent-line);
+}
+.source-option.is-active.is-model svg {
+  color: var(--accent);
+}
+.mobile-nav-source {
+  margin-top: auto;
+  padding-top: var(--s-3);
+  border-top: 1px solid var(--border);
+}
+.mobile-nav-source .source-switch {
+  display: flex;
+}
+.mobile-nav-source .source-option {
+  flex: 1;
+  justify-content: center;
+}
+@media (max-width: 1280px) {
+  .topbar .source-option {
+    padding: 0 var(--s-2);
+  }
+}
+@media (max-width: 767px) {
+  .topbar .source-switch {
+    display: none;
+  }
+}
+.has-drawer .map-status {
+  right: calc(min(var(--drawer-w), 62%) + var(--s-6));
+}
+@media (max-width: 767px) {
+  .has-drawer .map-status {
+    right: var(--s-2);
+  }
+}
+
+.baseline-summary {
+  margin-bottom: var(--s-3);
+  padding: var(--s-2) var(--s-3);
+  border-radius: var(--radius-sm);
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  font-size: var(--fs-sm);
+  color: var(--text-2);
+}
+.baseline-summary strong {
+  color: var(--text);
+}

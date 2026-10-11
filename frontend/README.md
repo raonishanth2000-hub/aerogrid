@@ -42,6 +42,8 @@ npm run dev                   # http://localhost:5173
 
 ## Data modes
 
+Viewers switch between **Demo data** and **AeroGrid model** with the control in the top bar (in the menu on phones). The choice is remembered per browser. The model option is available whenever a backend URL is set; in local development it defaults to `http://localhost:8000`.
+
 - **mock**: data comes from `src/data/demoStations.ts` and `src/data/demoMetrics.ts`. Sites are labelled "Demo Site A…", not real stations. A DEMO DATA badge appears on everything sourced from them. Mock metrics are all `null`, so the Model Performance page shows its "not available yet" state. A "Preview layout with placeholder numbers" toggle exists only in mock mode, behind a banner saying the numbers are not evaluation results.
 - Mock mode offers six demo cities (Delhi, Mumbai, Bengaluru, Kolkata, Chennai, Lucknow). They share one synthetic site layout, scaled so that between them they cover every concentration band from Good to Severe. This makes it easy to check the band-driven ambient theme. The levels say nothing about real air quality in those cities.
 - **api**: every request goes to the backend. Failures show error/retry states and **never** fall back to demo data. Missing values stay missing (shown as "—" / "Unavailable", never 0).

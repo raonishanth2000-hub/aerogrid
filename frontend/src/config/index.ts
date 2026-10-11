@@ -48,9 +48,17 @@ function parseNumber(raw: string | undefined, fallback: number): number {
   return Number.isFinite(n) ? n : fallback
 }
 
+const apiBaseUrl =
+  (env.VITE_API_BASE_URL ?? '').trim().replace(/\/+$/, '') ||
+  // In local development the FastAPI backend runs on port 8000 by default.
+  (env.DEV ? 'http://localhost:8000' : '')
+
 export const config = {
-  dataMode: resolveMode(),
-  apiBaseUrl: (env.VITE_API_BASE_URL ?? '').trim().replace(/\/+$/, ''),
+  /** Mode the app starts in; viewers can switch at runtime when a backend URL is available. */
+  initialDataMode: resolveMode(),
+  apiBaseUrl,
+  /** The "AeroGrid model" data source needs a backend to call. */
+  modelModeAvailable: apiBaseUrl !== '',
   // Bengaluru: the city the current model was trained and validated on.
   defaultCityId: (env.VITE_DEFAULT_CITY ?? '').trim().toLowerCase() || 'bengaluru',
   staleAfterMinutes: parseNumber(env.VITE_STALE_AFTER_MINUTES, 180),
@@ -74,9 +82,9 @@ export function cityById(id: string): CityConfig {
   return CITIES.find((c) => c.id === id) ?? CITIES[0]
 }
 
-/** Cities the selector may offer in the current data mode. */
-export function availableCities(): CityConfig[] {
-  if (config.dataMode === 'mock') return CITIES
+/** Cities the selector may offer in the given data mode. */
+export function availableCities(mode: DataMode): CityConfig[] {
+  if (mode === 'mock') return CITIES
   const ids = (env.VITE_API_CITIES ?? '').split(',').map((c) => c.trim().toLowerCase()).filter(Boolean)
   const allowed = CITIES.filter((c) => (ids.length ? ids.includes(c.id) : c.id === config.defaultCityId))
   return allowed.length ? allowed : [cityById(config.defaultCityId)]

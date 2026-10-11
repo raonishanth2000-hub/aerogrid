@@ -1,53 +1,52 @@
-/* AeroGrid design tokens — dark geospatial theme, 4/8 px spacing scale. */
+/* AeroGrid design tokens — neutral slate dark theme, 4/8 px spacing scale. */
 :root {
-  /* Surfaces: deep navy, each step slightly lifted */
-  --bg: #070b14;
-  --bg-2: #0a101d;
-  --surface: #0f1726;
-  --surface-2: #142033;
-  --surface-3: #1a2840;
-  --surface-glass: rgba(13, 20, 34, 0.86);
-  --border: #1b2740;
-  --border-strong: #273756;
-  --highlight: rgba(255, 255, 255, 0.04);
+  /* Surfaces: neutral slate, each step slightly lifted */
+  --bg: #0e1116;
+  --bg-2: #11151b;
+  --surface: #161b22;
+  --surface-2: #1c222b;
+  --surface-3: #232a35;
+  --surface-glass: #161b22;
+  --border: #262d38;
+  --border-strong: #343d4b;
+  --highlight: rgba(255, 255, 255, 0.03);
 
   /* Text */
-  --text: #eef3fb;
-  --text-2: #b3c0d6;
-  --text-3: #8391ab;
+  --text: #e6e9ee;
+  --text-2: #adb5c2;
+  --text-3: #8b95a5;
 
-  /* Accent: sky blue, with a warm sunset orange as its contrast colour.
-     --accent, --glow-sky, --glow-haze and --bg shift with the city's air (see [data-air] below). */
-  --accent: #38bdf8;
-  --accent-strong: #bae6fd;
-  --sky-light: #7dd3fc;
+  /* Accent: sky blue, with a warm orange as its (sparingly used) contrast colour.
+     --accent, --bg and --air-band follow the city's air (see [data-air] below). */
+  --accent: #4ba6e2;
+  --accent-strong: #b9dcf4;
+  --sky-light: #8cc8ef;
   --accent-soft: color-mix(in srgb, var(--accent) 12%, transparent);
   --accent-line: color-mix(in srgb, var(--accent) 40%, transparent);
-  --contrast: #fb923c;
-  --contrast-soft: rgba(251, 146, 60, 0.12);
-  --glow-sky: rgba(56, 189, 248, 0.08);
-  --glow-haze: rgba(251, 146, 60, 0.02);
-  --ok: #4ade80;
-  --warn: #f5b04a;
-  --warn-soft: rgba(245, 176, 74, 0.1);
-  --error: #f47272;
-  --error-soft: rgba(244, 114, 114, 0.1);
-  --demo: #f5b04a;
+  --contrast: #f0883e;
+  --contrast-soft: rgba(240, 136, 62, 0.12);
+  --air-band: transparent;
+  --ok: #3fb950;
+  --warn: #d29922;
+  --warn-soft: rgba(210, 153, 34, 0.1);
+  --error: #f85149;
+  --error-soft: rgba(248, 81, 73, 0.1);
+  --demo: #d29922;
 
   /* PM2.5 concentration bands (see utils/pm25Bands.ts) */
-  --band-1: #3fbf86;
-  --band-2: #a6cf45;
-  --band-3: #f0cf45;
-  --band-4: #f59a3c;
-  --band-5: #ec5a50;
-  --band-6: #b23a6a;
-  --band-none: #56627a;
+  --band-1: #3fb27f;
+  --band-2: #9dc44a;
+  --band-3: #e3c443;
+  --band-4: #ec9238;
+  --band-5: #e2574c;
+  --band-6: #a8406c;
+  --band-none: #5a6474;
 
   /* Chart series (comparison lines also differ by dash pattern) */
-  --series-1: #38bdf8;
-  --series-2: #f5b04a;
-  --series-3: #c084fc;
-  --series-4: #4ade80;
+  --series-1: #4ba6e2;
+  --series-2: #d29922;
+  --series-3: #a371f7;
+  --series-4: #3fb950;
 
   /* Spacing (4/8 scale) */
   --s-1: 4px;
@@ -58,98 +57,81 @@
   --s-6: 24px;
   --s-8: 32px;
 
-  /* Shape & depth */
-  --radius-sm: 8px;
-  --radius: 12px;
-  --radius-lg: 16px;
-  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.35);
-  --shadow-2: 0 10px 30px -8px rgba(0, 0, 0, 0.55), 0 2px 6px rgba(0, 0, 0, 0.3);
-  --shadow-float: 0 12px 40px -10px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.03);
+  /* Shape & depth: flat, bordered surfaces with restrained shadows */
+  --radius-sm: 6px;
+  --radius: 8px;
+  --radius-lg: 10px;
+  --shadow-1: 0 1px 0 rgba(0, 0, 0, 0.25);
+  --shadow-2: 0 4px 12px rgba(0, 0, 0, 0.35);
+  --shadow-float: 0 4px 14px rgba(0, 0, 0, 0.4);
 
-  /* Type */
-  --font: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-  --font-display: 'Space Grotesk', 'Inter', ui-sans-serif, system-ui, sans-serif;
-  --mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  /* Type: IBM Plex Sans throughout, tabular figures for data */
+  --font: 'IBM Plex Sans', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-display: var(--font);
+  --mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
   --fs-xs: 0.75rem;
   --fs-sm: 0.8125rem;
   --fs-md: 0.875rem;
   --fs-base: 0.9375rem;
 
   /* Layout */
-  --sidebar-w: 240px;
-  --sidebar-w-collapsed: 68px;
-  --topbar-h: 60px;
+  --sidebar-w: 232px;
+  --sidebar-w-collapsed: 64px;
+  --topbar-h: 56px;
   --drawer-w: 372px;
   --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
-  --t-fast: 140ms;
-  --t-med: 220ms;
+  --t-fast: 120ms;
+  --t-med: 180ms;
 
   color-scheme: dark;
   transition:
-    --accent 700ms var(--ease),
-    --glow-sky 900ms var(--ease),
-    --glow-haze 900ms var(--ease),
-    --bg 900ms var(--ease);
+    --accent 600ms var(--ease),
+    --bg 600ms var(--ease);
 }
 
-/* Registered so the ambient colours fade instead of snapping when the air band changes. */
+/* Registered so the air-driven colours fade instead of snapping when the band changes. */
 @property --accent {
   syntax: '<color>';
   inherits: true;
-  initial-value: #38bdf8;
-}
-@property --glow-sky {
-  syntax: '<color>';
-  inherits: true;
-  initial-value: rgba(56, 189, 248, 0.08);
-}
-@property --glow-haze {
-  syntax: '<color>';
-  inherits: true;
-  initial-value: rgba(251, 146, 60, 0.02);
+  initial-value: #4ba6e2;
 }
 @property --bg {
   syntax: '<color>';
   inherits: true;
-  initial-value: #070b14;
+  initial-value: #0e1116;
 }
 
-/* Ambient sky, driven by the median of the latest measured station readings
-   (data-air is set in app/AmbientAir.tsx). Cleaner air = lighter, clearer sky;
-   worse air = darker, duller sky with a warm haze. All accents stay ≥ 4.5:1 on --bg and --surface. */
+/* Air-driven tone, from the median of the latest measured station readings
+   (data-air is set in app/AmbientAir.tsx). Cleaner air = lighter, clearer sky blue;
+   worse air = darker, duller tone. --air-band colours the status line under the top bar.
+   All accents stay ≥ 4.5:1 on --bg and --surface. */
 :root[data-air='b1'] {
-  --accent: #7dd3fc;
-  --glow-sky: rgba(125, 211, 252, 0.2);
-  --glow-haze: rgba(251, 146, 60, 0);
-  --bg: #0b1424;
+  --accent: #8cc8ef;
+  --bg: #11151c;
+  --air-band: var(--band-1);
 }
 :root[data-air='b2'] {
-  --accent: #38bdf8;
-  --glow-sky: rgba(56, 189, 248, 0.14);
-  --glow-haze: rgba(251, 146, 60, 0.02);
-  --bg: #08101d;
+  --accent: #5bb2e8;
+  --bg: #0f1319;
+  --air-band: var(--band-2);
 }
 :root[data-air='b3'] {
-  --accent: #2ea8e6;
-  --glow-sky: rgba(46, 168, 230, 0.09);
-  --glow-haze: rgba(251, 146, 60, 0.07);
-  --bg: #070b14;
+  --accent: #4ba6e2;
+  --bg: #0e1116;
+  --air-band: var(--band-3);
 }
 :root[data-air='b4'] {
-  --accent: #4f9ad0;
-  --glow-sky: rgba(79, 154, 208, 0.06);
-  --glow-haze: rgba(251, 146, 60, 0.11);
-  --bg: #06090f;
+  --accent: #5d9fcf;
+  --bg: #0c0f13;
+  --air-band: var(--band-4);
 }
 :root[data-air='b5'] {
-  --accent: #5a97c4;
-  --glow-sky: rgba(90, 151, 196, 0.045);
-  --glow-haze: rgba(236, 110, 70, 0.14);
-  --bg: #05060b;
+  --accent: #6898bf;
+  --bg: #0b0d11;
+  --air-band: var(--band-5);
 }
 :root[data-air='b6'] {
-  --accent: #5a8db5;
-  --glow-sky: rgba(90, 141, 181, 0.03);
-  --glow-haze: rgba(190, 80, 90, 0.17);
-  --bg: #040408;
+  --accent: #6a93b6;
+  --bg: #090b0e;
+  --air-band: var(--band-6);
 }

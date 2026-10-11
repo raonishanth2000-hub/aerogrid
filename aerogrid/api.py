@@ -19,6 +19,7 @@ from __future__ import annotations
 
 import json
 import math
+import os
 from datetime import datetime, timezone
 from typing import Any, Optional
 
@@ -252,6 +253,15 @@ def _latest_data_time(city: City, pollutant: str) -> Optional[pd.Timestamp]:
     return _latest_time_cache[key]
 
 
+def _refresh_if_needed(city: City, pollutant: str) -> None:
+    """Keep CAMS-based cities current: their files mix in forecasts that go stale as hours pass."""
+    if city.data_kind != "modelled" or os.getenv("CAMS_AUTO_REFRESH", "1").strip().lower() in {"0", "false", "no"}:
+        return
+    from aerogrid.refresh_cams import refresh_if_stale
+
+    refresh_if_stale(city, _latest_data_time(city, pollutant))
+
+
 @app.get("/api/stations")
 def stations(
     pollutant: str = Query("pm25", description="Pollutant: pm25"),
@@ -270,6 +280,7 @@ def stations(
             status_code=503,
             detail=f"Station data for {c.name} is not available on the server ({c.dataset_path.name} not found).",
         )
+    _refresh_if_needed(c, p)
     # The hour is part of the key because forecast rows become usable observations as time passes.
     cache_key = (c.id, p, history_days, pd.Timestamp.now(tz="UTC").floor("h"), c.dataset_path.stat().st_mtime)
     if cache_key in _station_cache:
@@ -457,6 +468,7 @@ def predict_for_frontend(
     if timestamp:
         target_dt = _parse_timestamp(timestamp)
     else:
+        _refresh_if_needed(c, p)
         latest = _latest_data_time(c, p)
         now = pd.Timestamp.now(tz="UTC").floor("h")
         target_dt = (latest if latest is not None and latest < now else now).to_pydatetime()

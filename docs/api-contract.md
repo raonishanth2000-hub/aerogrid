@@ -71,9 +71,9 @@ single split recorded at training time).
 {
   "model_name": "AeroGrid model (gradient boosting)", "model_version": "pm25-hgb-…",
   "evaluation_method": "grouped 5-fold spatial cross-validation (every station held out once); 38 stations",
-  "sample_count": 4332, "mae": 3.03, "rmse": 9.61, "bias": -1.28, "r2": 0.895,
+  "sample_count": 7068, "mae": 3.00, "rmse": 9.42, "bias": -1.16, "r2": 0.891,
   "evaluated_at": "…", "training_period": "2026-10-07 – 2026-10-11",
-  "baselines": [{ "method": "Nearest station", "mae": 1.50, "rmse": 8.65, "bias": 1.36, "r2": 0.915 }],
+  "baselines": [{ "method": "Nearest station", "mae": 1.44, "rmse": 8.19, "bias": 1.23, "r2": 0.918 }],
   "held_out_predictions": [{ "station_id": "…", "station_name": "…", "actual": 87.8, "predicted": 85.1 }]
 }
 ```

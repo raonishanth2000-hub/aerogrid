@@ -23,9 +23,9 @@ On station-held-out cross-validation:
 
 | Method | MAE (µg/m³) |
 | --- | --- |
-| AeroGrid model | 3.03 |
-| Copying the nearest station | 1.50 |
-| IDW | 3.19 |
+| AeroGrid model | 3.00 |
+| Copying the nearest station | 1.44 |
+| IDW | 2.87 |
 
 On real Bengaluru sensor data the model is the best method: MAE 13.17, against 14.59 for IDW and
 17.36 for copying the nearest station.

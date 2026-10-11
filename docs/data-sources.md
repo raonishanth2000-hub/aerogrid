@@ -19,6 +19,14 @@ grid cell, not the station's sensor reading. We checked this three ways:
 - The API reports `source_type: "modelled"` (Delhi's `data_kind` in `aerogrid/config.py`) and drops future rows.
 - The website labels stations "Modelled", not "Measured".
 
+**Keeping it current.** A saved CAMS file holds *forecasts* for hours that were still in the future
+when it was downloaded. Once those hours pass, the forecasts look like observations, but they can
+be far off: one stale file showed 39.9 µg/m³ when CAMS later reported 67.5. So
+`python -m aerogrid.refresh_cams` rebuilds the last 7 days from Open-Meteo and keeps only hours
+that have passed. The API runs it automatically when Delhi's newest row is more than about an
+hour old; it tries at most once every 15 minutes and keeps serving the old file if the request
+fails. Set `CAMS_AUTO_REFRESH=0` to turn this off.
+
 Station names and coordinates are real CPCB, DPCC and IMD sites. The pollutant values are not
 those stations' readings.
 

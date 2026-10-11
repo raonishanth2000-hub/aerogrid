@@ -16,6 +16,11 @@ CITY = get_city()
 CENTER_LAT, CENTER_LON = CITY.latitude, CITY.longitude
 
 
+@pytest.fixture(autouse=True)
+def no_network_refresh(monkeypatch):
+    monkeypatch.setenv("CAMS_AUTO_REFRESH", "0")
+
+
 @pytest.fixture()
 def client():
     api._station_cache.clear()

@@ -25,20 +25,20 @@ Model Performance page read.
 
 ## Current results: Delhi, CAMS model data
 
-38 stations, 4,332 station-hours, 7–11 Oct 2026, PM2.5 in µg/m³. Rows dated in the future (forecasts) are
+38 stations, 7,068 station-hours, 4–11 Oct 2026, PM2.5 in µg/m³. Rows dated in the future (forecasts) are
 excluded.
 
 | Method | MAE | RMSE | Bias | R² |
 | --- | --- | --- | --- | --- |
-| Nearest station (baseline) | **1.50** | 8.65 | +1.36 | 0.915 |
-| AeroGrid model (gradient boosting) | 3.03 | 9.61 | −1.28 | 0.895 |
-| IDW interpolation (baseline) | 3.19 | **7.69** | −0.48 | **0.933** |
-| Training median (baseline) | 22.25 | 30.49 | −7.01 | −0.058 |
+| Nearest station (baseline) | **1.44** | 8.19 | +1.23 | 0.918 |
+| IDW interpolation (baseline) | 2.87 | **7.33** | −0.19 | **0.934** |
+| AeroGrid model (gradient boosting) | 3.00 | 9.42 | −1.16 | 0.891 |
+| Training median (baseline) | 22.10 | 29.53 | −7.30 | −0.070 |
 
 Other variants tried on the same folds, by MAE:
-- residual on nearest station: 3.00
-- without location identity: 3.50
-- residual on IDW: 4.69
+- residual on nearest station: 2.39
+- without location identity: 3.24
+- residual on IDW: 3.48
 
 None beat the nearest-station baseline, so no new model was saved.
 
@@ -52,8 +52,8 @@ it is against real air. The website shows this caveat on the Model Performance p
 
 Estimates carry an empirical 90% interval. It is calibrated from the out-of-fold ratio of actual
 to predicted values, using the 5th and 95th percentiles:
-- lower bound = 0.976 × estimate
-- upper bound = 1.131 × estimate
+- lower bound = 0.965 × estimate
+- upper bound = 1.156 × estimate
 - held-out coverage: 90.0%
 
 When no calibration has been published, `uncertainty` is `null`; the API never invents a range.

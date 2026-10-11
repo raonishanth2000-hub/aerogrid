@@ -1,0 +1,26 @@
+version: 0.0
+os: linux
+files:
+  - source: /
+    destination: /opt/aerogrid
+hooks:
+  BeforeInstall:
+    - location: aws/codedeploy/scripts/validate_environment.sh
+      timeout: 180
+      runas: root
+  AfterInstall:
+    - location: aws/codedeploy/scripts/install_dependencies.sh
+      timeout: 300
+      runas: root
+  ApplicationStart:
+    - location: aws/codedeploy/scripts/start_server.sh
+      timeout: 120
+      runas: root
+  ValidateService:
+    - location: aws/codedeploy/scripts/validate_service.sh
+      timeout: 180
+      runas: root
+  ApplicationStop:
+    - location: aws/codedeploy/scripts/stop_server.sh
+      timeout: 60
+      runas: root

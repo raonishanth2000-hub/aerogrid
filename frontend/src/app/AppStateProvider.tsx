@@ -8,6 +8,7 @@ import { fetchPrediction } from '../services/predictionService'
 import { fetchStations } from '../services/stationsService'
 import type { Estimate, MapLayers, Selection, TimeRange } from '../types/app'
 import { latestTime } from '../utils/formatters'
+import { stationKindOf } from '../utils/stationKind'
 import { AppContext, type AppState } from './appContext'
 
 const MAX_ESTIMATES = 30
@@ -56,6 +57,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
 
   const stationList = useMemo(() => stations.data?.data.stations ?? [], [stations.data])
   const latestObservation = useMemo(() => latestTime(stationList.map((s) => s.timestamp)), [stationList])
+  const stationKind = useMemo(() => stationKindOf(stationList), [stationList])
 
   const runEstimate = useCallback((id: string, lat: number, lon: number) => {
     inflight.current.get(id)?.abort()
@@ -171,6 +173,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
     refreshAll,
     isRefreshing: stations.status === 'loading' || metrics.status === 'loading' || health.status === 'loading',
     stationList,
+    stationKind,
     latestObservation,
     layers,
     setLayers,

@@ -2,6 +2,7 @@ import { ChevronDown } from 'lucide-react'
 import { useState } from 'react'
 import { useApp } from '../../app/appContext'
 import { BAND_SOURCE, PM25_BANDS, UNAVAILABLE_COLOR, bandKey, bandRangeLabel } from '../../utils/pm25Bands'
+import { KIND_LABEL } from '../../utils/stationKind'
 import { ScaleBar } from '../common/ScaleBar'
 import { InfoTip } from '../common/Tooltip'
 
@@ -20,7 +21,7 @@ function readOpen(): boolean {
 
 /** Legend that doubles as a band filter: each band toggles its markers on the map. */
 export function MapLegend() {
-  const { stationList, hiddenBands, toggleBand } = useApp()
+  const { stationList, stationKind, hiddenBands, toggleBand } = useApp()
   const [open, setOpen] = useState(readOpen)
 
   const toggleOpen = () =>
@@ -84,7 +85,7 @@ export function MapLegend() {
           <ul className="legend-kinds" aria-label="Marker types">
             <li>
               <span className="mk mk-station mk-legend" style={{ ['--c' as string]: 'var(--text-2)' }} aria-hidden="true" />
-              Measured
+              {KIND_LABEL[stationKind]} station
             </li>
             <li>
               <span className="mk mk-estimate mk-legend" style={{ ['--c' as string]: 'var(--text-2)' }} aria-hidden="true" />

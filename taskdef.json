@@ -1,0 +1,51 @@
+{
+  "family": "aerogrid-backend-task",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "1024",
+  "memory": "2048",
+  "executionRoleArn": "arn:aws:iam::<ACCOUNT_ID>:role/AeroGridEcsExecutionRole",
+  "taskRoleArn": "arn:aws:iam::<ACCOUNT_ID>:role/AeroGridEcsTaskRole",
+  "containerDefinitions": [
+    {
+      "name": "aerogrid-backend",
+      "image": "<IMAGE1_NAME>",
+      "essential": true,
+      "portMappings": [
+        {
+          "containerPort": 8000,
+          "hostPort": 8000,
+          "protocol": "tcp"
+        }
+      ],
+      "environment": [
+        { "name": "APP_ENV", "value": "production" },
+        { "name": "DATA_MODE", "value": "demo" },
+        { "name": "STORAGE_PROVIDER", "value": "s3" },
+        { "name": "AWS_REGION", "value": "ap-south-1" },
+        { "name": "AWS_APPCONFIG_ENABLED", "value": "true" },
+        { "name": "AWS_APPCONFIG_APPLICATION_ID", "value": "" },
+        { "name": "AWS_APPCONFIG_ENVIRONMENT_ID", "value": "" },
+        { "name": "AWS_APPCONFIG_PROFILE_ID", "value": "" }
+      ],
+      "healthCheck": {
+        "command": [
+          "CMD-SHELL",
+          "curl -f http://localhost:8000/api/health || exit 1"
+        ],
+        "interval": 30,
+        "timeout": 5,
+        "retries": 3,
+        "startPeriod": 15
+      },
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/aerogrid-backend",
+          "awslogs-region": "ap-south-1",
+          "awslogs-stream-prefix": "backend"
+        }
+      }
+    }
+  ]
+}

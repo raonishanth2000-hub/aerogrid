@@ -14,7 +14,7 @@ from aerogrid.config import (
     DATA_DIR, LOCAL_TIMEZONE, MODEL_DIR, OPEN_METEO_ARCHIVE_URL,
     OPEN_METEO_FORECAST_URL, WEATHER_VARIABLES,
 )
-from aerogrid.features import make_model_features
+from aerogrid.features import drop_future_rows, make_model_features
 from aerogrid.fetch_data import fetch_elevation, fetch_aod_for_location
 
 
@@ -115,7 +115,7 @@ def idw_from_available_readings(pollutant: str, latitude: float, longitude: floa
     path = DATA_DIR / "training_dataset.csv"
     if not path.exists():
         return None
-    frame = pd.read_csv(path)
+    frame = drop_future_rows(pd.read_csv(path))
     frame["pollutant"] = frame["pollutant"].astype(str).str.lower()
     frame = frame.loc[frame["pollutant"] == pollutant.lower()].copy()
     if frame.empty:
@@ -184,7 +184,7 @@ def predict_location(pollutant: str, latitude: float, longitude: float,
     }
     target_row = pd.DataFrame([{**weather_row, "location_id": "__AEROGRID_TARGET__"}])
     reference_path = DATA_DIR / "training_dataset.csv"
-    reference = pd.read_csv(reference_path) if reference_path.exists() else pd.DataFrame()
+    reference = drop_future_rows(pd.read_csv(reference_path)) if reference_path.exists() else pd.DataFrame()
     if not reference.empty:
         reference["pollutant"] = reference["pollutant"].astype(str).str.lower()
         reference = reference.loc[reference["pollutant"] == bundle["pollutant"]].copy()

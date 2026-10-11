@@ -1,7 +1,7 @@
 import type { Station } from '../../types/api'
 import { PM25_BANDS, UNAVAILABLE_COLOR, bandFor } from '../../utils/pm25Bands'
 
-/** Stacked bar: how many stations' latest measured value falls in each concentration band. */
+/** Stacked bar: how many stations' latest value falls in each concentration band. */
 export function BandDistribution({ stations }: { stations: Station[] }) {
   if (!stations.length) return null
   const counts = PM25_BANDS.map((b) => ({ band: b, n: stations.filter((s) => bandFor(s.value)?.key === b.key).length }))
@@ -13,7 +13,7 @@ export function BandDistribution({ stations }: { stations: Station[] }) {
     .join(', ')
 
   return (
-    <div className="banddist" role="img" aria-label={`Latest measured readings by band: ${summary}`}>
+    <div className="banddist" role="img" aria-label={`Latest station values by band: ${summary}`}>
       <div className="banddist-bar">
         {counts.map(
           (c) => c.n > 0 && <span key={c.band.key} style={{ flex: c.n, background: c.band.color }} title={`${c.band.label}: ${c.n}`} />,

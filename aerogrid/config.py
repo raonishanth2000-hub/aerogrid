@@ -14,9 +14,16 @@ DATA_DIR.mkdir(exist_ok=True)
 MODEL_DIR.mkdir(exist_ok=True)
 
 OPENAQ_API_KEY = os.getenv("OPENAQ_API_KEY", "").strip()
-CENTER_LAT = float(os.getenv("CENTER_LAT", "12.9716"))
-CENTER_LON = float(os.getenv("CENTER_LON", "77.5946"))
+# Study-area centre (Delhi). The previous Bengaluru study used 12.9716, 77.5946.
+CENTER_LAT = float(os.getenv("CENTER_LAT", "28.6139"))
+CENTER_LON = float(os.getenv("CENTER_LON", "77.2090"))
 SEARCH_RADIUS_M = min(int(os.getenv("SEARCH_RADIUS_M", "25000")), 25000)
+
+# What the station values in data/training_dataset.csv are. The current Delhi dataset comes from
+# the CAMS atmospheric model (via Open-Meteo), so it is "modelled", not sensor "measured" data.
+# For OpenAQ / CPCB sensor data set STATION_DATA_KIND=measured and STATION_DATA_SOURCE=OpenAQ.
+STATION_DATA_KIND = os.getenv("STATION_DATA_KIND", "modelled").strip().lower()
+STATION_DATA_SOURCE = os.getenv("STATION_DATA_SOURCE", "CAMS model (Copernicus) via Open-Meteo").strip()
 LOCAL_TIMEZONE = os.getenv("LOCAL_TIMEZONE", "Asia/Kolkata")
 
 # AWS Configuration (Amazon S3 and Amazon SageMaker AI)

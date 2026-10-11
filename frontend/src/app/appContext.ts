@@ -4,6 +4,7 @@ import type { Resource } from '../hooks/useResource'
 import type { StationsResult } from '../services/stationsService'
 import type { ApiResult, HealthResponse, MetricsResponse, Station } from '../types/api'
 import type { Estimate, MapLayers, Selection, TimeRange } from '../types/app'
+import type { StationKind } from '../utils/stationKind'
 
 export interface AppState {
   dataMode: DataMode
@@ -22,6 +23,8 @@ export interface AppState {
 
   /** Valid stations from the latest successful load (empty while unavailable). */
   stationList: Station[]
+  /** Measured sensor data or modelled values, as reported by the station data. */
+  stationKind: StationKind
   latestObservation: string | null
 
   layers: MapLayers

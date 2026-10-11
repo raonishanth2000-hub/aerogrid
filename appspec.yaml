@@ -1,0 +1,16 @@
+version: 0.0
+Resources:
+  - TargetService:
+      Type: AWS::ECS::Service
+      Properties:
+        TaskDefinition: <TASK_DEFINITION>
+        LoadBalancerInfo:
+          ContainerName: "aerogrid-backend"
+          ContainerPort: 8000
+        PlatformVersion: "LATEST"
+        NetworkConfiguration:
+          AwsvpcConfiguration:
+            AssignPublicIp: "ENABLED"
+Hooks:
+  - AfterAllowTestTraffic: "AeroGridTestTrafficValidationFunction"
+  - BeforeAllowTraffic: "AeroGridPreTrafficValidationFunction"

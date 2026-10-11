@@ -17,7 +17,7 @@ from sklearn.model_selection import GroupShuffleSplit, train_test_split
 from sklearn.pipeline import Pipeline
 
 from aerogrid.config import DATA_DIR, FEATURE_COLUMNS, LOCAL_TIMEZONE, MODEL_DIR
-from aerogrid.features import make_model_features
+from aerogrid.features import drop_future_rows, make_model_features
 
 
 def normalize_pollutant(value: str) -> str:
@@ -76,6 +76,7 @@ def train(pollutant: str) -> dict:
     frame = frame.dropna(subset=["timestamp_utc", "value_ugm3", "latitude", "longitude", "location_id"])
     frame = frame.replace([np.inf, -np.inf], np.nan)
     frame = frame.loc[frame["value_ugm3"] >= 0]
+    frame = drop_future_rows(frame)
 
     n_rows = len(frame)
     n_locations = int(frame["location_id"].nunique())

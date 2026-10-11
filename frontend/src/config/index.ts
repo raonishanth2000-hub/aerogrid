@@ -18,7 +18,7 @@ function city(id: string, name: string, lat: number, lon: number, zoom = 11): Ci
 
 /**
  * Cities known to the frontend. In API mode only those listed in VITE_API_CITIES
- * (default: the default city, Bengaluru) are offered, because the model is trained
+ * (default: the default city, Delhi) are offered, because the model is trained
  * for one study area and the /api/stations contract has no city parameter. In mock mode every city is available with
  * synthetic DEMO data, so the UI can be tested across air-quality levels.
  */
@@ -59,8 +59,8 @@ export const config = {
   apiBaseUrl,
   /** The "AeroGrid model" data source needs a backend to call. */
   modelModeAvailable: apiBaseUrl !== '',
-  // Bengaluru: the city the current model was trained and validated on.
-  defaultCityId: (env.VITE_DEFAULT_CITY ?? '').trim().toLowerCase() || 'bengaluru',
+  // Delhi: the study area the current model is trained and validated on.
+  defaultCityId: (env.VITE_DEFAULT_CITY ?? '').trim().toLowerCase() || 'delhi',
   staleAfterMinutes: parseNumber(env.VITE_STALE_AFTER_MINUTES, 180),
   requestTimeoutMs: 15_000,
   tiles: {

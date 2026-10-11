@@ -25,7 +25,10 @@ from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
-from aerogrid.config import CENTER_LAT, CENTER_LON, DATA_DIR, MODEL_DIR, SEARCH_RADIUS_M
+from aerogrid.config import (
+    CENTER_LAT, CENTER_LON, DATA_DIR, MODEL_DIR, SEARCH_RADIUS_M, STATION_DATA_KIND, STATION_DATA_SOURCE,
+)
+from aerogrid.features import drop_future_rows
 
 app = FastAPI(
     title="AeroGrid Air Quality Prediction API",
@@ -127,6 +130,26 @@ def _finite(value: Any) -> Any:
     return value
 
 
+def _read_validation(pollutant: str) -> dict[str, Any] | None:
+    path = MODEL_DIR / f"{pollutant}_validation.json"
+    return json.loads(path.read_text(encoding="utf-8")) if path.exists() else None
+
+
+def _calibrated_interval(pollutant: str, value: float | None) -> dict[str, Any] | None:
+    """90% interval from held-out station errors (see experiments.interval_calibration)."""
+    if value is None:
+        return None
+    v = _read_validation(pollutant)
+    cal = (v or {}).get("interval_90")
+    if not cal:
+        return None
+    return {
+        "lower": round(max(0.0, value * cal["low_ratio"]), 1),
+        "upper": round(value * cal["high_ratio"], 1),
+        "confidence_level": cal["level"],
+    }
+
+
 def _read_metrics(pollutant: str) -> dict[str, Any] | None:
     path = MODEL_DIR / f"{pollutant}_metrics.json"
     if not path.exists():
@@ -173,10 +196,11 @@ def stations(
     pollutant: str = Query("pm25", description="Pollutant: pm25"),
     history_days: int = Query(30, ge=0, le=90, description="Days of history per station (0 for none)"),
 ):
-    """Latest measured reading per monitoring station, with recent history.
+    """Latest value per monitoring station, with recent history.
 
-    Readings come from the downloaded OpenAQ dataset, so their timestamps show how old they are;
-    the frontend flags stale data. Nothing is interpolated or filled in.
+    Values come from data/training_dataset.csv. `source_type` says whether they are sensor
+    measurements or modelled values (STATION_DATA_KIND); forecast rows dated after now are
+    excluded. Nothing is interpolated or filled in.
     """
     p = _normalize_pollutant(pollutant)
     if not DATASET_PATH.exists():
@@ -184,7 +208,8 @@ def stations(
             status_code=503,
             detail="Station data is not available on the server (data/training_dataset.csv not found). Run fetch_data first.",
         )
-    cache_key = (f"{p}:{history_days}", DATASET_PATH.stat().st_mtime)
+    # The hour is part of the key because forecast rows become usable observations as time passes.
+    cache_key = (f"{p}:{history_days}:{pd.Timestamp.now(tz='UTC').floor('h').isoformat()}", DATASET_PATH.stat().st_mtime)
     if cache_key in _station_cache:
         return _station_cache[cache_key]
 
@@ -193,6 +218,7 @@ def stations(
         usecols=lambda c: c in {"location_id", "location_name", "latitude", "longitude", "timestamp_utc", "pollutant", "value_ugm3"},
     )
     frame = frame.loc[frame["pollutant"].astype(str).str.lower() == p].copy()
+    frame = drop_future_rows(frame)
     frame["timestamp_utc"] = pd.to_datetime(frame["timestamp_utc"], utc=True, errors="coerce")
     frame["value_ugm3"] = pd.to_numeric(frame["value_ugm3"], errors="coerce")
     frame = frame.dropna(subset=["location_id", "latitude", "longitude", "timestamp_utc"])
@@ -218,9 +244,9 @@ def stations(
             "pollutant": POLLUTANT_LABELS[p],
             "value": None if latest is None else round(float(latest["value_ugm3"]), 1),
             "unit": "µg/m³",
-            "source_type": "measured",
+            "source_type": STATION_DATA_KIND,
             "timestamp": None if latest is None else latest["timestamp_utc"].isoformat(),
-            "data_source": "OpenAQ",
+            "data_source": STATION_DATA_SOURCE,
             "history": history,
         })
 
@@ -240,9 +266,8 @@ def metrics_for_frontend(pollutant: str = Query("pm25", description="Pollutant: 
 
     # Prefer station-held-out cross-validation (every station tested once; see aerogrid/experiments.py)
     # over the single train/test split recorded at training time.
-    validation_path = MODEL_DIR / f"{p}_validation.json"
-    if validation_path.exists():
-        v = json.loads(validation_path.read_text(encoding="utf-8"))
+    v = _read_validation(p)
+    if v is not None:
         vm = {k: _finite(val) for k, val in v["metrics"].items()}
         start, end = v.get("data_start_utc"), v.get("data_end_utc")
         return {
@@ -379,8 +404,8 @@ def predict_for_frontend(
         "unit": "µg/m³",
         "source_type": "estimated",
         "timestamp": datetime.now(timezone.utc).isoformat(),
-        # Prediction intervals are not calculated by the current model, so none are reported.
-        "uncertainty": None,
+        # Empirical interval calibrated on held-out stations; omitted if no calibration is published.
+        "uncertainty": _calibrated_interval(p, None if value is None else float(value)),
         "model_version": f"{p}-hgb-{trained[:10]}" if trained else None,
         # The model's neighbour readings come from the downloaded dataset; their times are not
         # returned by predict_location yet, so this stays unavailable rather than guessed.

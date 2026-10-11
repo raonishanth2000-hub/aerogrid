@@ -1,0 +1,122 @@
+{
+  "status": "VALIDATED",
+  "model_version": "aerogrid-rf-spatial-v1.0",
+  "evaluation_method": "5-Fold Spatial Station Leave-Out Cross-Validation (Held-Out Whole Stations)",
+  "evaluation_timestamp": "2026-10-10T09:06:45.683945Z",
+  "sample_count": 6878,
+  "held_out_stations_count": 38,
+  "target_pollutant": "pm2_5",
+  "unit": "\u00b5g/m\u00b3",
+  "models": {
+    "spatial_random_forest": {
+      "name": "AeroGrid Spatial Random Forest",
+      "mae": 1.42,
+      "rmse": 7.29,
+      "bias": 0.82,
+      "r2": 0.951,
+      "is_primary": true
+    },
+    "idw_baseline": {
+      "name": "Inverse Distance Weighting (Power p=2)",
+      "mae": 5.69,
+      "rmse": 9.62,
+      "bias": -1.02,
+      "r2": 0.915,
+      "is_primary": false
+    },
+    "nearest_station_baseline": {
+      "name": "Nearest Station Observation",
+      "mae": 1.21,
+      "rmse": 7.24,
+      "bias": 1.07,
+      "r2": 0.952,
+      "is_primary": false
+    }
+  },
+  "uncertainty_calibration": {
+    "method": "Residual Empirical Calibration with Spatial Distance Adjustment",
+    "residual_std": 7.25,
+    "theoretical_coverage": 0.95,
+    "empirical_coverage": 0.969,
+    "formula": "y_hat \u00b1 (1.96 * sigma_residual * (1 + 0.05 * dist_nearest_km))"
+  },
+  "residual_distribution": [
+    {
+      "bin": "-30 to -25",
+      "count": 6,
+      "range_min": -30.0,
+      "range_max": -25.0
+    },
+    {
+      "bin": "-25 to -20",
+      "count": 4,
+      "range_min": -25.0,
+      "range_max": -20.0
+    },
+    {
+      "bin": "-20 to -15",
+      "count": 11,
+      "range_min": -20.0,
+      "range_max": -15.0
+    },
+    {
+      "bin": "-15 to -10",
+      "count": 15,
+      "range_min": -15.0,
+      "range_max": -10.0
+    },
+    {
+      "bin": "-10 to -5",
+      "count": 42,
+      "range_min": -10.0,
+      "range_max": -5.0
+    },
+    {
+      "bin": "-5 to 0",
+      "count": 3532,
+      "range_min": -5.0,
+      "range_max": 0.0
+    },
+    {
+      "bin": "0 to 5",
+      "count": 3024,
+      "range_min": 0.0,
+      "range_max": 5.0
+    },
+    {
+      "bin": "5 to 10",
+      "count": 23,
+      "range_min": 5.0,
+      "range_max": 10.0
+    },
+    {
+      "bin": "10 to 15",
+      "count": 30,
+      "range_min": 10.0,
+      "range_max": 15.0
+    },
+    {
+      "bin": "15 to 20",
+      "count": 41,
+      "range_min": 15.0,
+      "range_max": 20.0
+    },
+    {
+      "bin": "20 to 25",
+      "count": 33,
+      "range_min": 20.0,
+      "range_max": 25.0
+    },
+    {
+      "bin": "25 to 30",
+      "count": 27,
+      "range_min": 25.0,
+      "range_max": 30.0
+    }
+  ],
+  "limitations": [
+    "Estimates degrade significantly at distances > 25km from any active station.",
+    "Extreme localized point emissions (e.g., immediate roadside tailpipes or transient garbage fires) may not be captured by regional spatial features.",
+    "Predictions are statistical spatial interpolations and must never be treated as verified sensor observations."
+  ]
+}

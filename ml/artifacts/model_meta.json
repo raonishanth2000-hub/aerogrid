@@ -1,0 +1,23 @@
+{
+  "model_version": "aerogrid-rf-spatial-v1.0",
+  "algorithm": "RandomForestRegressor",
+  "n_estimators": 100,
+  "features": [
+    "latitude",
+    "longitude",
+    "elevation_m",
+    "hour_sin",
+    "hour_cos",
+    "dow_sin",
+    "dow_cos",
+    "dist_nearest_km",
+    "nearest_pm25",
+    "idw_pm25",
+    "regional_mean_pm25",
+    "regional_std_pm25",
+    "station_density_10km"
+  ],
+  "trained_samples_count": 6878,
+  "trained_stations_count": 38,
+  "created_at": "2026-10-10T09:06:30.883899Z"
+}

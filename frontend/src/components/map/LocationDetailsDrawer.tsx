@@ -9,6 +9,7 @@ import { formatConcentration, formatCoordinate, formatDateTime, formatRelative, 
 import { nearest } from '../../utils/geo'
 import { bandFor } from '../../utils/pm25Bands'
 import { seriesStats, toSeries, windowSeries } from '../../utils/series'
+import { KIND_ADJECTIVE } from '../../utils/stationKind'
 import { ScaleBar } from '../common/ScaleBar'
 import { Sparkline } from '../common/Sparkline'
 import { ErrorState, LoadingState } from '../common/States'
@@ -57,20 +58,22 @@ function StationBody({ station, mode }: { station: Station; mode?: DataMode }) {
   return (
     <>
       <div className="drawer-badges">
-        <SourceBadge kind="measured" />
+        <SourceBadge kind={station.source_type} />
         <ModeBadge mode={mode} />
       </div>
       <Reading value={station.value} unit={station.unit} />
       <p className="drawer-explain">
         {station.value === null
           ? 'This station has no valid reading in the latest data. No value is substituted.'
-          : 'Measured concentration of fine particulate matter (PM2.5) at this monitoring station.'}
+          : station.source_type === 'modelled'
+            ? `Modelled PM2.5 at this station's location (${station.data_source ?? 'atmospheric model'}). It is not a sensor reading.`
+            : 'Measured concentration of fine particulate matter (PM2.5) at this monitoring station.'}
       </p>
       {stale && <p className="notice notice-warn">This observation is {formatRelative(station.timestamp)} — it may not reflect current conditions.</p>}
       {stats24.count > 1 && (
         <div className="trend-card">
           <div className="trend-text">
-            <span className="eyebrow">Last 24 h · measured</span>
+            <span className="eyebrow">Last 24 h · {KIND_ADJECTIVE[station.source_type]}</span>
             <span className="trend-range">
               {formatConcentration(stats24.min)}–{formatConcentration(stats24.max)} <span className="muted">µg/m³</span>
             </span>

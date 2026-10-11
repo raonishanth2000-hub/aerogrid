@@ -76,7 +76,7 @@ export function parseStations(body: unknown): { stations: Station[]; dropped: nu
       pollutant: strOrNull(s.pollutant) ?? 'PM2.5',
       value: numOrNull(s.value),
       unit: strOrNull(s.unit) ?? 'µg/m³',
-      source_type: 'measured',
+      source_type: s.source_type === 'modelled' ? 'modelled' : 'measured',
       timestamp: strOrNull(s.timestamp),
       data_source: strOrNull(s.data_source),
       history: parseHistory(s.history),

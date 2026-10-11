@@ -16,17 +16,20 @@ export interface HistoryPoint {
   value: number | null
 }
 
-/** One monitoring station. `value` is a measurement, never model output. */
+/**
+ * One monitoring station. `source_type` says whether `value` is a sensor measurement or a
+ * modelled value at the station's location (e.g. CAMS); it is never an AeroGrid estimate.
+ */
 export interface Station {
   id: string
   name: string | null
   latitude: number
   longitude: number
   pollutant: string
-  /** Latest measured concentration; null when the station has no valid reading. */
+  /** Latest concentration; null when the station has no valid value. */
   value: number | null
   unit: string
-  source_type: 'measured'
+  source_type: 'measured' | 'modelled'
   /** ISO-8601 time of the latest observation; null when unknown. */
   timestamp: string | null
   /** Proposed extension: data provider, e.g. "CPCB" or "OpenAQ". */

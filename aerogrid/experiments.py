@@ -31,7 +31,7 @@ from sklearn.model_selection import GroupKFold
 from sklearn.pipeline import Pipeline
 
 from aerogrid.config import DATA_DIR, FEATURE_COLUMNS, LOCAL_TIMEZONE, MODEL_DIR
-from aerogrid.features import make_model_features
+from aerogrid.features import drop_future_rows, make_model_features
 from aerogrid.train import make_model, normalize_pollutant
 
 # Static per-site inputs that can act as a station identifier when there are few stations.
@@ -70,19 +70,20 @@ class ColumnSubsetModel(BaseEstimator, RegressorMixin):
 
 
 class ResidualOnIDW(BaseEstimator, RegressorMixin):
-    """Predicts a correction to the IDW neighbour estimate in log space.
+    """Predicts a correction to a neighbour estimate (IDW by default) in log space.
 
     Where no neighbour readings exist (e.g. live inference without station data), a
     fallback model trained without neighbour inputs is used instead.
     """
 
-    def __init__(self, columns: list[str], fallback_columns: list[str]):
+    def __init__(self, columns: list[str], fallback_columns: list[str], anchor: str = "idw_neighbor_pm"):
         self.columns = columns
         self.fallback_columns = fallback_columns
+        self.anchor = anchor
 
     def fit(self, X: pd.DataFrame, y):
         y = np.asarray(y, dtype=float)
-        idw = X["idw_neighbor_pm"].to_numpy(dtype=float)
+        idw = X[self.anchor].to_numpy(dtype=float)
         has = np.isfinite(idw)
         self.residual_ = Pipeline([
             ("imputer", SimpleImputer(strategy="median", keep_empty_features=True)),
@@ -97,7 +98,7 @@ class ResidualOnIDW(BaseEstimator, RegressorMixin):
 
     def predict(self, X: pd.DataFrame) -> np.ndarray:
         out = self.fallback_.predict(X[self.fallback_columns])
-        idw = X["idw_neighbor_pm"].to_numpy(dtype=float)
+        idw = X[self.anchor].to_numpy(dtype=float)
         has = np.isfinite(idw)
         if self.residual_ is not None and has.any():
             correction = self.residual_.predict(X.loc[has, self.columns])
@@ -112,6 +113,7 @@ def candidates() -> dict[str, BaseEstimator]:
         "current (all features)": make_model(),
         "without location identity": ColumnSubsetModel(no_identity),
         "residual on IDW": ResidualOnIDW(no_identity, no_neighbours),
+        "residual on nearest station": ResidualOnIDW(no_identity, no_neighbours, anchor="nearest_neighbor_pm"),
     }
 
 
@@ -122,6 +124,22 @@ def _metrics(y_true: np.ndarray, y_pred: np.ndarray) -> dict[str, float]:
         "bias_ugm3": float(np.mean(y_pred - y_true)),
         "r2": float(r2_score(y_true, y_pred)),
     }
+
+
+def interval_calibration(y_true: np.ndarray, y_pred: np.ndarray, level: float = 0.9) -> dict[str, float] | None:
+    """Empirical prediction interval from held-out errors, as ratios of actual to predicted.
+
+    Concentration errors grow with the level, so a multiplicative interval is used:
+    [pred * low_ratio, pred * high_ratio] covers `level` of held-out stations' values.
+    """
+    ok = (y_pred > 0.5) & np.isfinite(y_true) & np.isfinite(y_pred)
+    if ok.sum() < 50:
+        return None
+    ratio = y_true[ok] / y_pred[ok]
+    tail = (1 - level) / 2
+    low, high = float(np.quantile(ratio, tail)), float(np.quantile(ratio, 1 - tail))
+    covered = (y_true[ok] >= y_pred[ok] * low) & (y_true[ok] <= y_pred[ok] * high)
+    return {"level": level, "low_ratio": low, "high_ratio": high, "empirical_coverage": float(covered.mean())}
 
 
 def load_frame(pollutant: str) -> pd.DataFrame:
@@ -135,7 +153,8 @@ def load_frame(pollutant: str) -> pd.DataFrame:
     for col in ("value_ugm3", "latitude", "longitude"):
         frame[col] = pd.to_numeric(frame[col], errors="coerce")
     frame = frame.dropna(subset=["timestamp_utc", "value_ugm3", "latitude", "longitude", "location_id"])
-    frame = frame.loc[frame["value_ugm3"] >= 0].reset_index(drop=True)
+    frame = frame.loc[frame["value_ugm3"] >= 0]
+    frame = drop_future_rows(frame).reset_index(drop=True)
     return frame
 
 
@@ -171,6 +190,8 @@ def evaluate(pollutant: str, folds: int = 5, verbose: bool = True) -> dict:
             print(f"fold {fold}/{k}: held out {len(held)} stations, {len(test_idx):,} rows")
 
     results = {name: _metrics(y, p) for name, p in preds.items()}
+    for name in models:
+        results[name]["interval_90"] = interval_calibration(y, preds[name])
     # A reproducible sample of out-of-fold predictions from the current model, for an actual-vs-predicted plot.
     sample = np.random.default_rng(42).choice(len(y), size=min(500, len(y)), replace=False)
     held_out = [
@@ -230,7 +251,7 @@ def save_best(report: dict) -> str | None:
             shutil.copy2(path, path.with_name(path.stem + ".previous" + path.suffix))
 
     metrics = {
-        **results[best],
+        **{k: v for k, v in results[best].items() if k != "interval_90"},
         "training_median_baseline_mae_ugm3": results["baseline: training median"]["mae_ugm3"],
         "baselines": [
             {"method": label, **results[name]}
@@ -278,7 +299,8 @@ def publish_validation(report: dict, model_name: str) -> None:
         "evaluation_type": report["evaluation_type"],
         "n_rows": report["n_rows"],
         "n_locations": report["n_locations"],
-        "metrics": results[model_name],
+        "metrics": {k: v for k, v in results[model_name].items() if k != "interval_90"},
+        "interval_90": results[model_name].get("interval_90"),
         "baselines": [
             {"method": label, **results[name]}
             for name, label in (

@@ -4,6 +4,7 @@ import type { TimeRange } from '../../types/app'
 import { formatConcentration, formatDateTime } from '../../utils/formatters'
 import { NAAQS_24H_PM25 } from '../../utils/pm25Bands'
 import type { SeriesPoint } from '../../utils/series'
+import { KIND_ADJECTIVE, KIND_LABEL, type StationKind } from '../../utils/stationKind'
 import { chartTheme } from './chartTheme'
 
 interface PM25TrendChartProps {
@@ -12,12 +13,13 @@ interface PM25TrendChartProps {
   range: TimeRange
   start: number
   end: number
+  kind: StationKind
 }
 
 const tickFormat = (range: TimeRange) =>
   new Intl.DateTimeFormat(undefined, range === '24h' ? { hour: '2-digit', minute: '2-digit' } : { day: 'numeric', month: 'short' })
 
-export function PM25TrendChart({ points, stationName, range, start, end }: PM25TrendChartProps) {
+export function PM25TrendChart({ points, stationName, range, start, end, kind }: PM25TrendChartProps) {
   const theme = chartTheme()
   const gradientId = `trend-${useId().replace(/[^a-zA-Z0-9-]/g, '')}`
   const fmt = tickFormat(range)
@@ -28,7 +30,7 @@ export function PM25TrendChart({ points, stationName, range, start, end }: PM25T
   return (
     <figure className="chart-figure">
       <figcaption className="chart-title">
-        Measured PM2.5 at {stationName} <span className="muted">· µg/m³</span>
+        {KIND_LABEL[kind]} PM2.5 at {stationName} <span className="muted">· µg/m³</span>
       </figcaption>
       <div className="chart-box" style={{ height: 300 }}>
         <ResponsiveContainer width="100%" height="100%">
@@ -58,7 +60,7 @@ export function PM25TrendChart({ points, stationName, range, start, end }: PM25T
             <Tooltip
               {...theme.tooltip}
               labelFormatter={(t) => formatDateTime(Number(t))}
-              formatter={(v) => [`${formatConcentration(v as number)} µg/m³`, 'Measured PM2.5']}
+              formatter={(v) => [`${formatConcentration(v as number)} µg/m³`, `${KIND_LABEL[kind]} PM2.5`]}
             />
             <Legend wrapperStyle={{ fontSize: 12, color: theme.text2 }} />
             <ReferenceLine
@@ -71,7 +73,7 @@ export function PM25TrendChart({ points, stationName, range, start, end }: PM25T
             <Area
               type="linear"
               dataKey="value"
-              name="Measured PM2.5"
+              name={`${KIND_LABEL[kind]} PM2.5`}
               stroke={theme.accent}
               fill={`url(#${gradientId})`}
               strokeWidth={1.8}
@@ -84,7 +86,7 @@ export function PM25TrendChart({ points, stationName, range, start, end }: PM25T
         </ResponsiveContainer>
       </div>
       <p className="sr-only">
-        Line chart of {valid} measured PM2.5 observations at {stationName} from {formatDateTime(start)} to {formatDateTime(end)}.
+        Line chart of {valid} {KIND_ADJECTIVE[kind]} PM2.5 values at {stationName} from {formatDateTime(start)} to {formatDateTime(end)}.
       </p>
       <p className="chart-note muted small">
         Breaks in the line mark missing observations or gaps in the record; values are not interpolated. The dashed line is

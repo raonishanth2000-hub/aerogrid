@@ -8,6 +8,19 @@ from aerogrid.config import CENTER_LAT, CENTER_LON, FEATURE_COLUMNS, LOCAL_TIMEZ
 from aerogrid.geo import get_geo_features
 
 
+def drop_future_rows(frame: pd.DataFrame, column: str = "timestamp_utc") -> pd.DataFrame:
+    """Remove rows timestamped after now.
+
+    Some sources (e.g. the CAMS feed behind Open-Meteo) mix forecasts into the same series;
+    a forecast is not an observation, so it must not be used as a training label or as a
+    "nearby reading".
+    """
+    if frame.empty or column not in frame.columns:
+        return frame
+    stamps = pd.to_datetime(frame[column], utc=True, errors="coerce")
+    return frame.loc[stamps <= pd.Timestamp.now(tz="UTC")].copy()
+
+
 def make_features(frame: pd.DataFrame, timezone: str = LOCAL_TIMEZONE) -> pd.DataFrame:
     """Build a consistent feature matrix from observation or prediction rows.
 

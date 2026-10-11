@@ -2916,3 +2916,9 @@ code {
 .baseline-summary strong {
   color: var(--text);
 }
+
+.badge-modelled {
+  color: var(--text);
+  background: var(--surface-3);
+  border: 1px dashed var(--border-strong);
+}

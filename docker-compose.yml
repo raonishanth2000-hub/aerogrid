@@ -1,0 +1,26 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: aerogrid-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - STATION_DATA_KIND=modelled
+      - STATION_DATA_SOURCE=CAMS model (Copernicus) via Open-Meteo
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_DATA_MODE: api
+        VITE_API_BASE_URL: http://localhost:8000
+    container_name: aerogrid-frontend
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
+    restart: unless-stopped

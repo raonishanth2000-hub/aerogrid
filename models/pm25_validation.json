@@ -2,3040 +2,3046 @@
   "pollutant": "pm25",
   "model_variant": "current (all features)",
   "evaluation_type": "grouped 5-fold spatial cross-validation (every station held out once)",
-  "n_rows": 70500,
-  "n_locations": 15,
+  "n_rows": 4332,
+  "n_locations": 38,
   "metrics": {
-    "mae_ugm3": 14.28438640638545,
-    "rmse_ugm3": 26.65901633998767,
-    "bias_ugm3": -3.1072926321481265,
-    "r2": 0.024312634040277836
+    "mae_ugm3": 3.0266466657703943,
+    "rmse_ugm3": 9.613846372011068,
+    "bias_ugm3": -1.2784522081608856,
+    "r2": 0.8948388333026701
+  },
+  "interval_90": {
+    "level": 0.9,
+    "low_ratio": 0.975669690189499,
+    "high_ratio": 1.1313550271232748,
+    "empirical_coverage": 0.8998153277931671
   },
   "baselines": [
     {
       "method": "Training median (constant)",
-      "mae_ugm3": 14.870543761276595,
-      "rmse_ugm3": 27.41812223420512,
-      "bias_ugm3": -4.274250564964539,
-      "r2": -0.03204315136011493
+      "mae_ugm3": 22.254362880886426,
+      "rmse_ugm3": 30.490431684126662,
+      "bias_ugm3": -7.0123961218836515,
+      "r2": -0.05776254866261943
     },
     {
       "method": "Nearest station",
-      "mae_ugm3": 17.358823196312056,
-      "rmse_ugm3": 34.13428019541086,
-      "bias_ugm3": 0.9284799290780137,
-      "r2": -0.5995725326696326
+      "mae_ugm3": 1.5022853185595568,
+      "rmse_ugm3": 8.648441354244266,
+      "bias_ugm3": 1.3563019390581719,
+      "r2": 0.914898595145071
     },
     {
       "method": "IDW interpolation",
-      "mae_ugm3": 14.593454811244523,
-      "rmse_ugm3": 28.78124152191525,
-      "bias_ugm3": -1.1982281004260626,
-      "r2": -0.13721214097206813
+      "mae_ugm3": 3.1911264677882234,
+      "rmse_ugm3": 7.686330214368645,
+      "bias_ugm3": -0.48141569474927165,
+      "r2": 0.9327799058132251
     }
   ],
   "held_out_predictions": [
     {
-      "station_id": "5548",
-      "station_name": "BTM Layout, Bengaluru - CPCB",
-      "actual": 20.2,
-      "predicted": 27.8
+      "station_id": "delhi_anand_vihar",
+      "station_name": "Anand Vihar, Delhi",
+      "actual": 101.7,
+      "predicted": 101.7
     },
     {
-      "station_id": "5548",
-      "station_name": "BTM Layout, Bengaluru - CPCB",
-      "actual": 29.9,
-      "predicted": 52.6
+      "station_id": "delhi_anand_vihar",
+      "station_name": "Anand Vihar, Delhi",
+      "actual": 86.1,
+      "predicted": 86.2
     },
     {
-      "station_id": "5548",
-      "station_name": "BTM Layout, Bengaluru - CPCB",
-      "actual": 23.0,
-      "predicted": 33.5
+      "station_id": "delhi_anand_vihar",
+      "station_name": "Anand Vihar, Delhi",
+      "actual": 90.3,
+      "predicted": 90.3
     },
     {
-      "station_id": "5548",
-      "station_name": "BTM Layout, Bengaluru - CPCB",
-      "actual": 27.2,
-      "predicted": 33.4
+      "station_id": "delhi_anand_vihar",
+      "station_name": "Anand Vihar, Delhi",
+      "actual": 79.4,
+      "predicted": 79.4
     },
     {
-      "station_id": "5548",
-      "station_name": "BTM Layout, Bengaluru - CPCB",
-      "actual": 25.0,
-      "predicted": 33.5
+      "station_id": "delhi_anand_vihar",
+      "station_name": "Anand Vihar, Delhi",
+      "actual": 57.6,
+      "predicted": 57.4
     },
     {
-      "station_id": "5548",
-      "station_name": "BTM Layout, Bengaluru - CPCB",
-      "actual": 22.8,
-      "predicted": 25.0
-    },
-    {
-      "station_id": "5548",
-      "station_name": "BTM Layout, Bengaluru - CPCB",
-      "actual": 31.9,
-      "predicted": 39.5
-    },
-    {
-      "station_id": "5548",
-      "station_name": "BTM Layout, Bengaluru - CPCB",
-      "actual": 19.1,
-      "predicted": 24.6
-    },
-    {
-      "station_id": "5548",
-      "station_name": "BTM Layout, Bengaluru - CPCB",
-      "actual": 18.3,
-      "predicted": 33.1
-    },
-    {
-      "station_id": "5548",
-      "station_name": "BTM Layout, Bengaluru - CPCB",
-      "actual": 14.1,
-      "predicted": 17.6
-    },
-    {
-      "station_id": "5548",
-      "station_name": "BTM Layout, Bengaluru - CPCB",
-      "actual": 13.8,
-      "predicted": 17.1
-    },
-    {
-      "station_id": "5548",
-      "station_name": "BTM Layout, Bengaluru - CPCB",
-      "actual": 16.0,
-      "predicted": 19.5
-    },
-    {
-      "station_id": "5548",
-      "station_name": "BTM Layout, Bengaluru - CPCB",
-      "actual": 16.6,
-      "predicted": 9.5
-    },
-    {
-      "station_id": "5548",
-      "station_name": "BTM Layout, Bengaluru - CPCB",
-      "actual": 16.6,
-      "predicted": 10.6
-    },
-    {
-      "station_id": "5548",
-      "station_name": "BTM Layout, Bengaluru - CPCB",
-      "actual": 17.3,
-      "predicted": 9.7
-    },
-    {
-      "station_id": "5548",
-      "station_name": "BTM Layout, Bengaluru - CPCB",
-      "actual": 18.2,
-      "predicted": 14.1
-    },
-    {
-      "station_id": "5548",
-      "station_name": "BTM Layout, Bengaluru - CPCB",
-      "actual": 18.7,
-      "predicted": 17.8
-    },
-    {
-      "station_id": "5548",
-      "station_name": "BTM Layout, Bengaluru - CPCB",
-      "actual": 18.5,
-      "predicted": 15.7
-    },
-    {
-      "station_id": "5548",
-      "station_name": "BTM Layout, Bengaluru - CPCB",
-      "actual": 18.0,
-      "predicted": 14.8
-    },
-    {
-      "station_id": "5548",
-      "station_name": "BTM Layout, Bengaluru - CPCB",
-      "actual": 14.7,
-      "predicted": 12.5
-    },
-    {
-      "station_id": "5548",
-      "station_name": "BTM Layout, Bengaluru - CPCB",
-      "actual": 15.8,
-      "predicted": 10.0
-    },
-    {
-      "station_id": "5548",
-      "station_name": "BTM Layout, Bengaluru - CPCB",
-      "actual": 15.4,
-      "predicted": 13.7
-    },
-    {
-      "station_id": "5548",
-      "station_name": "BTM Layout, Bengaluru - CPCB",
-      "actual": 14.2,
-      "predicted": 12.3
-    },
-    {
-      "station_id": "5548",
-      "station_name": "BTM Layout, Bengaluru - CPCB",
-      "actual": 28.1,
-      "predicted": 52.2
-    },
-    {
-      "station_id": "5548",
-      "station_name": "BTM Layout, Bengaluru - CPCB",
-      "actual": 61.3,
-      "predicted": 64.3
-    },
-    {
-      "station_id": "5548",
-      "station_name": "BTM Layout, Bengaluru - CPCB",
-      "actual": 44.2,
-      "predicted": 20.7
-    },
-    {
-      "station_id": "5548",
-      "station_name": "BTM Layout, Bengaluru - CPCB",
-      "actual": 56.0,
-      "predicted": 58.0
-    },
-    {
-      "station_id": "5548",
-      "station_name": "BTM Layout, Bengaluru - CPCB",
-      "actual": 62.9,
-      "predicted": 61.8
-    },
-    {
-      "station_id": "5607",
-      "station_name": "Peenya, Bengaluru - CPCB",
-      "actual": 46.9,
-      "predicted": 31.3
-    },
-    {
-      "station_id": "5607",
-      "station_name": "Peenya, Bengaluru - CPCB",
-      "actual": 49.3,
-      "predicted": 51.3
-    },
-    {
-      "station_id": "5607",
-      "station_name": "Peenya, Bengaluru - CPCB",
-      "actual": 38.6,
-      "predicted": 30.1
-    },
-    {
-      "station_id": "5607",
-      "station_name": "Peenya, Bengaluru - CPCB",
-      "actual": 45.5,
-      "predicted": 37.1
-    },
-    {
-      "station_id": "5607",
-      "station_name": "Peenya, Bengaluru - CPCB",
-      "actual": 31.1,
-      "predicted": 30.5
-    },
-    {
-      "station_id": "5607",
-      "station_name": "Peenya, Bengaluru - CPCB",
-      "actual": 51.5,
-      "predicted": 33.2
-    },
-    {
-      "station_id": "5607",
-      "station_name": "Peenya, Bengaluru - CPCB",
-      "actual": 33.3,
-      "predicted": 31.4
-    },
-    {
-      "station_id": "5607",
-      "station_name": "Peenya, Bengaluru - CPCB",
-      "actual": 23.3,
-      "predicted": 43.6
-    },
-    {
-      "station_id": "5607",
-      "station_name": "Peenya, Bengaluru - CPCB",
-      "actual": 9.7,
-      "predicted": 27.0
-    },
-    {
-      "station_id": "5607",
-      "station_name": "Peenya, Bengaluru - CPCB",
-      "actual": 42.9,
-      "predicted": 28.8
-    },
-    {
-      "station_id": "5607",
-      "station_name": "Peenya, Bengaluru - CPCB",
-      "actual": 42.2,
-      "predicted": 26.3
-    },
-    {
-      "station_id": "5607",
-      "station_name": "Peenya, Bengaluru - CPCB",
-      "actual": 7.3,
-      "predicted": 26.7
-    },
-    {
-      "station_id": "5607",
-      "station_name": "Peenya, Bengaluru - CPCB",
-      "actual": 38.7,
-      "predicted": 29.5
-    },
-    {
-      "station_id": "5607",
-      "station_name": "Peenya, Bengaluru - CPCB",
-      "actual": 13.1,
-      "predicted": 27.1
-    },
-    {
-      "station_id": "5607",
-      "station_name": "Peenya, Bengaluru - CPCB",
-      "actual": 35.0,
-      "predicted": 26.9
-    },
-    {
-      "station_id": "5607",
-      "station_name": "Peenya, Bengaluru - CPCB",
-      "actual": 34.1,
-      "predicted": 27.1
-    },
-    {
-      "station_id": "5607",
-      "station_name": "Peenya, Bengaluru - CPCB",
-      "actual": 52.6,
-      "predicted": 28.3
-    },
-    {
-      "station_id": "5607",
-      "station_name": "Peenya, Bengaluru - CPCB",
-      "actual": 18.1,
-      "predicted": 25.5
-    },
-    {
-      "station_id": "5607",
-      "station_name": "Peenya, Bengaluru - CPCB",
-      "actual": 28.1,
-      "predicted": 21.6
-    },
-    {
-      "station_id": "5607",
-      "station_name": "Peenya, Bengaluru - CPCB",
-      "actual": 36.7,
-      "predicted": 20.2
-    },
-    {
-      "station_id": "5607",
-      "station_name": "Peenya, Bengaluru - CPCB",
-      "actual": 33.4,
-      "predicted": 33.5
-    },
-    {
-      "station_id": "5607",
-      "station_name": "Peenya, Bengaluru - CPCB",
-      "actual": 35.7,
-      "predicted": 33.2
-    },
-    {
-      "station_id": "5607",
-      "station_name": "Peenya, Bengaluru - CPCB",
-      "actual": 10.9,
-      "predicted": 23.4
-    },
-    {
-      "station_id": "5607",
-      "station_name": "Peenya, Bengaluru - CPCB",
-      "actual": 25.7,
-      "predicted": 20.0
-    },
-    {
-      "station_id": "5607",
-      "station_name": "Peenya, Bengaluru - CPCB",
-      "actual": 17.7,
-      "predicted": 18.4
-    },
-    {
-      "station_id": "5607",
-      "station_name": "Peenya, Bengaluru - CPCB",
-      "actual": 18.5,
-      "predicted": 23.9
-    },
-    {
-      "station_id": "5607",
-      "station_name": "Peenya, Bengaluru - CPCB",
-      "actual": 16.1,
-      "predicted": 24.4
-    },
-    {
-      "station_id": "5607",
-      "station_name": "Peenya, Bengaluru - CPCB",
-      "actual": 20.1,
-      "predicted": 20.2
-    },
-    {
-      "station_id": "5607",
-      "station_name": "Peenya, Bengaluru - CPCB",
-      "actual": 17.4,
-      "predicted": 19.0
-    },
-    {
-      "station_id": "5607",
-      "station_name": "Peenya, Bengaluru - CPCB",
-      "actual": 20.8,
-      "predicted": 24.1
-    },
-    {
-      "station_id": "5607",
-      "station_name": "Peenya, Bengaluru - CPCB",
-      "actual": 30.1,
-      "predicted": 24.9
-    },
-    {
-      "station_id": "5607",
-      "station_name": "Peenya, Bengaluru - CPCB",
-      "actual": 13.2,
-      "predicted": 30.3
-    },
-    {
-      "station_id": "5607",
-      "station_name": "Peenya, Bengaluru - CPCB",
-      "actual": 15.1,
-      "predicted": 20.1
-    },
-    {
-      "station_id": "5607",
-      "station_name": "Peenya, Bengaluru - CPCB",
-      "actual": 10.7,
-      "predicted": 23.8
-    },
-    {
-      "station_id": "5607",
-      "station_name": "Peenya, Bengaluru - CPCB",
-      "actual": 18.2,
-      "predicted": 24.9
-    },
-    {
-      "station_id": "5607",
-      "station_name": "Peenya, Bengaluru - CPCB",
-      "actual": 17.5,
-      "predicted": 23.6
-    },
-    {
-      "station_id": "5607",
-      "station_name": "Peenya, Bengaluru - CPCB",
-      "actual": 11.4,
-      "predicted": 21.9
-    },
-    {
-      "station_id": "5607",
-      "station_name": "Peenya, Bengaluru - CPCB",
-      "actual": 21.9,
-      "predicted": 18.9
-    },
-    {
-      "station_id": "5607",
-      "station_name": "Peenya, Bengaluru - CPCB",
-      "actual": 20.0,
-      "predicted": 29.4
-    },
-    {
-      "station_id": "5607",
-      "station_name": "Peenya, Bengaluru - CPCB",
-      "actual": 24.3,
-      "predicted": 24.2
-    },
-    {
-      "station_id": "5607",
-      "station_name": "Peenya, Bengaluru - CPCB",
-      "actual": 15.3,
-      "predicted": 62.4
-    },
-    {
-      "station_id": "5607",
-      "station_name": "Peenya, Bengaluru - CPCB",
-      "actual": 41.1,
-      "predicted": 63.4
-    },
-    {
-      "station_id": "5607",
-      "station_name": "Peenya, Bengaluru - CPCB",
-      "actual": 20.8,
-      "predicted": 55.7
-    },
-    {
-      "station_id": "5607",
-      "station_name": "Peenya, Bengaluru - CPCB",
-      "actual": 14.5,
-      "predicted": 56.9
-    },
-    {
-      "station_id": "5607",
-      "station_name": "Peenya, Bengaluru - CPCB",
-      "actual": 10.7,
-      "predicted": 50.1
-    },
-    {
-      "station_id": "5607",
-      "station_name": "Peenya, Bengaluru - CPCB",
-      "actual": 49.2,
-      "predicted": 33.4
-    },
-    {
-      "station_id": "5607",
-      "station_name": "Peenya, Bengaluru - CPCB",
-      "actual": 19.4,
-      "predicted": 50.1
-    },
-    {
-      "station_id": "5607",
-      "station_name": "Peenya, Bengaluru - CPCB",
-      "actual": 18.0,
-      "predicted": 58.3
-    },
-    {
-      "station_id": "5607",
-      "station_name": "Peenya, Bengaluru - CPCB",
-      "actual": 12.5,
-      "predicted": 40.9
-    },
-    {
-      "station_id": "5607",
-      "station_name": "Peenya, Bengaluru - CPCB",
-      "actual": 21.8,
-      "predicted": 62.4
-    },
-    {
-      "station_id": "5607",
-      "station_name": "Peenya, Bengaluru - CPCB",
-      "actual": 10.5,
-      "predicted": 52.4
-    },
-    {
-      "station_id": "5607",
-      "station_name": "Peenya, Bengaluru - CPCB",
-      "actual": 15.0,
-      "predicted": 36.4
-    },
-    {
-      "station_id": "5607",
-      "station_name": "Peenya, Bengaluru - CPCB",
-      "actual": 18.8,
-      "predicted": 25.3
-    },
-    {
-      "station_id": "5607",
-      "station_name": "Peenya, Bengaluru - CPCB",
-      "actual": 26.5,
-      "predicted": 60.0
-    },
-    {
-      "station_id": "5607",
-      "station_name": "Peenya, Bengaluru - CPCB",
-      "actual": 26.9,
-      "predicted": 73.2
-    },
-    {
-      "station_id": "5607",
-      "station_name": "Peenya, Bengaluru - CPCB",
-      "actual": 25.3,
-      "predicted": 57.1
-    },
-    {
-      "station_id": "6973",
-      "station_name": "Jayanagar 5th Block, Bengaluru - KSPCB",
-      "actual": 32.0,
-      "predicted": 33.9
-    },
-    {
-      "station_id": "6973",
-      "station_name": "Jayanagar 5th Block, Bengaluru - KSPCB",
-      "actual": 28.5,
-      "predicted": 19.4
-    },
-    {
-      "station_id": "6973",
-      "station_name": "Jayanagar 5th Block, Bengaluru - KSPCB",
-      "actual": 16.5,
-      "predicted": 19.8
-    },
-    {
-      "station_id": "6973",
-      "station_name": "Jayanagar 5th Block, Bengaluru - KSPCB",
-      "actual": 32.0,
-      "predicted": 23.7
-    },
-    {
-      "station_id": "6973",
-      "station_name": "Jayanagar 5th Block, Bengaluru - KSPCB",
-      "actual": 26.0,
-      "predicted": 23.2
-    },
-    {
-      "station_id": "6973",
-      "station_name": "Jayanagar 5th Block, Bengaluru - KSPCB",
-      "actual": 39.3,
-      "predicted": 27.7
-    },
-    {
-      "station_id": "6973",
-      "station_name": "Jayanagar 5th Block, Bengaluru - KSPCB",
-      "actual": 35.0,
-      "predicted": 25.1
-    },
-    {
-      "station_id": "6973",
-      "station_name": "Jayanagar 5th Block, Bengaluru - KSPCB",
-      "actual": 42.5,
-      "predicted": 26.8
-    },
-    {
-      "station_id": "6973",
-      "station_name": "Jayanagar 5th Block, Bengaluru - KSPCB",
-      "actual": 39.5,
-      "predicted": 29.7
-    },
-    {
-      "station_id": "6973",
-      "station_name": "Jayanagar 5th Block, Bengaluru - KSPCB",
-      "actual": 20.0,
-      "predicted": 16.4
-    },
-    {
-      "station_id": "6973",
-      "station_name": "Jayanagar 5th Block, Bengaluru - KSPCB",
-      "actual": 28.3,
-      "predicted": 21.5
-    },
-    {
-      "station_id": "6973",
-      "station_name": "Jayanagar 5th Block, Bengaluru - KSPCB",
-      "actual": 40.5,
-      "predicted": 29.6
-    },
-    {
-      "station_id": "6973",
-      "station_name": "Jayanagar 5th Block, Bengaluru - KSPCB",
-      "actual": 37.5,
-      "predicted": 23.7
-    },
-    {
-      "station_id": "6973",
-      "station_name": "Jayanagar 5th Block, Bengaluru - KSPCB",
-      "actual": 22.0,
-      "predicted": 20.6
-    },
-    {
-      "station_id": "6973",
-      "station_name": "Jayanagar 5th Block, Bengaluru - KSPCB",
-      "actual": 9.5,
-      "predicted": 5.7
-    },
-    {
-      "station_id": "6973",
-      "station_name": "Jayanagar 5th Block, Bengaluru - KSPCB",
-      "actual": 13.0,
-      "predicted": 5.8
-    },
-    {
-      "station_id": "6973",
-      "station_name": "Jayanagar 5th Block, Bengaluru - KSPCB",
-      "actual": 9.0,
-      "predicted": 5.7
-    },
-    {
-      "station_id": "6973",
-      "station_name": "Jayanagar 5th Block, Bengaluru - KSPCB",
-      "actual": 9.5,
-      "predicted": 3.1
-    },
-    {
-      "station_id": "6973",
-      "station_name": "Jayanagar 5th Block, Bengaluru - KSPCB",
-      "actual": 10.0,
-      "predicted": 6.2
-    },
-    {
-      "station_id": "6973",
-      "station_name": "Jayanagar 5th Block, Bengaluru - KSPCB",
-      "actual": 6.7,
-      "predicted": 5.3
-    },
-    {
-      "station_id": "6973",
-      "station_name": "Jayanagar 5th Block, Bengaluru - KSPCB",
-      "actual": 22.5,
-      "predicted": 11.7
-    },
-    {
-      "station_id": "6973",
-      "station_name": "Jayanagar 5th Block, Bengaluru - KSPCB",
-      "actual": 31.5,
-      "predicted": 10.8
-    },
-    {
-      "station_id": "6973",
-      "station_name": "Jayanagar 5th Block, Bengaluru - KSPCB",
-      "actual": 17.0,
-      "predicted": 10.3
-    },
-    {
-      "station_id": "6973",
-      "station_name": "Jayanagar 5th Block, Bengaluru - KSPCB",
-      "actual": 5.3,
-      "predicted": 7.1
-    },
-    {
-      "station_id": "6973",
-      "station_name": "Jayanagar 5th Block, Bengaluru - KSPCB",
-      "actual": 12.5,
-      "predicted": 9.7
-    },
-    {
-      "station_id": "6973",
-      "station_name": "Jayanagar 5th Block, Bengaluru - KSPCB",
-      "actual": 10.5,
-      "predicted": 9.3
-    },
-    {
-      "station_id": "6973",
-      "station_name": "Jayanagar 5th Block, Bengaluru - KSPCB",
-      "actual": 17.0,
-      "predicted": 7.3
-    },
-    {
-      "station_id": "6973",
-      "station_name": "Jayanagar 5th Block, Bengaluru - KSPCB",
-      "actual": 32.0,
-      "predicted": 31.1
-    },
-    {
-      "station_id": "6973",
-      "station_name": "Jayanagar 5th Block, Bengaluru - KSPCB",
-      "actual": 17.0,
-      "predicted": 12.8
-    },
-    {
-      "station_id": "6973",
-      "station_name": "Jayanagar 5th Block, Bengaluru - KSPCB",
-      "actual": 16.3,
-      "predicted": 10.7
-    },
-    {
-      "station_id": "6973",
-      "station_name": "Jayanagar 5th Block, Bengaluru - KSPCB",
-      "actual": 4.0,
-      "predicted": 7.5
-    },
-    {
-      "station_id": "6973",
-      "station_name": "Jayanagar 5th Block, Bengaluru - KSPCB",
-      "actual": 8.0,
-      "predicted": 11.8
-    },
-    {
-      "station_id": "6973",
-      "station_name": "Jayanagar 5th Block, Bengaluru - KSPCB",
-      "actual": 36.5,
-      "predicted": 17.8
-    },
-    {
-      "station_id": "6973",
-      "station_name": "Jayanagar 5th Block, Bengaluru - KSPCB",
-      "actual": 52.0,
-      "predicted": 33.9
-    },
-    {
-      "station_id": "6973",
-      "station_name": "Jayanagar 5th Block, Bengaluru - KSPCB",
-      "actual": 65.0,
-      "predicted": 36.4
-    },
-    {
-      "station_id": "6973",
-      "station_name": "Jayanagar 5th Block, Bengaluru - KSPCB",
-      "actual": 70.0,
-      "predicted": 48.9
-    },
-    {
-      "station_id": "6973",
-      "station_name": "Jayanagar 5th Block, Bengaluru - KSPCB",
-      "actual": 50.0,
-      "predicted": 46.0
-    },
-    {
-      "station_id": "6973",
-      "station_name": "Jayanagar 5th Block, Bengaluru - KSPCB",
-      "actual": 56.7,
-      "predicted": 43.3
-    },
-    {
-      "station_id": "6974",
-      "station_name": "Bapuji Nagar, Bengaluru - KSPCB",
-      "actual": 46.7,
-      "predicted": 37.7
-    },
-    {
-      "station_id": "6974",
-      "station_name": "Bapuji Nagar, Bengaluru - KSPCB",
-      "actual": 53.7,
-      "predicted": 42.7
-    },
-    {
-      "station_id": "6974",
-      "station_name": "Bapuji Nagar, Bengaluru - KSPCB",
-      "actual": 34.5,
-      "predicted": 32.6
-    },
-    {
-      "station_id": "6974",
-      "station_name": "Bapuji Nagar, Bengaluru - KSPCB",
-      "actual": 37.0,
-      "predicted": 37.1
-    },
-    {
-      "station_id": "6974",
-      "station_name": "Bapuji Nagar, Bengaluru - KSPCB",
-      "actual": 17.0,
-      "predicted": 25.8
-    },
-    {
-      "station_id": "6974",
-      "station_name": "Bapuji Nagar, Bengaluru - KSPCB",
-      "actual": 41.0,
-      "predicted": 20.5
-    },
-    {
-      "station_id": "6974",
-      "station_name": "Bapuji Nagar, Bengaluru - KSPCB",
-      "actual": 15.0,
-      "predicted": 32.1
-    },
-    {
-      "station_id": "6974",
-      "station_name": "Bapuji Nagar, Bengaluru - KSPCB",
-      "actual": 18.5,
-      "predicted": 29.7
-    },
-    {
-      "station_id": "6974",
-      "station_name": "Bapuji Nagar, Bengaluru - KSPCB",
-      "actual": 21.5,
-      "predicted": 33.6
-    },
-    {
-      "station_id": "6974",
-      "station_name": "Bapuji Nagar, Bengaluru - KSPCB",
-      "actual": 55.0,
-      "predicted": 34.9
-    },
-    {
-      "station_id": "6974",
-      "station_name": "Bapuji Nagar, Bengaluru - KSPCB",
-      "actual": 11.0,
-      "predicted": 20.0
-    },
-    {
-      "station_id": "6974",
-      "station_name": "Bapuji Nagar, Bengaluru - KSPCB",
-      "actual": 20.0,
-      "predicted": 16.4
-    },
-    {
-      "station_id": "6974",
-      "station_name": "Bapuji Nagar, Bengaluru - KSPCB",
-      "actual": 21.5,
-      "predicted": 14.1
-    },
-    {
-      "station_id": "6974",
-      "station_name": "Bapuji Nagar, Bengaluru - KSPCB",
-      "actual": 32.0,
-      "predicted": 23.6
-    },
-    {
-      "station_id": "6974",
-      "station_name": "Bapuji Nagar, Bengaluru - KSPCB",
-      "actual": 19.5,
-      "predicted": 8.7
-    },
-    {
-      "station_id": "6974",
-      "station_name": "Bapuji Nagar, Bengaluru - KSPCB",
-      "actual": 11.0,
-      "predicted": 2.9
-    },
-    {
-      "station_id": "6974",
-      "station_name": "Bapuji Nagar, Bengaluru - KSPCB",
-      "actual": 16.0,
-      "predicted": 7.1
-    },
-    {
-      "station_id": "6974",
-      "station_name": "Bapuji Nagar, Bengaluru - KSPCB",
-      "actual": 26.0,
-      "predicted": 11.4
-    },
-    {
-      "station_id": "6974",
-      "station_name": "Bapuji Nagar, Bengaluru - KSPCB",
-      "actual": 26.0,
-      "predicted": 7.6
-    },
-    {
-      "station_id": "6974",
-      "station_name": "Bapuji Nagar, Bengaluru - KSPCB",
-      "actual": 12.0,
-      "predicted": 5.2
-    },
-    {
-      "station_id": "6974",
-      "station_name": "Bapuji Nagar, Bengaluru - KSPCB",
-      "actual": 7.0,
-      "predicted": 4.2
-    },
-    {
-      "station_id": "6974",
-      "station_name": "Bapuji Nagar, Bengaluru - KSPCB",
-      "actual": 20.0,
-      "predicted": 6.0
-    },
-    {
-      "station_id": "6974",
-      "station_name": "Bapuji Nagar, Bengaluru - KSPCB",
-      "actual": 19.0,
-      "predicted": 7.1
-    },
-    {
-      "station_id": "6974",
-      "station_name": "Bapuji Nagar, Bengaluru - KSPCB",
-      "actual": 9.5,
-      "predicted": 5.2
-    },
-    {
-      "station_id": "6974",
-      "station_name": "Bapuji Nagar, Bengaluru - KSPCB",
-      "actual": 14.0,
-      "predicted": 4.5
-    },
-    {
-      "station_id": "6974",
-      "station_name": "Bapuji Nagar, Bengaluru - KSPCB",
-      "actual": 21.5,
-      "predicted": 6.3
-    },
-    {
-      "station_id": "6974",
-      "station_name": "Bapuji Nagar, Bengaluru - KSPCB",
-      "actual": 10.0,
-      "predicted": 4.2
-    },
-    {
-      "station_id": "6974",
-      "station_name": "Bapuji Nagar, Bengaluru - KSPCB",
-      "actual": 22.3,
-      "predicted": 7.0
-    },
-    {
-      "station_id": "6974",
-      "station_name": "Bapuji Nagar, Bengaluru - KSPCB",
-      "actual": 17.3,
-      "predicted": 6.5
-    },
-    {
-      "station_id": "6974",
-      "station_name": "Bapuji Nagar, Bengaluru - KSPCB",
-      "actual": 17.0,
-      "predicted": 6.0
-    },
-    {
-      "station_id": "6974",
-      "station_name": "Bapuji Nagar, Bengaluru - KSPCB",
-      "actual": 19.0,
-      "predicted": 7.8
-    },
-    {
-      "station_id": "6974",
-      "station_name": "Bapuji Nagar, Bengaluru - KSPCB",
-      "actual": 8.5,
-      "predicted": 6.5
-    },
-    {
-      "station_id": "6974",
-      "station_name": "Bapuji Nagar, Bengaluru - KSPCB",
-      "actual": 11.0,
-      "predicted": 3.2
-    },
-    {
-      "station_id": "6974",
-      "station_name": "Bapuji Nagar, Bengaluru - KSPCB",
-      "actual": 15.0,
-      "predicted": 3.9
-    },
-    {
-      "station_id": "6974",
-      "station_name": "Bapuji Nagar, Bengaluru - KSPCB",
-      "actual": 10.0,
-      "predicted": 2.9
-    },
-    {
-      "station_id": "6974",
-      "station_name": "Bapuji Nagar, Bengaluru - KSPCB",
-      "actual": 4.0,
-      "predicted": 2.9
-    },
-    {
-      "station_id": "6974",
-      "station_name": "Bapuji Nagar, Bengaluru - KSPCB",
-      "actual": 13.0,
-      "predicted": 4.4
-    },
-    {
-      "station_id": "6974",
-      "station_name": "Bapuji Nagar, Bengaluru - KSPCB",
-      "actual": 19.0,
-      "predicted": 7.6
-    },
-    {
-      "station_id": "6974",
-      "station_name": "Bapuji Nagar, Bengaluru - KSPCB",
-      "actual": 18.0,
-      "predicted": 8.8
-    },
-    {
-      "station_id": "6974",
-      "station_name": "Bapuji Nagar, Bengaluru - KSPCB",
-      "actual": 8.0,
-      "predicted": 4.8
-    },
-    {
-      "station_id": "6974",
-      "station_name": "Bapuji Nagar, Bengaluru - KSPCB",
-      "actual": 14.0,
-      "predicted": 6.3
-    },
-    {
-      "station_id": "6974",
-      "station_name": "Bapuji Nagar, Bengaluru - KSPCB",
-      "actual": 11.0,
-      "predicted": 8.1
-    },
-    {
-      "station_id": "6974",
-      "station_name": "Bapuji Nagar, Bengaluru - KSPCB",
-      "actual": 25.0,
-      "predicted": 6.9
-    },
-    {
-      "station_id": "6974",
-      "station_name": "Bapuji Nagar, Bengaluru - KSPCB",
-      "actual": 63.0,
-      "predicted": 14.5
-    },
-    {
-      "station_id": "6974",
-      "station_name": "Bapuji Nagar, Bengaluru - KSPCB",
-      "actual": 44.0,
-      "predicted": 8.0
-    },
-    {
-      "station_id": "6974",
-      "station_name": "Bapuji Nagar, Bengaluru - KSPCB",
-      "actual": 56.0,
-      "predicted": 56.6
-    },
-    {
-      "station_id": "6974",
-      "station_name": "Bapuji Nagar, Bengaluru - KSPCB",
-      "actual": 34.5,
-      "predicted": 8.6
-    },
-    {
-      "station_id": "6974",
-      "station_name": "Bapuji Nagar, Bengaluru - KSPCB",
-      "actual": 24.0,
-      "predicted": 13.0
-    },
-    {
-      "station_id": "6974",
-      "station_name": "Bapuji Nagar, Bengaluru - KSPCB",
-      "actual": 37.0,
-      "predicted": 16.7
-    },
-    {
-      "station_id": "6975",
-      "station_name": "Silk Board, Bengaluru - KSPCB",
-      "actual": 52.0,
-      "predicted": 37.0
-    },
-    {
-      "station_id": "6975",
-      "station_name": "Silk Board, Bengaluru - KSPCB",
-      "actual": 35.0,
-      "predicted": 33.6
-    },
-    {
-      "station_id": "6975",
-      "station_name": "Silk Board, Bengaluru - KSPCB",
-      "actual": 18.3,
-      "predicted": 23.6
-    },
-    {
-      "station_id": "6975",
-      "station_name": "Silk Board, Bengaluru - KSPCB",
-      "actual": 31.0,
-      "predicted": 21.8
-    },
-    {
-      "station_id": "6975",
-      "station_name": "Silk Board, Bengaluru - KSPCB",
-      "actual": 35.5,
-      "predicted": 20.7
-    },
-    {
-      "station_id": "6975",
-      "station_name": "Silk Board, Bengaluru - KSPCB",
-      "actual": 26.5,
-      "predicted": 15.6
-    },
-    {
-      "station_id": "6975",
-      "station_name": "Silk Board, Bengaluru - KSPCB",
-      "actual": 14.5,
-      "predicted": 15.9
-    },
-    {
-      "station_id": "6975",
-      "station_name": "Silk Board, Bengaluru - KSPCB",
-      "actual": 31.0,
-      "predicted": 22.9
-    },
-    {
-      "station_id": "6975",
-      "station_name": "Silk Board, Bengaluru - KSPCB",
-      "actual": 23.5,
-      "predicted": 22.0
-    },
-    {
-      "station_id": "6975",
-      "station_name": "Silk Board, Bengaluru - KSPCB",
-      "actual": 12.0,
-      "predicted": 13.7
-    },
-    {
-      "station_id": "6975",
-      "station_name": "Silk Board, Bengaluru - KSPCB",
-      "actual": 12.5,
-      "predicted": 16.5
-    },
-    {
-      "station_id": "6975",
-      "station_name": "Silk Board, Bengaluru - KSPCB",
-      "actual": 28.0,
-      "predicted": 16.5
-    },
-    {
-      "station_id": "6975",
-      "station_name": "Silk Board, Bengaluru - KSPCB",
-      "actual": 20.0,
-      "predicted": 14.3
-    },
-    {
-      "station_id": "6975",
-      "station_name": "Silk Board, Bengaluru - KSPCB",
-      "actual": 15.5,
-      "predicted": 18.2
-    },
-    {
-      "station_id": "6975",
-      "station_name": "Silk Board, Bengaluru - KSPCB",
-      "actual": 28.5,
-      "predicted": 17.1
-    },
-    {
-      "station_id": "6975",
-      "station_name": "Silk Board, Bengaluru - KSPCB",
-      "actual": 22.0,
-      "predicted": 18.2
-    },
-    {
-      "station_id": "6975",
-      "station_name": "Silk Board, Bengaluru - KSPCB",
-      "actual": 13.5,
-      "predicted": 16.0
-    },
-    {
-      "station_id": "6975",
-      "station_name": "Silk Board, Bengaluru - KSPCB",
-      "actual": 12.3,
-      "predicted": 17.1
-    },
-    {
-      "station_id": "6975",
-      "station_name": "Silk Board, Bengaluru - KSPCB",
-      "actual": 12.0,
-      "predicted": 18.4
-    },
-    {
-      "station_id": "6975",
-      "station_name": "Silk Board, Bengaluru - KSPCB",
-      "actual": 17.0,
-      "predicted": 21.0
-    },
-    {
-      "station_id": "6975",
-      "station_name": "Silk Board, Bengaluru - KSPCB",
-      "actual": 40.5,
-      "predicted": 35.8
-    },
-    {
-      "station_id": "6975",
-      "station_name": "Silk Board, Bengaluru - KSPCB",
-      "actual": 32.5,
-      "predicted": 31.9
-    },
-    {
-      "station_id": "6975",
-      "station_name": "Silk Board, Bengaluru - KSPCB",
-      "actual": 46.5,
-      "predicted": 42.7
-    },
-    {
-      "station_id": "6975",
-      "station_name": "Silk Board, Bengaluru - KSPCB",
-      "actual": 64.0,
-      "predicted": 41.0
-    },
-    {
-      "station_id": "6975",
-      "station_name": "Silk Board, Bengaluru - KSPCB",
-      "actual": 35.5,
-      "predicted": 40.9
-    },
-    {
-      "station_id": "6975",
-      "station_name": "Silk Board, Bengaluru - KSPCB",
-      "actual": 47.0,
-      "predicted": 50.1
-    },
-    {
-      "station_id": "6975",
-      "station_name": "Silk Board, Bengaluru - KSPCB",
-      "actual": 23.0,
-      "predicted": 41.9
-    },
-    {
-      "station_id": "6975",
-      "station_name": "Silk Board, Bengaluru - KSPCB",
-      "actual": 21.0,
-      "predicted": 37.7
-    },
-    {
-      "station_id": "6975",
-      "station_name": "Silk Board, Bengaluru - KSPCB",
-      "actual": 17.5,
-      "predicted": 35.5
-    },
-    {
-      "station_id": "6975",
-      "station_name": "Silk Board, Bengaluru - KSPCB",
-      "actual": 65.5,
-      "predicted": 63.1
-    },
-    {
-      "station_id": "6983",
-      "station_name": "Hombegowda Nagar, Bengaluru - KSPCB",
-      "actual": 25.0,
-      "predicted": 38.1
-    },
-    {
-      "station_id": "6983",
-      "station_name": "Hombegowda Nagar, Bengaluru - KSPCB",
-      "actual": 32.0,
-      "predicted": 40.2
-    },
-    {
-      "station_id": "6983",
-      "station_name": "Hombegowda Nagar, Bengaluru - KSPCB",
-      "actual": 29.0,
-      "predicted": 33.2
-    },
-    {
-      "station_id": "6983",
-      "station_name": "Hombegowda Nagar, Bengaluru - KSPCB",
-      "actual": 50.0,
-      "predicted": 34.9
-    },
-    {
-      "station_id": "6983",
-      "station_name": "Hombegowda Nagar, Bengaluru - KSPCB",
-      "actual": 21.0,
-      "predicted": 27.0
-    },
-    {
-      "station_id": "6983",
-      "station_name": "Hombegowda Nagar, Bengaluru - KSPCB",
-      "actual": 7.0,
-      "predicted": 27.3
-    },
-    {
-      "station_id": "6983",
-      "station_name": "Hombegowda Nagar, Bengaluru - KSPCB",
-      "actual": 12.5,
-      "predicted": 24.8
-    },
-    {
-      "station_id": "6983",
-      "station_name": "Hombegowda Nagar, Bengaluru - KSPCB",
-      "actual": 25.5,
-      "predicted": 31.3
-    },
-    {
-      "station_id": "6983",
-      "station_name": "Hombegowda Nagar, Bengaluru - KSPCB",
-      "actual": 70.0,
-      "predicted": 35.6
-    },
-    {
-      "station_id": "6983",
-      "station_name": "Hombegowda Nagar, Bengaluru - KSPCB",
-      "actual": 26.5,
-      "predicted": 31.3
-    },
-    {
-      "station_id": "6983",
-      "station_name": "Hombegowda Nagar, Bengaluru - KSPCB",
-      "actual": 34.0,
-      "predicted": 30.5
-    },
-    {
-      "station_id": "6983",
-      "station_name": "Hombegowda Nagar, Bengaluru - KSPCB",
-      "actual": 29.0,
-      "predicted": 29.5
-    },
-    {
-      "station_id": "6983",
-      "station_name": "Hombegowda Nagar, Bengaluru - KSPCB",
-      "actual": 29.5,
-      "predicted": 29.7
-    },
-    {
-      "station_id": "6983",
-      "station_name": "Hombegowda Nagar, Bengaluru - KSPCB",
-      "actual": 26.0,
-      "predicted": 27.9
-    },
-    {
-      "station_id": "6983",
-      "station_name": "Hombegowda Nagar, Bengaluru - KSPCB",
-      "actual": 50.5,
-      "predicted": 42.2
-    },
-    {
-      "station_id": "6983",
-      "station_name": "Hombegowda Nagar, Bengaluru - KSPCB",
-      "actual": 10.5,
-      "predicted": 33.5
-    },
-    {
-      "station_id": "6983",
-      "station_name": "Hombegowda Nagar, Bengaluru - KSPCB",
-      "actual": 18.5,
-      "predicted": 26.5
-    },
-    {
-      "station_id": "6983",
-      "station_name": "Hombegowda Nagar, Bengaluru - KSPCB",
-      "actual": 6.5,
-      "predicted": 25.6
-    },
-    {
-      "station_id": "6983",
-      "station_name": "Hombegowda Nagar, Bengaluru - KSPCB",
-      "actual": 16.7,
-      "predicted": 27.2
-    },
-    {
-      "station_id": "6983",
-      "station_name": "Hombegowda Nagar, Bengaluru - KSPCB",
-      "actual": 29.0,
-      "predicted": 30.0
-    },
-    {
-      "station_id": "6983",
-      "station_name": "Hombegowda Nagar, Bengaluru - KSPCB",
-      "actual": 18.0,
-      "predicted": 25.5
-    },
-    {
-      "station_id": "6983",
-      "station_name": "Hombegowda Nagar, Bengaluru - KSPCB",
-      "actual": 20.0,
-      "predicted": 26.3
-    },
-    {
-      "station_id": "6983",
-      "station_name": "Hombegowda Nagar, Bengaluru - KSPCB",
-      "actual": 20.0,
-      "predicted": 29.5
-    },
-    {
-      "station_id": "6983",
-      "station_name": "Hombegowda Nagar, Bengaluru - KSPCB",
-      "actual": 12.0,
-      "predicted": 20.5
-    },
-    {
-      "station_id": "6983",
-      "station_name": "Hombegowda Nagar, Bengaluru - KSPCB",
-      "actual": 4.0,
-      "predicted": 20.1
-    },
-    {
-      "station_id": "6983",
-      "station_name": "Hombegowda Nagar, Bengaluru - KSPCB",
-      "actual": 4.0,
-      "predicted": 18.0
-    },
-    {
-      "station_id": "6983",
-      "station_name": "Hombegowda Nagar, Bengaluru - KSPCB",
-      "actual": 14.0,
-      "predicted": 31.6
-    },
-    {
-      "station_id": "6983",
-      "station_name": "Hombegowda Nagar, Bengaluru - KSPCB",
-      "actual": 7.0,
-      "predicted": 30.1
-    },
-    {
-      "station_id": "6983",
-      "station_name": "Hombegowda Nagar, Bengaluru - KSPCB",
-      "actual": 11.0,
-      "predicted": 27.0
-    },
-    {
-      "station_id": "6983",
-      "station_name": "Hombegowda Nagar, Bengaluru - KSPCB",
-      "actual": 1.0,
-      "predicted": 21.4
-    },
-    {
-      "station_id": "6983",
-      "station_name": "Hombegowda Nagar, Bengaluru - KSPCB",
-      "actual": 6.5,
-      "predicted": 26.5
-    },
-    {
-      "station_id": "6983",
-      "station_name": "Hombegowda Nagar, Bengaluru - KSPCB",
-      "actual": 15.0,
-      "predicted": 23.8
-    },
-    {
-      "station_id": "6983",
-      "station_name": "Hombegowda Nagar, Bengaluru - KSPCB",
-      "actual": 17.0,
-      "predicted": 26.5
-    },
-    {
-      "station_id": "6983",
-      "station_name": "Hombegowda Nagar, Bengaluru - KSPCB",
-      "actual": 12.0,
-      "predicted": 22.4
-    },
-    {
-      "station_id": "6983",
-      "station_name": "Hombegowda Nagar, Bengaluru - KSPCB",
-      "actual": 10.0,
-      "predicted": 24.2
-    },
-    {
-      "station_id": "6983",
-      "station_name": "Hombegowda Nagar, Bengaluru - KSPCB",
-      "actual": 14.5,
-      "predicted": 21.4
-    },
-    {
-      "station_id": "6983",
-      "station_name": "Hombegowda Nagar, Bengaluru - KSPCB",
-      "actual": 16.0,
-      "predicted": 23.4
-    },
-    {
-      "station_id": "6983",
-      "station_name": "Hombegowda Nagar, Bengaluru - KSPCB",
-      "actual": 12.0,
-      "predicted": 23.6
-    },
-    {
-      "station_id": "6983",
-      "station_name": "Hombegowda Nagar, Bengaluru - KSPCB",
-      "actual": 15.0,
-      "predicted": 25.0
-    },
-    {
-      "station_id": "6983",
-      "station_name": "Hombegowda Nagar, Bengaluru - KSPCB",
-      "actual": 6.0,
-      "predicted": 20.4
-    },
-    {
-      "station_id": "6983",
-      "station_name": "Hombegowda Nagar, Bengaluru - KSPCB",
-      "actual": 1.0,
-      "predicted": 22.4
-    },
-    {
-      "station_id": "6983",
-      "station_name": "Hombegowda Nagar, Bengaluru - KSPCB",
-      "actual": 3.3,
-      "predicted": 22.8
-    },
-    {
-      "station_id": "6983",
-      "station_name": "Hombegowda Nagar, Bengaluru - KSPCB",
-      "actual": 10.0,
-      "predicted": 24.6
-    },
-    {
-      "station_id": "6983",
-      "station_name": "Hombegowda Nagar, Bengaluru - KSPCB",
-      "actual": 26.0,
-      "predicted": 28.9
-    },
-    {
-      "station_id": "6983",
-      "station_name": "Hombegowda Nagar, Bengaluru - KSPCB",
-      "actual": 9.7,
-      "predicted": 27.4
-    },
-    {
-      "station_id": "6983",
-      "station_name": "Hombegowda Nagar, Bengaluru - KSPCB",
-      "actual": 13.5,
-      "predicted": 29.4
-    },
-    {
-      "station_id": "6983",
-      "station_name": "Hombegowda Nagar, Bengaluru - KSPCB",
-      "actual": 2.5,
-      "predicted": 25.4
-    },
-    {
-      "station_id": "6983",
-      "station_name": "Hombegowda Nagar, Bengaluru - KSPCB",
-      "actual": 12.5,
-      "predicted": 27.0
-    },
-    {
-      "station_id": "6983",
-      "station_name": "Hombegowda Nagar, Bengaluru - KSPCB",
-      "actual": 4.5,
-      "predicted": 22.4
-    },
-    {
-      "station_id": "6983",
-      "station_name": "Hombegowda Nagar, Bengaluru - KSPCB",
-      "actual": 13.5,
-      "predicted": 23.6
-    },
-    {
-      "station_id": "6983",
-      "station_name": "Hombegowda Nagar, Bengaluru - KSPCB",
-      "actual": 36.0,
-      "predicted": 38.1
-    },
-    {
-      "station_id": "6983",
-      "station_name": "Hombegowda Nagar, Bengaluru - KSPCB",
-      "actual": 4.0,
-      "predicted": 28.1
-    },
-    {
-      "station_id": "6983",
-      "station_name": "Hombegowda Nagar, Bengaluru - KSPCB",
-      "actual": 12.0,
-      "predicted": 29.1
-    },
-    {
-      "station_id": "6983",
-      "station_name": "Hombegowda Nagar, Bengaluru - KSPCB",
-      "actual": 8.5,
-      "predicted": 26.8
-    },
-    {
-      "station_id": "6983",
-      "station_name": "Hombegowda Nagar, Bengaluru - KSPCB",
-      "actual": 15.3,
-      "predicted": 28.9
-    },
-    {
-      "station_id": "6983",
-      "station_name": "Hombegowda Nagar, Bengaluru - KSPCB",
-      "actual": 11.0,
-      "predicted": 38.0
-    },
-    {
-      "station_id": "6983",
-      "station_name": "Hombegowda Nagar, Bengaluru - KSPCB",
-      "actual": 20.0,
-      "predicted": 40.3
-    },
-    {
-      "station_id": "6983",
-      "station_name": "Hombegowda Nagar, Bengaluru - KSPCB",
-      "actual": 13.0,
-      "predicted": 29.7
-    },
-    {
-      "station_id": "6983",
-      "station_name": "Hombegowda Nagar, Bengaluru - KSPCB",
-      "actual": 32.5,
-      "predicted": 44.8
-    },
-    {
-      "station_id": "6983",
-      "station_name": "Hombegowda Nagar, Bengaluru - KSPCB",
-      "actual": 40.0,
-      "predicted": 46.5
-    },
-    {
-      "station_id": "6983",
-      "station_name": "Hombegowda Nagar, Bengaluru - KSPCB",
-      "actual": 44.5,
-      "predicted": 56.3
-    },
-    {
-      "station_id": "6983",
-      "station_name": "Hombegowda Nagar, Bengaluru - KSPCB",
-      "actual": 47.5,
-      "predicted": 63.4
-    },
-    {
-      "station_id": "6983",
-      "station_name": "Hombegowda Nagar, Bengaluru - KSPCB",
-      "actual": 36.0,
-      "predicted": 49.9
-    },
-    {
-      "station_id": "6983",
-      "station_name": "Hombegowda Nagar, Bengaluru - KSPCB",
-      "actual": 44.0,
-      "predicted": 49.1
-    },
-    {
-      "station_id": "6983",
-      "station_name": "Hombegowda Nagar, Bengaluru - KSPCB",
-      "actual": 24.5,
-      "predicted": 61.4
-    },
-    {
-      "station_id": "6984",
-      "station_name": "Hebbal, Bengaluru - KSPCB",
-      "actual": 67.0,
-      "predicted": 21.1
-    },
-    {
-      "station_id": "6984",
-      "station_name": "Hebbal, Bengaluru - KSPCB",
-      "actual": 16.5,
-      "predicted": 29.9
-    },
-    {
-      "station_id": "6984",
-      "station_name": "Hebbal, Bengaluru - KSPCB",
-      "actual": 22.3,
-      "predicted": 20.0
-    },
-    {
-      "station_id": "6984",
-      "station_name": "Hebbal, Bengaluru - KSPCB",
-      "actual": 34.5,
-      "predicted": 20.3
-    },
-    {
-      "station_id": "6984",
-      "station_name": "Hebbal, Bengaluru - KSPCB",
-      "actual": 29.0,
-      "predicted": 20.3
-    },
-    {
-      "station_id": "6984",
-      "station_name": "Hebbal, Bengaluru - KSPCB",
-      "actual": 52.5,
-      "predicted": 17.5
-    },
-    {
-      "station_id": "6984",
-      "station_name": "Hebbal, Bengaluru - KSPCB",
-      "actual": 37.5,
-      "predicted": 26.7
-    },
-    {
-      "station_id": "6984",
-      "station_name": "Hebbal, Bengaluru - KSPCB",
-      "actual": 42.0,
-      "predicted": 17.6
-    },
-    {
-      "station_id": "6984",
-      "station_name": "Hebbal, Bengaluru - KSPCB",
-      "actual": 39.0,
-      "predicted": 14.7
-    },
-    {
-      "station_id": "6984",
-      "station_name": "Hebbal, Bengaluru - KSPCB",
-      "actual": 5.0,
-      "predicted": 14.8
-    },
-    {
-      "station_id": "6984",
-      "station_name": "Hebbal, Bengaluru - KSPCB",
-      "actual": 9.0,
-      "predicted": 19.8
-    },
-    {
-      "station_id": "6984",
-      "station_name": "Hebbal, Bengaluru - KSPCB",
-      "actual": 12.0,
-      "predicted": 20.5
-    },
-    {
-      "station_id": "6984",
-      "station_name": "Hebbal, Bengaluru - KSPCB",
-      "actual": 16.5,
-      "predicted": 14.9
-    },
-    {
-      "station_id": "6984",
-      "station_name": "Hebbal, Bengaluru - KSPCB",
-      "actual": 22.5,
-      "predicted": 26.7
-    },
-    {
-      "station_id": "6984",
-      "station_name": "Hebbal, Bengaluru - KSPCB",
-      "actual": 6.0,
-      "predicted": 16.4
-    },
-    {
-      "station_id": "6984",
-      "station_name": "Hebbal, Bengaluru - KSPCB",
-      "actual": 8.5,
-      "predicted": 20.1
-    },
-    {
-      "station_id": "6984",
-      "station_name": "Hebbal, Bengaluru - KSPCB",
-      "actual": 5.0,
-      "predicted": 21.3
-    },
-    {
-      "station_id": "6984",
-      "station_name": "Hebbal, Bengaluru - KSPCB",
-      "actual": 5.3,
-      "predicted": 21.1
-    },
-    {
-      "station_id": "6984",
-      "station_name": "Hebbal, Bengaluru - KSPCB",
-      "actual": 5.0,
-      "predicted": 18.4
-    },
-    {
-      "station_id": "6984",
-      "station_name": "Hebbal, Bengaluru - KSPCB",
-      "actual": 9.5,
-      "predicted": 18.5
-    },
-    {
-      "station_id": "6984",
-      "station_name": "Hebbal, Bengaluru - KSPCB",
-      "actual": 6.0,
-      "predicted": 18.3
-    },
-    {
-      "station_id": "6984",
-      "station_name": "Hebbal, Bengaluru - KSPCB",
-      "actual": 6.0,
-      "predicted": 16.2
-    },
-    {
-      "station_id": "6984",
-      "station_name": "Hebbal, Bengaluru - KSPCB",
-      "actual": 4.0,
-      "predicted": 15.1
-    },
-    {
-      "station_id": "6984",
-      "station_name": "Hebbal, Bengaluru - KSPCB",
-      "actual": 1.0,
-      "predicted": 13.8
-    },
-    {
-      "station_id": "6984",
-      "station_name": "Hebbal, Bengaluru - KSPCB",
-      "actual": 3.5,
-      "predicted": 17.8
-    },
-    {
-      "station_id": "6984",
-      "station_name": "Hebbal, Bengaluru - KSPCB",
-      "actual": 4.5,
-      "predicted": 18.4
-    },
-    {
-      "station_id": "6984",
-      "station_name": "Hebbal, Bengaluru - KSPCB",
-      "actual": 6.0,
-      "predicted": 20.7
-    },
-    {
-      "station_id": "6984",
-      "station_name": "Hebbal, Bengaluru - KSPCB",
-      "actual": 9.0,
-      "predicted": 17.5
-    },
-    {
-      "station_id": "6984",
-      "station_name": "Hebbal, Bengaluru - KSPCB",
-      "actual": 11.0,
-      "predicted": 20.0
-    },
-    {
-      "station_id": "6984",
-      "station_name": "Hebbal, Bengaluru - KSPCB",
-      "actual": 11.0,
-      "predicted": 20.3
-    },
-    {
-      "station_id": "6984",
-      "station_name": "Hebbal, Bengaluru - KSPCB",
-      "actual": 6.0,
-      "predicted": 24.3
-    },
-    {
-      "station_id": "6984",
-      "station_name": "Hebbal, Bengaluru - KSPCB",
-      "actual": 12.0,
-      "predicted": 22.7
-    },
-    {
-      "station_id": "6984",
-      "station_name": "Hebbal, Bengaluru - KSPCB",
-      "actual": 13.0,
-      "predicted": 21.1
-    },
-    {
-      "station_id": "6984",
-      "station_name": "Hebbal, Bengaluru - KSPCB",
-      "actual": 15.5,
-      "predicted": 22.7
-    },
-    {
-      "station_id": "6984",
-      "station_name": "Hebbal, Bengaluru - KSPCB",
-      "actual": 55.5,
-      "predicted": 25.9
-    },
-    {
-      "station_id": "6984",
-      "station_name": "Hebbal, Bengaluru - KSPCB",
-      "actual": 78.7,
-      "predicted": 27.0
-    },
-    {
-      "station_id": "6984",
-      "station_name": "Hebbal, Bengaluru - KSPCB",
-      "actual": 31.5,
-      "predicted": 22.6
-    },
-    {
-      "station_id": "6984",
-      "station_name": "Hebbal, Bengaluru - KSPCB",
-      "actual": 83.5,
-      "predicted": 24.5
-    },
-    {
-      "station_id": "6984",
-      "station_name": "Hebbal, Bengaluru - KSPCB",
-      "actual": 67.0,
-      "predicted": 19.7
-    },
-    {
-      "station_id": "2498781",
-      "station_name": "SiriJaya",
-      "actual": 80.4,
-      "predicted": 33.8
-    },
-    {
-      "station_id": "2498781",
-      "station_name": "SiriJaya",
-      "actual": 58.3,
-      "predicted": 36.8
-    },
-    {
-      "station_id": "2498781",
-      "station_name": "SiriJaya",
-      "actual": 56.4,
-      "predicted": 40.8
-    },
-    {
-      "station_id": "2498781",
-      "station_name": "SiriJaya",
-      "actual": 73.1,
-      "predicted": 39.5
-    },
-    {
-      "station_id": "2498781",
-      "station_name": "SiriJaya",
-      "actual": 43.5,
-      "predicted": 42.5
-    },
-    {
-      "station_id": "2498781",
-      "station_name": "SiriJaya",
-      "actual": 39.7,
-      "predicted": 37.3
-    },
-    {
-      "station_id": "2498781",
-      "station_name": "SiriJaya",
-      "actual": 79.3,
-      "predicted": 36.3
-    },
-    {
-      "station_id": "2498781",
-      "station_name": "SiriJaya",
-      "actual": 51.2,
-      "predicted": 32.8
-    },
-    {
-      "station_id": "2498781",
-      "station_name": "SiriJaya",
-      "actual": 38.0,
-      "predicted": 33.0
-    },
-    {
-      "station_id": "2498781",
-      "station_name": "SiriJaya",
-      "actual": 120.0,
-      "predicted": 33.1
-    },
-    {
-      "station_id": "2498781",
-      "station_name": "SiriJaya",
-      "actual": 39.0,
-      "predicted": 30.9
-    },
-    {
-      "station_id": "2498781",
-      "station_name": "SiriJaya",
-      "actual": 26.0,
-      "predicted": 16.4
-    },
-    {
-      "station_id": "2498781",
-      "station_name": "SiriJaya",
-      "actual": 45.5,
-      "predicted": 32.1
-    },
-    {
-      "station_id": "2498781",
-      "station_name": "SiriJaya",
-      "actual": 45.3,
-      "predicted": 33.5
-    },
-    {
-      "station_id": "2498781",
-      "station_name": "SiriJaya",
-      "actual": 28.7,
-      "predicted": 30.9
-    },
-    {
-      "station_id": "3409312",
-      "station_name": "BWSSB Kadabesanahalli, Bengaluru - CPCB",
-      "actual": 27.3,
-      "predicted": 29.3
-    },
-    {
-      "station_id": "3409312",
-      "station_name": "BWSSB Kadabesanahalli, Bengaluru - CPCB",
-      "actual": 0.0,
-      "predicted": 27.9
-    },
-    {
-      "station_id": "3409312",
-      "station_name": "BWSSB Kadabesanahalli, Bengaluru - CPCB",
-      "actual": 36.1,
-      "predicted": 29.5
-    },
-    {
-      "station_id": "3409312",
-      "station_name": "BWSSB Kadabesanahalli, Bengaluru - CPCB",
-      "actual": 36.6,
-      "predicted": 29.3
-    },
-    {
-      "station_id": "3409312",
-      "station_name": "BWSSB Kadabesanahalli, Bengaluru - CPCB",
-      "actual": 36.5,
-      "predicted": 34.5
-    },
-    {
-      "station_id": "3409312",
-      "station_name": "BWSSB Kadabesanahalli, Bengaluru - CPCB",
-      "actual": 36.5,
-      "predicted": 33.5
-    },
-    {
-      "station_id": "3409312",
-      "station_name": "BWSSB Kadabesanahalli, Bengaluru - CPCB",
-      "actual": 36.2,
-      "predicted": 36.5
-    },
-    {
-      "station_id": "3409312",
-      "station_name": "BWSSB Kadabesanahalli, Bengaluru - CPCB",
-      "actual": 36.2,
-      "predicted": 34.1
-    },
-    {
-      "station_id": "3409312",
-      "station_name": "BWSSB Kadabesanahalli, Bengaluru - CPCB",
-      "actual": 36.5,
-      "predicted": 35.5
-    },
-    {
-      "station_id": "3409312",
-      "station_name": "BWSSB Kadabesanahalli, Bengaluru - CPCB",
-      "actual": 36.4,
-      "predicted": 38.7
-    },
-    {
-      "station_id": "3409312",
-      "station_name": "BWSSB Kadabesanahalli, Bengaluru - CPCB",
-      "actual": 43.7,
-      "predicted": 35.5
-    },
-    {
-      "station_id": "3409312",
-      "station_name": "BWSSB Kadabesanahalli, Bengaluru - CPCB",
-      "actual": 0.0,
-      "predicted": 26.5
-    },
-    {
-      "station_id": "3409312",
-      "station_name": "BWSSB Kadabesanahalli, Bengaluru - CPCB",
-      "actual": 93.4,
-      "predicted": 55.9
-    },
-    {
-      "station_id": "3409312",
-      "station_name": "BWSSB Kadabesanahalli, Bengaluru - CPCB",
-      "actual": 83.1,
-      "predicted": 48.5
-    },
-    {
-      "station_id": "3409312",
-      "station_name": "BWSSB Kadabesanahalli, Bengaluru - CPCB",
-      "actual": 107.0,
-      "predicted": 52.2
-    },
-    {
-      "station_id": "3409312",
-      "station_name": "BWSSB Kadabesanahalli, Bengaluru - CPCB",
-      "actual": 24.0,
-      "predicted": 46.4
-    },
-    {
-      "station_id": "3409312",
-      "station_name": "BWSSB Kadabesanahalli, Bengaluru - CPCB",
-      "actual": 102.0,
-      "predicted": 54.9
-    },
-    {
-      "station_id": "3409385",
-      "station_name": "RVCE-Mailasandra, Bengaluru - KSPCB",
-      "actual": 33.5,
-      "predicted": 47.4
-    },
-    {
-      "station_id": "3409385",
-      "station_name": "RVCE-Mailasandra, Bengaluru - KSPCB",
-      "actual": 34.2,
-      "predicted": 52.8
-    },
-    {
-      "station_id": "3409385",
-      "station_name": "RVCE-Mailasandra, Bengaluru - KSPCB",
-      "actual": 33.9,
-      "predicted": 50.0
-    },
-    {
-      "station_id": "3409385",
-      "station_name": "RVCE-Mailasandra, Bengaluru - KSPCB",
-      "actual": 33.5,
-      "predicted": 54.2
-    },
-    {
-      "station_id": "3409385",
-      "station_name": "RVCE-Mailasandra, Bengaluru - KSPCB",
-      "actual": 33.7,
-      "predicted": 31.8
-    },
-    {
-      "station_id": "3409385",
-      "station_name": "RVCE-Mailasandra, Bengaluru - KSPCB",
-      "actual": 33.8,
-      "predicted": 31.3
-    },
-    {
-      "station_id": "3409385",
-      "station_name": "RVCE-Mailasandra, Bengaluru - KSPCB",
-      "actual": 33.6,
-      "predicted": 34.1
-    },
-    {
-      "station_id": "3409385",
-      "station_name": "RVCE-Mailasandra, Bengaluru - KSPCB",
-      "actual": 33.4,
-      "predicted": 33.3
-    },
-    {
-      "station_id": "3409385",
-      "station_name": "RVCE-Mailasandra, Bengaluru - KSPCB",
-      "actual": 70.5,
-      "predicted": 29.1
-    },
-    {
-      "station_id": "3409385",
-      "station_name": "RVCE-Mailasandra, Bengaluru - KSPCB",
-      "actual": 73.5,
-      "predicted": 29.5
-    },
-    {
-      "station_id": "3409385",
-      "station_name": "RVCE-Mailasandra, Bengaluru - KSPCB",
-      "actual": 72.1,
-      "predicted": 30.5
-    },
-    {
-      "station_id": "3409385",
-      "station_name": "RVCE-Mailasandra, Bengaluru - KSPCB",
-      "actual": 54.0,
-      "predicted": 23.8
-    },
-    {
-      "station_id": "3409385",
-      "station_name": "RVCE-Mailasandra, Bengaluru - KSPCB",
-      "actual": 46.3,
-      "predicted": 27.7
-    },
-    {
-      "station_id": "3409385",
-      "station_name": "RVCE-Mailasandra, Bengaluru - KSPCB",
-      "actual": 49.6,
-      "predicted": 30.2
-    },
-    {
-      "station_id": "3409385",
-      "station_name": "RVCE-Mailasandra, Bengaluru - KSPCB",
-      "actual": 31.9,
-      "predicted": 32.1
-    },
-    {
-      "station_id": "3409385",
-      "station_name": "RVCE-Mailasandra, Bengaluru - KSPCB",
-      "actual": 23.7,
-      "predicted": 28.9
-    },
-    {
-      "station_id": "3409385",
-      "station_name": "RVCE-Mailasandra, Bengaluru - KSPCB",
-      "actual": 27.2,
-      "predicted": 27.4
-    },
-    {
-      "station_id": "3409385",
-      "station_name": "RVCE-Mailasandra, Bengaluru - KSPCB",
-      "actual": 23.9,
-      "predicted": 29.1
-    },
-    {
-      "station_id": "3409385",
-      "station_name": "RVCE-Mailasandra, Bengaluru - KSPCB",
-      "actual": 37.2,
-      "predicted": 29.1
-    },
-    {
-      "station_id": "3409385",
-      "station_name": "RVCE-Mailasandra, Bengaluru - KSPCB",
-      "actual": 56.6,
-      "predicted": 26.7
-    },
-    {
-      "station_id": "3409385",
-      "station_name": "RVCE-Mailasandra, Bengaluru - KSPCB",
-      "actual": 33.4,
-      "predicted": 23.5
-    },
-    {
-      "station_id": "3409385",
-      "station_name": "RVCE-Mailasandra, Bengaluru - KSPCB",
-      "actual": 33.7,
-      "predicted": 37.1
-    },
-    {
-      "station_id": "3409385",
-      "station_name": "RVCE-Mailasandra, Bengaluru - KSPCB",
-      "actual": 33.1,
-      "predicted": 29.1
-    },
-    {
-      "station_id": "3409385",
-      "station_name": "RVCE-Mailasandra, Bengaluru - KSPCB",
-      "actual": 33.3,
-      "predicted": 27.5
-    },
-    {
-      "station_id": "3409385",
-      "station_name": "RVCE-Mailasandra, Bengaluru - KSPCB",
-      "actual": 33.0,
-      "predicted": 29.4
-    },
-    {
-      "station_id": "3409385",
-      "station_name": "RVCE-Mailasandra, Bengaluru - KSPCB",
-      "actual": 33.0,
-      "predicted": 31.0
-    },
-    {
-      "station_id": "3409385",
-      "station_name": "RVCE-Mailasandra, Bengaluru - KSPCB",
-      "actual": 33.0,
-      "predicted": 36.7
-    },
-    {
-      "station_id": "3409385",
-      "station_name": "RVCE-Mailasandra, Bengaluru - KSPCB",
-      "actual": 33.0,
-      "predicted": 26.6
-    },
-    {
-      "station_id": "3409385",
-      "station_name": "RVCE-Mailasandra, Bengaluru - KSPCB",
-      "actual": 33.0,
-      "predicted": 39.1
-    },
-    {
-      "station_id": "3409385",
-      "station_name": "RVCE-Mailasandra, Bengaluru - KSPCB",
-      "actual": 33.0,
-      "predicted": 51.9
-    },
-    {
-      "station_id": "3409385",
-      "station_name": "RVCE-Mailasandra, Bengaluru - KSPCB",
-      "actual": 16.0,
-      "predicted": 32.9
-    },
-    {
-      "station_id": "3409385",
-      "station_name": "RVCE-Mailasandra, Bengaluru - KSPCB",
-      "actual": 16.0,
-      "predicted": 34.7
-    },
-    {
-      "station_id": "3409385",
-      "station_name": "RVCE-Mailasandra, Bengaluru - KSPCB",
-      "actual": 16.0,
-      "predicted": 36.7
-    },
-    {
-      "station_id": "3409385",
-      "station_name": "RVCE-Mailasandra, Bengaluru - KSPCB",
-      "actual": 16.0,
-      "predicted": 39.4
-    },
-    {
-      "station_id": "3409385",
-      "station_name": "RVCE-Mailasandra, Bengaluru - KSPCB",
-      "actual": 96.2,
-      "predicted": 41.4
-    },
-    {
-      "station_id": "3409385",
-      "station_name": "RVCE-Mailasandra, Bengaluru - KSPCB",
-      "actual": 30.2,
-      "predicted": 49.1
-    },
-    {
-      "station_id": "3409385",
-      "station_name": "RVCE-Mailasandra, Bengaluru - KSPCB",
-      "actual": 33.2,
-      "predicted": 13.8
-    },
-    {
-      "station_id": "3409385",
-      "station_name": "RVCE-Mailasandra, Bengaluru - KSPCB",
-      "actual": 29.8,
-      "predicted": 47.9
-    },
-    {
-      "station_id": "3409385",
-      "station_name": "RVCE-Mailasandra, Bengaluru - KSPCB",
-      "actual": 31.5,
-      "predicted": 52.2
-    },
-    {
-      "station_id": "3409385",
-      "station_name": "RVCE-Mailasandra, Bengaluru - KSPCB",
-      "actual": 31.8,
-      "predicted": 65.5
-    },
-    {
-      "station_id": "3409385",
-      "station_name": "RVCE-Mailasandra, Bengaluru - KSPCB",
-      "actual": 50.8,
-      "predicted": 63.7
-    },
-    {
-      "station_id": "3409385",
-      "station_name": "RVCE-Mailasandra, Bengaluru - KSPCB",
-      "actual": 32.5,
-      "predicted": 58.9
-    },
-    {
-      "station_id": "3409385",
-      "station_name": "RVCE-Mailasandra, Bengaluru - KSPCB",
-      "actual": 25.2,
-      "predicted": 55.9
-    },
-    {
-      "station_id": "3409385",
-      "station_name": "RVCE-Mailasandra, Bengaluru - KSPCB",
-      "actual": 28.3,
-      "predicted": 49.5
-    },
-    {
-      "station_id": "3409385",
-      "station_name": "RVCE-Mailasandra, Bengaluru - KSPCB",
-      "actual": 63.2,
-      "predicted": 63.2
-    },
-    {
-      "station_id": "3409388",
-      "station_name": "Kasturi Nagar, Bengaluru - KSPCB",
-      "actual": 23.0,
-      "predicted": 41.5
-    },
-    {
-      "station_id": "3409388",
-      "station_name": "Kasturi Nagar, Bengaluru - KSPCB",
-      "actual": 22.3,
-      "predicted": 32.9
-    },
-    {
-      "station_id": "3409388",
-      "station_name": "Kasturi Nagar, Bengaluru - KSPCB",
-      "actual": 22.6,
-      "predicted": 25.4
-    },
-    {
-      "station_id": "3409388",
-      "station_name": "Kasturi Nagar, Bengaluru - KSPCB",
-      "actual": 27.5,
-      "predicted": 15.0
-    },
-    {
-      "station_id": "3409388",
-      "station_name": "Kasturi Nagar, Bengaluru - KSPCB",
-      "actual": 23.7,
-      "predicted": 35.9
-    },
-    {
-      "station_id": "3409388",
-      "station_name": "Kasturi Nagar, Bengaluru - KSPCB",
-      "actual": 22.2,
-      "predicted": 37.1
-    },
-    {
-      "station_id": "3409388",
-      "station_name": "Kasturi Nagar, Bengaluru - KSPCB",
-      "actual": 24.2,
-      "predicted": 49.0
-    },
-    {
-      "station_id": "3409388",
-      "station_name": "Kasturi Nagar, Bengaluru - KSPCB",
-      "actual": 25.6,
-      "predicted": 29.6
-    },
-    {
-      "station_id": "3409388",
-      "station_name": "Kasturi Nagar, Bengaluru - KSPCB",
-      "actual": 24.5,
-      "predicted": 35.0
-    },
-    {
-      "station_id": "3409388",
-      "station_name": "Kasturi Nagar, Bengaluru - KSPCB",
-      "actual": 21.7,
-      "predicted": 41.7
-    },
-    {
-      "station_id": "3409388",
-      "station_name": "Kasturi Nagar, Bengaluru - KSPCB",
-      "actual": 22.0,
-      "predicted": 34.3
-    },
-    {
-      "station_id": "3409388",
-      "station_name": "Kasturi Nagar, Bengaluru - KSPCB",
-      "actual": 22.4,
-      "predicted": 24.8
-    },
-    {
-      "station_id": "3409388",
-      "station_name": "Kasturi Nagar, Bengaluru - KSPCB",
-      "actual": 22.5,
-      "predicted": 30.4
-    },
-    {
-      "station_id": "3409388",
-      "station_name": "Kasturi Nagar, Bengaluru - KSPCB",
-      "actual": 21.7,
-      "predicted": 35.5
-    },
-    {
-      "station_id": "3409388",
-      "station_name": "Kasturi Nagar, Bengaluru - KSPCB",
-      "actual": 23.3,
-      "predicted": 30.2
-    },
-    {
-      "station_id": "3409388",
-      "station_name": "Kasturi Nagar, Bengaluru - KSPCB",
-      "actual": 22.3,
-      "predicted": 23.5
-    },
-    {
-      "station_id": "3409388",
-      "station_name": "Kasturi Nagar, Bengaluru - KSPCB",
-      "actual": 22.5,
-      "predicted": 12.3
-    },
-    {
-      "station_id": "3409388",
-      "station_name": "Kasturi Nagar, Bengaluru - KSPCB",
-      "actual": 29.4,
-      "predicted": 17.1
-    },
-    {
-      "station_id": "3409388",
-      "station_name": "Kasturi Nagar, Bengaluru - KSPCB",
-      "actual": 29.3,
-      "predicted": 20.5
-    },
-    {
-      "station_id": "3409388",
-      "station_name": "Kasturi Nagar, Bengaluru - KSPCB",
-      "actual": 29.6,
-      "predicted": 20.3
-    },
-    {
-      "station_id": "3409388",
-      "station_name": "Kasturi Nagar, Bengaluru - KSPCB",
-      "actual": 41.7,
-      "predicted": 35.3
-    },
-    {
-      "station_id": "3409388",
-      "station_name": "Kasturi Nagar, Bengaluru - KSPCB",
-      "actual": 34.3,
-      "predicted": 14.2
-    },
-    {
-      "station_id": "3409388",
-      "station_name": "Kasturi Nagar, Bengaluru - KSPCB",
-      "actual": 25.8,
-      "predicted": 15.9
-    },
-    {
-      "station_id": "3409388",
-      "station_name": "Kasturi Nagar, Bengaluru - KSPCB",
-      "actual": 25.7,
-      "predicted": 11.0
-    },
-    {
-      "station_id": "3409388",
-      "station_name": "Kasturi Nagar, Bengaluru - KSPCB",
-      "actual": 36.3,
-      "predicted": 15.8
-    },
-    {
-      "station_id": "3409388",
-      "station_name": "Kasturi Nagar, Bengaluru - KSPCB",
-      "actual": 29.9,
-      "predicted": 10.9
-    },
-    {
-      "station_id": "3409388",
-      "station_name": "Kasturi Nagar, Bengaluru - KSPCB",
-      "actual": 35.8,
-      "predicted": 17.9
-    },
-    {
-      "station_id": "3409388",
-      "station_name": "Kasturi Nagar, Bengaluru - KSPCB",
-      "actual": 31.9,
-      "predicted": 17.7
-    },
-    {
-      "station_id": "3409388",
-      "station_name": "Kasturi Nagar, Bengaluru - KSPCB",
-      "actual": 31.8,
-      "predicted": 10.4
-    },
-    {
-      "station_id": "3409388",
-      "station_name": "Kasturi Nagar, Bengaluru - KSPCB",
-      "actual": 31.2,
-      "predicted": 12.5
-    },
-    {
-      "station_id": "3409388",
-      "station_name": "Kasturi Nagar, Bengaluru - KSPCB",
-      "actual": 28.6,
-      "predicted": 13.4
-    },
-    {
-      "station_id": "3409388",
-      "station_name": "Kasturi Nagar, Bengaluru - KSPCB",
-      "actual": 28.8,
-      "predicted": 20.9
-    },
-    {
-      "station_id": "3409388",
-      "station_name": "Kasturi Nagar, Bengaluru - KSPCB",
-      "actual": 34.7,
-      "predicted": 51.4
-    },
-    {
-      "station_id": "3409388",
-      "station_name": "Kasturi Nagar, Bengaluru - KSPCB",
-      "actual": 36.0,
-      "predicted": 51.2
-    },
-    {
-      "station_id": "3409388",
-      "station_name": "Kasturi Nagar, Bengaluru - KSPCB",
-      "actual": 35.8,
-      "predicted": 13.0
-    },
-    {
-      "station_id": "3409388",
-      "station_name": "Kasturi Nagar, Bengaluru - KSPCB",
-      "actual": 38.0,
-      "predicted": 39.2
-    },
-    {
-      "station_id": "3409388",
-      "station_name": "Kasturi Nagar, Bengaluru - KSPCB",
-      "actual": 39.2,
-      "predicted": 43.0
-    },
-    {
-      "station_id": "3409388",
-      "station_name": "Kasturi Nagar, Bengaluru - KSPCB",
-      "actual": 39.4,
-      "predicted": 51.7
-    },
-    {
-      "station_id": "3409388",
-      "station_name": "Kasturi Nagar, Bengaluru - KSPCB",
-      "actual": 39.3,
-      "predicted": 58.4
-    },
-    {
-      "station_id": "3409388",
-      "station_name": "Kasturi Nagar, Bengaluru - KSPCB",
-      "actual": 52.1,
-      "predicted": 7.7
-    },
-    {
-      "station_id": "3409388",
-      "station_name": "Kasturi Nagar, Bengaluru - KSPCB",
-      "actual": 48.1,
-      "predicted": 26.8
-    },
-    {
-      "station_id": "3409388",
-      "station_name": "Kasturi Nagar, Bengaluru - KSPCB",
-      "actual": 49.8,
-      "predicted": 56.0
-    },
-    {
-      "station_id": "3409393",
-      "station_name": "Shivapura_Peenya, Bengaluru - KSPCB",
-      "actual": 54.1,
-      "predicted": 25.6
-    },
-    {
-      "station_id": "3409393",
-      "station_name": "Shivapura_Peenya, Bengaluru - KSPCB",
-      "actual": 32.3,
-      "predicted": 26.6
-    },
-    {
-      "station_id": "3409393",
-      "station_name": "Shivapura_Peenya, Bengaluru - KSPCB",
-      "actual": 26.9,
-      "predicted": 25.8
-    },
-    {
-      "station_id": "3409393",
-      "station_name": "Shivapura_Peenya, Bengaluru - KSPCB",
-      "actual": 24.7,
-      "predicted": 29.0
-    },
-    {
-      "station_id": "3409393",
-      "station_name": "Shivapura_Peenya, Bengaluru - KSPCB",
-      "actual": 24.9,
-      "predicted": 27.3
-    },
-    {
-      "station_id": "3409393",
-      "station_name": "Shivapura_Peenya, Bengaluru - KSPCB",
-      "actual": 19.4,
-      "predicted": 28.5
-    },
-    {
-      "station_id": "3409393",
-      "station_name": "Shivapura_Peenya, Bengaluru - KSPCB",
-      "actual": 25.4,
-      "predicted": 23.2
-    },
-    {
-      "station_id": "3409393",
-      "station_name": "Shivapura_Peenya, Bengaluru - KSPCB",
-      "actual": 25.4,
-      "predicted": 29.7
-    },
-    {
-      "station_id": "3409393",
-      "station_name": "Shivapura_Peenya, Bengaluru - KSPCB",
-      "actual": 25.4,
-      "predicted": 28.7
-    },
-    {
-      "station_id": "3409393",
-      "station_name": "Shivapura_Peenya, Bengaluru - KSPCB",
-      "actual": 25.4,
-      "predicted": 26.8
-    },
-    {
-      "station_id": "3409393",
-      "station_name": "Shivapura_Peenya, Bengaluru - KSPCB",
-      "actual": 28.1,
-      "predicted": 33.5
-    },
-    {
-      "station_id": "3409393",
-      "station_name": "Shivapura_Peenya, Bengaluru - KSPCB",
-      "actual": 39.1,
-      "predicted": 25.9
-    },
-    {
-      "station_id": "3409393",
-      "station_name": "Shivapura_Peenya, Bengaluru - KSPCB",
-      "actual": 45.0,
-      "predicted": 24.8
-    },
-    {
-      "station_id": "3409393",
-      "station_name": "Shivapura_Peenya, Bengaluru - KSPCB",
-      "actual": 28.1,
-      "predicted": 27.1
-    },
-    {
-      "station_id": "3409393",
-      "station_name": "Shivapura_Peenya, Bengaluru - KSPCB",
-      "actual": 32.5,
-      "predicted": 25.0
-    },
-    {
-      "station_id": "3409393",
-      "station_name": "Shivapura_Peenya, Bengaluru - KSPCB",
-      "actual": 38.2,
-      "predicted": 23.3
-    },
-    {
-      "station_id": "3409393",
-      "station_name": "Shivapura_Peenya, Bengaluru - KSPCB",
-      "actual": 35.1,
-      "predicted": 27.8
-    },
-    {
-      "station_id": "3409393",
-      "station_name": "Shivapura_Peenya, Bengaluru - KSPCB",
-      "actual": 23.5,
-      "predicted": 21.2
-    },
-    {
-      "station_id": "3409393",
-      "station_name": "Shivapura_Peenya, Bengaluru - KSPCB",
-      "actual": 23.5,
-      "predicted": 24.3
-    },
-    {
-      "station_id": "3409393",
-      "station_name": "Shivapura_Peenya, Bengaluru - KSPCB",
-      "actual": 34.8,
-      "predicted": 24.4
-    },
-    {
-      "station_id": "3409393",
-      "station_name": "Shivapura_Peenya, Bengaluru - KSPCB",
-      "actual": 37.8,
-      "predicted": 24.7
-    },
-    {
-      "station_id": "3409393",
-      "station_name": "Shivapura_Peenya, Bengaluru - KSPCB",
-      "actual": 42.0,
-      "predicted": 24.1
-    },
-    {
-      "station_id": "3409393",
-      "station_name": "Shivapura_Peenya, Bengaluru - KSPCB",
-      "actual": 44.3,
-      "predicted": 23.0
-    },
-    {
-      "station_id": "3409393",
-      "station_name": "Shivapura_Peenya, Bengaluru - KSPCB",
-      "actual": 59.7,
-      "predicted": 23.7
-    },
-    {
-      "station_id": "3409393",
-      "station_name": "Shivapura_Peenya, Bengaluru - KSPCB",
-      "actual": 76.2,
-      "predicted": 23.6
-    },
-    {
-      "station_id": "3409393",
-      "station_name": "Shivapura_Peenya, Bengaluru - KSPCB",
-      "actual": 50.6,
-      "predicted": 24.6
-    },
-    {
-      "station_id": "3409393",
-      "station_name": "Shivapura_Peenya, Bengaluru - KSPCB",
-      "actual": 30.8,
-      "predicted": 21.3
-    },
-    {
-      "station_id": "3409393",
-      "station_name": "Shivapura_Peenya, Bengaluru - KSPCB",
-      "actual": 41.4,
-      "predicted": 24.1
-    },
-    {
-      "station_id": "3409393",
-      "station_name": "Shivapura_Peenya, Bengaluru - KSPCB",
-      "actual": 21.9,
-      "predicted": 25.1
-    },
-    {
-      "station_id": "3409393",
-      "station_name": "Shivapura_Peenya, Bengaluru - KSPCB",
-      "actual": 92.8,
-      "predicted": 23.5
-    },
-    {
-      "station_id": "3409393",
-      "station_name": "Shivapura_Peenya, Bengaluru - KSPCB",
-      "actual": 38.0,
-      "predicted": 27.9
-    },
-    {
-      "station_id": "3409393",
-      "station_name": "Shivapura_Peenya, Bengaluru - KSPCB",
-      "actual": 60.1,
-      "predicted": 24.0
-    },
-    {
-      "station_id": "3409434",
-      "station_name": "Jigani, Bengaluru - KSPCB",
-      "actual": 47.9,
-      "predicted": 33.0
-    },
-    {
-      "station_id": "3409434",
-      "station_name": "Jigani, Bengaluru - KSPCB",
-      "actual": 30.7,
-      "predicted": 23.0
-    },
-    {
-      "station_id": "3409434",
-      "station_name": "Jigani, Bengaluru - KSPCB",
-      "actual": 153.0,
-      "predicted": 35.2
-    },
-    {
-      "station_id": "3409434",
-      "station_name": "Jigani, Bengaluru - KSPCB",
-      "actual": 69.0,
-      "predicted": 28.6
-    },
-    {
-      "station_id": "3409434",
-      "station_name": "Jigani, Bengaluru - KSPCB",
-      "actual": 2.9,
-      "predicted": 33.1
-    },
-    {
-      "station_id": "3409434",
-      "station_name": "Jigani, Bengaluru - KSPCB",
-      "actual": 2.7,
-      "predicted": 36.1
-    },
-    {
-      "station_id": "3409434",
-      "station_name": "Jigani, Bengaluru - KSPCB",
-      "actual": 2.6,
-      "predicted": 33.0
-    },
-    {
-      "station_id": "3409434",
-      "station_name": "Jigani, Bengaluru - KSPCB",
-      "actual": 26.2,
-      "predicted": 29.5
-    },
-    {
-      "station_id": "3409434",
-      "station_name": "Jigani, Bengaluru - KSPCB",
-      "actual": 26.4,
-      "predicted": 30.5
-    },
-    {
-      "station_id": "3409434",
-      "station_name": "Jigani, Bengaluru - KSPCB",
-      "actual": 26.0,
-      "predicted": 25.4
-    },
-    {
-      "station_id": "3409434",
-      "station_name": "Jigani, Bengaluru - KSPCB",
-      "actual": 26.9,
-      "predicted": 26.3
-    },
-    {
-      "station_id": "3409434",
-      "station_name": "Jigani, Bengaluru - KSPCB",
-      "actual": 26.4,
-      "predicted": 26.3
-    },
-    {
-      "station_id": "3409434",
-      "station_name": "Jigani, Bengaluru - KSPCB",
-      "actual": 26.0,
-      "predicted": 28.8
-    },
-    {
-      "station_id": "3409434",
-      "station_name": "Jigani, Bengaluru - KSPCB",
-      "actual": 40.3,
-      "predicted": 30.6
-    },
-    {
-      "station_id": "3409434",
-      "station_name": "Jigani, Bengaluru - KSPCB",
-      "actual": 24.9,
-      "predicted": 26.1
-    },
-    {
-      "station_id": "3409434",
-      "station_name": "Jigani, Bengaluru - KSPCB",
-      "actual": 54.3,
-      "predicted": 24.6
-    },
-    {
-      "station_id": "3409434",
-      "station_name": "Jigani, Bengaluru - KSPCB",
-      "actual": 25.6,
-      "predicted": 25.7
-    },
-    {
-      "station_id": "3409434",
-      "station_name": "Jigani, Bengaluru - KSPCB",
-      "actual": 21.5,
-      "predicted": 25.7
-    },
-    {
-      "station_id": "3409434",
-      "station_name": "Jigani, Bengaluru - KSPCB",
-      "actual": 25.5,
-      "predicted": 26.3
-    },
-    {
-      "station_id": "3409434",
-      "station_name": "Jigani, Bengaluru - KSPCB",
-      "actual": 23.4,
-      "predicted": 23.1
-    },
-    {
-      "station_id": "3409434",
-      "station_name": "Jigani, Bengaluru - KSPCB",
-      "actual": 21.6,
-      "predicted": 23.5
-    },
-    {
-      "station_id": "3409434",
-      "station_name": "Jigani, Bengaluru - KSPCB",
-      "actual": 19.7,
-      "predicted": 25.2
-    },
-    {
-      "station_id": "3409434",
-      "station_name": "Jigani, Bengaluru - KSPCB",
-      "actual": 25.0,
-      "predicted": 26.2
-    },
-    {
-      "station_id": "3409434",
-      "station_name": "Jigani, Bengaluru - KSPCB",
-      "actual": 20.9,
-      "predicted": 24.1
-    },
-    {
-      "station_id": "3409434",
-      "station_name": "Jigani, Bengaluru - KSPCB",
-      "actual": 22.1,
-      "predicted": 22.6
-    },
-    {
-      "station_id": "3409434",
-      "station_name": "Jigani, Bengaluru - KSPCB",
-      "actual": 20.6,
-      "predicted": 23.6
-    },
-    {
-      "station_id": "3409434",
-      "station_name": "Jigani, Bengaluru - KSPCB",
-      "actual": 16.9,
-      "predicted": 23.7
-    },
-    {
-      "station_id": "3409434",
-      "station_name": "Jigani, Bengaluru - KSPCB",
-      "actual": 22.8,
-      "predicted": 23.2
-    },
-    {
-      "station_id": "3409434",
-      "station_name": "Jigani, Bengaluru - KSPCB",
-      "actual": 26.7,
-      "predicted": 22.6
-    },
-    {
-      "station_id": "3409434",
-      "station_name": "Jigani, Bengaluru - KSPCB",
-      "actual": 23.3,
-      "predicted": 21.5
-    },
-    {
-      "station_id": "3409434",
-      "station_name": "Jigani, Bengaluru - KSPCB",
-      "actual": 22.7,
-      "predicted": 33.3
-    },
-    {
-      "station_id": "3409434",
-      "station_name": "Jigani, Bengaluru - KSPCB",
-      "actual": 26.7,
-      "predicted": 28.8
-    },
-    {
-      "station_id": "3409434",
-      "station_name": "Jigani, Bengaluru - KSPCB",
-      "actual": 22.5,
-      "predicted": 23.5
-    },
-    {
-      "station_id": "3409434",
-      "station_name": "Jigani, Bengaluru - KSPCB",
-      "actual": 24.0,
-      "predicted": 54.7
-    },
-    {
-      "station_id": "6119271",
-      "station_name": "Kumaraswamy Layout",
-      "actual": 44.1,
-      "predicted": 36.7
-    },
-    {
-      "station_id": "6119271",
-      "station_name": "Kumaraswamy Layout",
-      "actual": 67.9,
-      "predicted": 41.8
-    },
-    {
-      "station_id": "6119271",
-      "station_name": "Kumaraswamy Layout",
-      "actual": 84.7,
-      "predicted": 39.0
-    },
-    {
-      "station_id": "6119271",
-      "station_name": "Kumaraswamy Layout",
-      "actual": 41.9,
-      "predicted": 30.9
-    },
-    {
-      "station_id": "6119271",
-      "station_name": "Kumaraswamy Layout",
-      "actual": 43.1,
-      "predicted": 56.2
-    },
-    {
-      "station_id": "6119271",
-      "station_name": "Kumaraswamy Layout",
-      "actual": 63.5,
-      "predicted": 62.5
-    },
-    {
-      "station_id": "6119271",
-      "station_name": "Kumaraswamy Layout",
-      "actual": 72.4,
-      "predicted": 67.2
-    },
-    {
-      "station_id": "6119271",
-      "station_name": "Kumaraswamy Layout",
-      "actual": 69.9,
+      "station_id": "delhi_anand_vihar",
+      "station_name": "Anand Vihar, Delhi",
+      "actual": 60.8,
       "predicted": 60.8
     },
     {
-      "station_id": "6146655",
-      "station_name": "Bellandur",
-      "actual": 8.2,
-      "predicted": 13.7
+      "station_id": "delhi_anand_vihar",
+      "station_name": "Anand Vihar, Delhi",
+      "actual": 71.0,
+      "predicted": 71.1
     },
     {
-      "station_id": "6146655",
-      "station_name": "Bellandur",
-      "actual": 52.1,
-      "predicted": 38.4
+      "station_id": "delhi_anand_vihar",
+      "station_name": "Anand Vihar, Delhi",
+      "actual": 61.7,
+      "predicted": 61.5
+    },
+    {
+      "station_id": "delhi_anand_vihar",
+      "station_name": "Anand Vihar, Delhi",
+      "actual": 60.1,
+      "predicted": 60.2
+    },
+    {
+      "station_id": "delhi_anand_vihar",
+      "station_name": "Anand Vihar, Delhi",
+      "actual": 56.3,
+      "predicted": 56.2
+    },
+    {
+      "station_id": "delhi_anand_vihar",
+      "station_name": "Anand Vihar, Delhi",
+      "actual": 55.3,
+      "predicted": 55.2
+    },
+    {
+      "station_id": "delhi_anand_vihar",
+      "station_name": "Anand Vihar, Delhi",
+      "actual": 49.4,
+      "predicted": 49.4
+    },
+    {
+      "station_id": "delhi_rk_puram",
+      "station_name": "R K Puram, Delhi",
+      "actual": 92.2,
+      "predicted": 91.8
+    },
+    {
+      "station_id": "delhi_rk_puram",
+      "station_name": "R K Puram, Delhi",
+      "actual": 158.8,
+      "predicted": 159.4
+    },
+    {
+      "station_id": "delhi_rk_puram",
+      "station_name": "R K Puram, Delhi",
+      "actual": 135.5,
+      "predicted": 135.8
+    },
+    {
+      "station_id": "delhi_rk_puram",
+      "station_name": "R K Puram, Delhi",
+      "actual": 91.0,
+      "predicted": 91.2
+    },
+    {
+      "station_id": "delhi_rk_puram",
+      "station_name": "R K Puram, Delhi",
+      "actual": 99.0,
+      "predicted": 99.0
+    },
+    {
+      "station_id": "delhi_rk_puram",
+      "station_name": "R K Puram, Delhi",
+      "actual": 75.2,
+      "predicted": 75.1
+    },
+    {
+      "station_id": "delhi_rk_puram",
+      "station_name": "R K Puram, Delhi",
+      "actual": 54.0,
+      "predicted": 53.9
+    },
+    {
+      "station_id": "delhi_rk_puram",
+      "station_name": "R K Puram, Delhi",
+      "actual": 120.6,
+      "predicted": 120.2
+    },
+    {
+      "station_id": "delhi_rk_puram",
+      "station_name": "R K Puram, Delhi",
+      "actual": 65.9,
+      "predicted": 65.8
+    },
+    {
+      "station_id": "delhi_punjabi_bagh",
+      "station_name": "Punjabi Bagh, Delhi",
+      "actual": 81.0,
+      "predicted": 80.0
+    },
+    {
+      "station_id": "delhi_punjabi_bagh",
+      "station_name": "Punjabi Bagh, Delhi",
+      "actual": 98.3,
+      "predicted": 98.2
+    },
+    {
+      "station_id": "delhi_punjabi_bagh",
+      "station_name": "Punjabi Bagh, Delhi",
+      "actual": 60.1,
+      "predicted": 60.2
+    },
+    {
+      "station_id": "delhi_punjabi_bagh",
+      "station_name": "Punjabi Bagh, Delhi",
+      "actual": 79.2,
+      "predicted": 79.2
+    },
+    {
+      "station_id": "delhi_punjabi_bagh",
+      "station_name": "Punjabi Bagh, Delhi",
+      "actual": 51.0,
+      "predicted": 50.8
+    },
+    {
+      "station_id": "delhi_punjabi_bagh",
+      "station_name": "Punjabi Bagh, Delhi",
+      "actual": 72.4,
+      "predicted": 71.8
+    },
+    {
+      "station_id": "delhi_punjabi_bagh",
+      "station_name": "Punjabi Bagh, Delhi",
+      "actual": 71.2,
+      "predicted": 71.2
+    },
+    {
+      "station_id": "delhi_punjabi_bagh",
+      "station_name": "Punjabi Bagh, Delhi",
+      "actual": 56.3,
+      "predicted": 56.2
+    },
+    {
+      "station_id": "delhi_punjabi_bagh",
+      "station_name": "Punjabi Bagh, Delhi",
+      "actual": 60.3,
+      "predicted": 60.3
+    },
+    {
+      "station_id": "delhi_punjabi_bagh",
+      "station_name": "Punjabi Bagh, Delhi",
+      "actual": 39.1,
+      "predicted": 39.4
+    },
+    {
+      "station_id": "delhi_mandir_marg",
+      "station_name": "Mandir Marg, Delhi",
+      "actual": 87.8,
+      "predicted": 73.0
+    },
+    {
+      "station_id": "delhi_mandir_marg",
+      "station_name": "Mandir Marg, Delhi",
+      "actual": 88.2,
+      "predicted": 77.2
+    },
+    {
+      "station_id": "delhi_mandir_marg",
+      "station_name": "Mandir Marg, Delhi",
+      "actual": 84.5,
+      "predicted": 73.9
+    },
+    {
+      "station_id": "delhi_mandir_marg",
+      "station_name": "Mandir Marg, Delhi",
+      "actual": 70.8,
+      "predicted": 62.9
+    },
+    {
+      "station_id": "delhi_mandir_marg",
+      "station_name": "Mandir Marg, Delhi",
+      "actual": 89.6,
+      "predicted": 72.6
+    },
+    {
+      "station_id": "delhi_mandir_marg",
+      "station_name": "Mandir Marg, Delhi",
+      "actual": 95.5,
+      "predicted": 80.8
+    },
+    {
+      "station_id": "delhi_mandir_marg",
+      "station_name": "Mandir Marg, Delhi",
+      "actual": 98.3,
+      "predicted": 81.0
+    },
+    {
+      "station_id": "delhi_mandir_marg",
+      "station_name": "Mandir Marg, Delhi",
+      "actual": 102.4,
+      "predicted": 85.8
+    },
+    {
+      "station_id": "delhi_mandir_marg",
+      "station_name": "Mandir Marg, Delhi",
+      "actual": 79.2,
+      "predicted": 73.3
+    },
+    {
+      "station_id": "delhi_mandir_marg",
+      "station_name": "Mandir Marg, Delhi",
+      "actual": 79.4,
+      "predicted": 70.9
+    },
+    {
+      "station_id": "delhi_mandir_marg",
+      "station_name": "Mandir Marg, Delhi",
+      "actual": 54.7,
+      "predicted": 50.8
+    },
+    {
+      "station_id": "delhi_mandir_marg",
+      "station_name": "Mandir Marg, Delhi",
+      "actual": 51.8,
+      "predicted": 47.5
+    },
+    {
+      "station_id": "delhi_mandir_marg",
+      "station_name": "Mandir Marg, Delhi",
+      "actual": 72.9,
+      "predicted": 62.2
+    },
+    {
+      "station_id": "delhi_mandir_marg",
+      "station_name": "Mandir Marg, Delhi",
+      "actual": 72.4,
+      "predicted": 62.7
+    },
+    {
+      "station_id": "delhi_mandir_marg",
+      "station_name": "Mandir Marg, Delhi",
+      "actual": 52.3,
+      "predicted": 46.1
+    },
+    {
+      "station_id": "delhi_mandir_marg",
+      "station_name": "Mandir Marg, Delhi",
+      "actual": 48.9,
+      "predicted": 43.9
+    },
+    {
+      "station_id": "delhi_mandir_marg",
+      "station_name": "Mandir Marg, Delhi",
+      "actual": 58.6,
+      "predicted": 50.8
+    },
+    {
+      "station_id": "delhi_mandir_marg",
+      "station_name": "Mandir Marg, Delhi",
+      "actual": 39.1,
+      "predicted": 35.4
+    },
+    {
+      "station_id": "delhi_ito",
+      "station_name": "ITO Crossing, Delhi",
+      "actual": 89.6,
+      "predicted": 89.5
+    },
+    {
+      "station_id": "delhi_ito",
+      "station_name": "ITO Crossing, Delhi",
+      "actual": 102.4,
+      "predicted": 101.9
+    },
+    {
+      "station_id": "delhi_ito",
+      "station_name": "ITO Crossing, Delhi",
+      "actual": 95.9,
+      "predicted": 95.8
+    },
+    {
+      "station_id": "delhi_ito",
+      "station_name": "ITO Crossing, Delhi",
+      "actual": 66.6,
+      "predicted": 67.8
+    },
+    {
+      "station_id": "delhi_ito",
+      "station_name": "ITO Crossing, Delhi",
+      "actual": 72.6,
+      "predicted": 74.4
+    },
+    {
+      "station_id": "delhi_ito",
+      "station_name": "ITO Crossing, Delhi",
+      "actual": 78.9,
+      "predicted": 78.3
+    },
+    {
+      "station_id": "delhi_ito",
+      "station_name": "ITO Crossing, Delhi",
+      "actual": 63.6,
+      "predicted": 63.6
+    },
+    {
+      "station_id": "delhi_ito",
+      "station_name": "ITO Crossing, Delhi",
+      "actual": 54.8,
+      "predicted": 54.7
+    },
+    {
+      "station_id": "delhi_ito",
+      "station_name": "ITO Crossing, Delhi",
+      "actual": 81.7,
+      "predicted": 81.9
+    },
+    {
+      "station_id": "delhi_ito",
+      "station_name": "ITO Crossing, Delhi",
+      "actual": 69.4,
+      "predicted": 69.2
+    },
+    {
+      "station_id": "delhi_ito",
+      "station_name": "ITO Crossing, Delhi",
+      "actual": 55.3,
+      "predicted": 55.6
+    },
+    {
+      "station_id": "delhi_ito",
+      "station_name": "ITO Crossing, Delhi",
+      "actual": 55.2,
+      "predicted": 55.3
+    },
+    {
+      "station_id": "delhi_ito",
+      "station_name": "ITO Crossing, Delhi",
+      "actual": 58.2,
+      "predicted": 58.2
+    },
+    {
+      "station_id": "delhi_ito",
+      "station_name": "ITO Crossing, Delhi",
+      "actual": 55.8,
+      "predicted": 56.4
+    },
+    {
+      "station_id": "delhi_dwarka_sec8",
+      "station_name": "Dwarka-Sector 8, Delhi",
+      "actual": 93.6,
+      "predicted": 89.1
+    },
+    {
+      "station_id": "delhi_dwarka_sec8",
+      "station_name": "Dwarka-Sector 8, Delhi",
+      "actual": 85.7,
+      "predicted": 70.9
+    },
+    {
+      "station_id": "delhi_dwarka_sec8",
+      "station_name": "Dwarka-Sector 8, Delhi",
+      "actual": 123.4,
+      "predicted": 97.6
+    },
+    {
+      "station_id": "delhi_dwarka_sec8",
+      "station_name": "Dwarka-Sector 8, Delhi",
+      "actual": 158.8,
+      "predicted": 105.1
+    },
+    {
+      "station_id": "delhi_dwarka_sec8",
+      "station_name": "Dwarka-Sector 8, Delhi",
+      "actual": 116.2,
+      "predicted": 97.3
+    },
+    {
+      "station_id": "delhi_dwarka_sec8",
+      "station_name": "Dwarka-Sector 8, Delhi",
+      "actual": 87.1,
+      "predicted": 73.8
+    },
+    {
+      "station_id": "delhi_dwarka_sec8",
+      "station_name": "Dwarka-Sector 8, Delhi",
+      "actual": 103.1,
+      "predicted": 80.9
+    },
+    {
+      "station_id": "delhi_dwarka_sec8",
+      "station_name": "Dwarka-Sector 8, Delhi",
+      "actual": 99.0,
+      "predicted": 81.0
+    },
+    {
+      "station_id": "delhi_dwarka_sec8",
+      "station_name": "Dwarka-Sector 8, Delhi",
+      "actual": 78.5,
+      "predicted": 63.6
+    },
+    {
+      "station_id": "delhi_dwarka_sec8",
+      "station_name": "Dwarka-Sector 8, Delhi",
+      "actual": 83.6,
+      "predicted": 58.5
+    },
+    {
+      "station_id": "delhi_dwarka_sec8",
+      "station_name": "Dwarka-Sector 8, Delhi",
+      "actual": 160.2,
+      "predicted": 71.1
+    },
+    {
+      "station_id": "delhi_dwarka_sec8",
+      "station_name": "Dwarka-Sector 8, Delhi",
+      "actual": 162.5,
+      "predicted": 70.3
+    },
+    {
+      "station_id": "delhi_dwarka_sec8",
+      "station_name": "Dwarka-Sector 8, Delhi",
+      "actual": 155.5,
+      "predicted": 72.2
+    },
+    {
+      "station_id": "delhi_dwarka_sec8",
+      "station_name": "Dwarka-Sector 8, Delhi",
+      "actual": 59.4,
+      "predicted": 60.5
+    },
+    {
+      "station_id": "delhi_dwarka_sec8",
+      "station_name": "Dwarka-Sector 8, Delhi",
+      "actual": 101.3,
+      "predicted": 64.0
+    },
+    {
+      "station_id": "delhi_dwarka_sec8",
+      "station_name": "Dwarka-Sector 8, Delhi",
+      "actual": 118.3,
+      "predicted": 55.7
+    },
+    {
+      "station_id": "delhi_dwarka_sec8",
+      "station_name": "Dwarka-Sector 8, Delhi",
+      "actual": 116.6,
+      "predicted": 57.8
+    },
+    {
+      "station_id": "delhi_dwarka_sec8",
+      "station_name": "Dwarka-Sector 8, Delhi",
+      "actual": 116.4,
+      "predicted": 58.9
+    },
+    {
+      "station_id": "delhi_igi_airport",
+      "station_name": "IGI Airport (T3), Delhi",
+      "actual": 124.3,
+      "predicted": 124.0
+    },
+    {
+      "station_id": "delhi_igi_airport",
+      "station_name": "IGI Airport (T3), Delhi",
+      "actual": 97.6,
+      "predicted": 93.2
+    },
+    {
+      "station_id": "delhi_igi_airport",
+      "station_name": "IGI Airport (T3), Delhi",
+      "actual": 150.4,
+      "predicted": 149.8
+    },
+    {
+      "station_id": "delhi_igi_airport",
+      "station_name": "IGI Airport (T3), Delhi",
+      "actual": 122.9,
+      "predicted": 123.2
+    },
+    {
+      "station_id": "delhi_igi_airport",
+      "station_name": "IGI Airport (T3), Delhi",
+      "actual": 87.1,
+      "predicted": 85.8
+    },
+    {
+      "station_id": "delhi_igi_airport",
+      "station_name": "IGI Airport (T3), Delhi",
+      "actual": 91.5,
+      "predicted": 87.8
+    },
+    {
+      "station_id": "delhi_igi_airport",
+      "station_name": "IGI Airport (T3), Delhi",
+      "actual": 86.6,
+      "predicted": 84.4
+    },
+    {
+      "station_id": "delhi_igi_airport",
+      "station_name": "IGI Airport (T3), Delhi",
+      "actual": 75.2,
+      "predicted": 73.7
+    },
+    {
+      "station_id": "delhi_igi_airport",
+      "station_name": "IGI Airport (T3), Delhi",
+      "actual": 152.3,
+      "predicted": 153.2
+    },
+    {
+      "station_id": "delhi_igi_airport",
+      "station_name": "IGI Airport (T3), Delhi",
+      "actual": 120.6,
+      "predicted": 119.1
+    },
+    {
+      "station_id": "delhi_igi_airport",
+      "station_name": "IGI Airport (T3), Delhi",
+      "actual": 131.3,
+      "predicted": 132.5
+    },
+    {
+      "station_id": "delhi_igi_airport",
+      "station_name": "IGI Airport (T3), Delhi",
+      "actual": 143.9,
+      "predicted": 145.4
+    },
+    {
+      "station_id": "delhi_igi_airport",
+      "station_name": "IGI Airport (T3), Delhi",
+      "actual": 114.1,
+      "predicted": 113.8
+    },
+    {
+      "station_id": "delhi_igi_airport",
+      "station_name": "IGI Airport (T3), Delhi",
+      "actual": 116.4,
+      "predicted": 113.4
+    },
+    {
+      "station_id": "delhi_shadipur",
+      "station_name": "Shadipur, Delhi",
+      "actual": 101.7,
+      "predicted": 101.5
+    },
+    {
+      "station_id": "delhi_shadipur",
+      "station_name": "Shadipur, Delhi",
+      "actual": 74.5,
+      "predicted": 73.9
+    },
+    {
+      "station_id": "delhi_shadipur",
+      "station_name": "Shadipur, Delhi",
+      "actual": 78.9,
+      "predicted": 78.8
+    },
+    {
+      "station_id": "delhi_shadipur",
+      "station_name": "Shadipur, Delhi",
+      "actual": 66.8,
+      "predicted": 66.7
+    },
+    {
+      "station_id": "delhi_shadipur",
+      "station_name": "Shadipur, Delhi",
+      "actual": 69.2,
+      "predicted": 69.0
+    },
+    {
+      "station_id": "delhi_shadipur",
+      "station_name": "Shadipur, Delhi",
+      "actual": 72.9,
+      "predicted": 72.8
+    },
+    {
+      "station_id": "delhi_shadipur",
+      "station_name": "Shadipur, Delhi",
+      "actual": 61.7,
+      "predicted": 61.2
+    },
+    {
+      "station_id": "delhi_dtu",
+      "station_name": "DTU, Rohini, Delhi",
+      "actual": 102.4,
+      "predicted": 102.5
+    },
+    {
+      "station_id": "delhi_dtu",
+      "station_name": "DTU, Rohini, Delhi",
+      "actual": 82.7,
+      "predicted": 82.6
+    },
+    {
+      "station_id": "delhi_dtu",
+      "station_name": "DTU, Rohini, Delhi",
+      "actual": 94.5,
+      "predicted": 94.5
+    },
+    {
+      "station_id": "delhi_dtu",
+      "station_name": "DTU, Rohini, Delhi",
+      "actual": 79.4,
+      "predicted": 79.3
+    },
+    {
+      "station_id": "delhi_dtu",
+      "station_name": "DTU, Rohini, Delhi",
+      "actual": 54.7,
+      "predicted": 54.9
+    },
+    {
+      "station_id": "delhi_dtu",
+      "station_name": "DTU, Rohini, Delhi",
+      "actual": 51.0,
+      "predicted": 50.8
+    },
+    {
+      "station_id": "delhi_dtu",
+      "station_name": "DTU, Rohini, Delhi",
+      "actual": 79.9,
+      "predicted": 79.7
+    },
+    {
+      "station_id": "delhi_dtu",
+      "station_name": "DTU, Rohini, Delhi",
+      "actual": 70.3,
+      "predicted": 69.7
+    },
+    {
+      "station_id": "delhi_dtu",
+      "station_name": "DTU, Rohini, Delhi",
+      "actual": 56.3,
+      "predicted": 56.1
+    },
+    {
+      "station_id": "delhi_dtu",
+      "station_name": "DTU, Rohini, Delhi",
+      "actual": 56.3,
+      "predicted": 56.1
+    },
+    {
+      "station_id": "delhi_dtu",
+      "station_name": "DTU, Rohini, Delhi",
+      "actual": 58.2,
+      "predicted": 58.0
+    },
+    {
+      "station_id": "delhi_siri_fort",
+      "station_name": "Siri Fort, Delhi",
+      "actual": 122.9,
+      "predicted": 123.3
+    },
+    {
+      "station_id": "delhi_siri_fort",
+      "station_name": "Siri Fort, Delhi",
+      "actual": 105.5,
+      "predicted": 105.4
+    },
+    {
+      "station_id": "delhi_siri_fort",
+      "station_name": "Siri Fort, Delhi",
+      "actual": 99.2,
+      "predicted": 100.2
+    },
+    {
+      "station_id": "delhi_siri_fort",
+      "station_name": "Siri Fort, Delhi",
+      "actual": 92.7,
+      "predicted": 92.1
+    },
+    {
+      "station_id": "delhi_siri_fort",
+      "station_name": "Siri Fort, Delhi",
+      "actual": 83.1,
+      "predicted": 82.2
+    },
+    {
+      "station_id": "delhi_siri_fort",
+      "station_name": "Siri Fort, Delhi",
+      "actual": 98.5,
+      "predicted": 98.5
+    },
+    {
+      "station_id": "delhi_siri_fort",
+      "station_name": "Siri Fort, Delhi",
+      "actual": 162.5,
+      "predicted": 162.4
+    },
+    {
+      "station_id": "delhi_siri_fort",
+      "station_name": "Siri Fort, Delhi",
+      "actual": 120.6,
+      "predicted": 120.0
+    },
+    {
+      "station_id": "delhi_siri_fort",
+      "station_name": "Siri Fort, Delhi",
+      "actual": 65.9,
+      "predicted": 65.7
+    },
+    {
+      "station_id": "delhi_siri_fort",
+      "station_name": "Siri Fort, Delhi",
+      "actual": 59.4,
+      "predicted": 60.5
+    },
+    {
+      "station_id": "delhi_siri_fort",
+      "station_name": "Siri Fort, Delhi",
+      "actual": 128.1,
+      "predicted": 129.1
+    },
+    {
+      "station_id": "delhi_siri_fort",
+      "station_name": "Siri Fort, Delhi",
+      "actual": 114.3,
+      "predicted": 114.8
+    },
+    {
+      "station_id": "delhi_siri_fort",
+      "station_name": "Siri Fort, Delhi",
+      "actual": 59.8,
+      "predicted": 59.4
+    },
+    {
+      "station_id": "delhi_siri_fort",
+      "station_name": "Siri Fort, Delhi",
+      "actual": 57.4,
+      "predicted": 58.4
+    },
+    {
+      "station_id": "delhi_bawana",
+      "station_name": "Bawana Industrial Area, Delhi",
+      "actual": 82.7,
+      "predicted": 82.6
+    },
+    {
+      "station_id": "delhi_bawana",
+      "station_name": "Bawana Industrial Area, Delhi",
+      "actual": 95.9,
+      "predicted": 95.9
+    },
+    {
+      "station_id": "delhi_bawana",
+      "station_name": "Bawana Industrial Area, Delhi",
+      "actual": 60.1,
+      "predicted": 60.1
+    },
+    {
+      "station_id": "delhi_bawana",
+      "station_name": "Bawana Industrial Area, Delhi",
+      "actual": 79.4,
+      "predicted": 79.5
+    },
+    {
+      "station_id": "delhi_bawana",
+      "station_name": "Bawana Industrial Area, Delhi",
+      "actual": 79.4,
+      "predicted": 79.4
+    },
+    {
+      "station_id": "delhi_bawana",
+      "station_name": "Bawana Industrial Area, Delhi",
+      "actual": 69.8,
+      "predicted": 69.7
+    },
+    {
+      "station_id": "delhi_bawana",
+      "station_name": "Bawana Industrial Area, Delhi",
+      "actual": 72.4,
+      "predicted": 72.4
+    },
+    {
+      "station_id": "delhi_bawana",
+      "station_name": "Bawana Industrial Area, Delhi",
+      "actual": 69.4,
+      "predicted": 69.4
+    },
+    {
+      "station_id": "delhi_bawana",
+      "station_name": "Bawana Industrial Area, Delhi",
+      "actual": 64.7,
+      "predicted": 64.7
+    },
+    {
+      "station_id": "delhi_bawana",
+      "station_name": "Bawana Industrial Area, Delhi",
+      "actual": 73.1,
+      "predicted": 73.0
+    },
+    {
+      "station_id": "delhi_bawana",
+      "station_name": "Bawana Industrial Area, Delhi",
+      "actual": 68.0,
+      "predicted": 67.9
+    },
+    {
+      "station_id": "delhi_bawana",
+      "station_name": "Bawana Industrial Area, Delhi",
+      "actual": 63.6,
+      "predicted": 63.6
+    },
+    {
+      "station_id": "delhi_bawana",
+      "station_name": "Bawana Industrial Area, Delhi",
+      "actual": 60.3,
+      "predicted": 60.3
+    },
+    {
+      "station_id": "delhi_bawana",
+      "station_name": "Bawana Industrial Area, Delhi",
+      "actual": 58.6,
+      "predicted": 58.6
+    },
+    {
+      "station_id": "delhi_alipur",
+      "station_name": "Alipur, Delhi",
+      "actual": 87.8,
+      "predicted": 87.5
+    },
+    {
+      "station_id": "delhi_alipur",
+      "station_name": "Alipur, Delhi",
+      "actual": 88.2,
+      "predicted": 88.0
+    },
+    {
+      "station_id": "delhi_alipur",
+      "station_name": "Alipur, Delhi",
+      "actual": 74.7,
+      "predicted": 75.0
+    },
+    {
+      "station_id": "delhi_alipur",
+      "station_name": "Alipur, Delhi",
+      "actual": 92.7,
+      "predicted": 93.7
+    },
+    {
+      "station_id": "delhi_alipur",
+      "station_name": "Alipur, Delhi",
+      "actual": 95.9,
+      "predicted": 96.0
+    },
+    {
+      "station_id": "delhi_alipur",
+      "station_name": "Alipur, Delhi",
+      "actual": 74.5,
+      "predicted": 74.9
+    },
+    {
+      "station_id": "delhi_alipur",
+      "station_name": "Alipur, Delhi",
+      "actual": 66.6,
+      "predicted": 67.2
+    },
+    {
+      "station_id": "delhi_alipur",
+      "station_name": "Alipur, Delhi",
+      "actual": 72.9,
+      "predicted": 72.8
+    },
+    {
+      "station_id": "delhi_alipur",
+      "station_name": "Alipur, Delhi",
+      "actual": 57.6,
+      "predicted": 57.8
+    },
+    {
+      "station_id": "delhi_alipur",
+      "station_name": "Alipur, Delhi",
+      "actual": 71.9,
+      "predicted": 71.8
+    },
+    {
+      "station_id": "delhi_alipur",
+      "station_name": "Alipur, Delhi",
+      "actual": 69.4,
+      "predicted": 69.0
+    },
+    {
+      "station_id": "delhi_alipur",
+      "station_name": "Alipur, Delhi",
+      "actual": 62.9,
+      "predicted": 62.8
+    },
+    {
+      "station_id": "delhi_alipur",
+      "station_name": "Alipur, Delhi",
+      "actual": 72.6,
+      "predicted": 72.8
+    },
+    {
+      "station_id": "delhi_alipur",
+      "station_name": "Alipur, Delhi",
+      "actual": 63.6,
+      "predicted": 63.6
+    },
+    {
+      "station_id": "delhi_alipur",
+      "station_name": "Alipur, Delhi",
+      "actual": 55.3,
+      "predicted": 55.3
+    },
+    {
+      "station_id": "delhi_alipur",
+      "station_name": "Alipur, Delhi",
+      "actual": 60.3,
+      "predicted": 60.3
+    },
+    {
+      "station_id": "delhi_alipur",
+      "station_name": "Alipur, Delhi",
+      "actual": 39.1,
+      "predicted": 39.4
+    },
+    {
+      "station_id": "delhi_wazirpur",
+      "station_name": "Wazirpur Industrial Area, Delhi",
+      "actual": 87.8,
+      "predicted": 87.9
+    },
+    {
+      "station_id": "delhi_wazirpur",
+      "station_name": "Wazirpur Industrial Area, Delhi",
+      "actual": 74.7,
+      "predicted": 74.7
+    },
+    {
+      "station_id": "delhi_wazirpur",
+      "station_name": "Wazirpur Industrial Area, Delhi",
+      "actual": 70.8,
+      "predicted": 70.8
+    },
+    {
+      "station_id": "delhi_wazirpur",
+      "station_name": "Wazirpur Industrial Area, Delhi",
+      "actual": 72.6,
+      "predicted": 72.5
+    },
+    {
+      "station_id": "delhi_wazirpur",
+      "station_name": "Wazirpur Industrial Area, Delhi",
+      "actual": 79.6,
+      "predicted": 79.6
+    },
+    {
+      "station_id": "delhi_wazirpur",
+      "station_name": "Wazirpur Industrial Area, Delhi",
+      "actual": 79.4,
+      "predicted": 79.4
+    },
+    {
+      "station_id": "delhi_wazirpur",
+      "station_name": "Wazirpur Industrial Area, Delhi",
+      "actual": 69.2,
+      "predicted": 69.0
+    },
+    {
+      "station_id": "delhi_wazirpur",
+      "station_name": "Wazirpur Industrial Area, Delhi",
+      "actual": 83.1,
+      "predicted": 83.2
+    },
+    {
+      "station_id": "delhi_wazirpur",
+      "station_name": "Wazirpur Industrial Area, Delhi",
+      "actual": 81.7,
+      "predicted": 81.7
+    },
+    {
+      "station_id": "delhi_wazirpur",
+      "station_name": "Wazirpur Industrial Area, Delhi",
+      "actual": 64.3,
+      "predicted": 64.3
+    },
+    {
+      "station_id": "delhi_wazirpur",
+      "station_name": "Wazirpur Industrial Area, Delhi",
+      "actual": 60.8,
+      "predicted": 60.8
+    },
+    {
+      "station_id": "delhi_wazirpur",
+      "station_name": "Wazirpur Industrial Area, Delhi",
+      "actual": 63.6,
+      "predicted": 63.6
+    },
+    {
+      "station_id": "delhi_wazirpur",
+      "station_name": "Wazirpur Industrial Area, Delhi",
+      "actual": 55.8,
+      "predicted": 55.8
+    },
+    {
+      "station_id": "delhi_ashok_vihar",
+      "station_name": "Ashok Vihar, Delhi",
+      "actual": 104.3,
+      "predicted": 104.4
+    },
+    {
+      "station_id": "delhi_ashok_vihar",
+      "station_name": "Ashok Vihar, Delhi",
+      "actual": 79.2,
+      "predicted": 79.4
+    },
+    {
+      "station_id": "delhi_ashok_vihar",
+      "station_name": "Ashok Vihar, Delhi",
+      "actual": 55.9,
+      "predicted": 56.0
+    },
+    {
+      "station_id": "delhi_ashok_vihar",
+      "station_name": "Ashok Vihar, Delhi",
+      "actual": 79.9,
+      "predicted": 79.3
+    },
+    {
+      "station_id": "delhi_ashok_vihar",
+      "station_name": "Ashok Vihar, Delhi",
+      "actual": 72.4,
+      "predicted": 72.4
+    },
+    {
+      "station_id": "delhi_ashok_vihar",
+      "station_name": "Ashok Vihar, Delhi",
+      "actual": 71.7,
+      "predicted": 71.4
+    },
+    {
+      "station_id": "delhi_ashok_vihar",
+      "station_name": "Ashok Vihar, Delhi",
+      "actual": 61.7,
+      "predicted": 61.2
+    },
+    {
+      "station_id": "delhi_jahangirpuri",
+      "station_name": "Jahangirpuri, Delhi",
+      "actual": 81.0,
+      "predicted": 80.6
+    },
+    {
+      "station_id": "delhi_jahangirpuri",
+      "station_name": "Jahangirpuri, Delhi",
+      "actual": 79.4,
+      "predicted": 79.4
+    },
+    {
+      "station_id": "delhi_jahangirpuri",
+      "station_name": "Jahangirpuri, Delhi",
+      "actual": 84.5,
+      "predicted": 84.3
+    },
+    {
+      "station_id": "delhi_jahangirpuri",
+      "station_name": "Jahangirpuri, Delhi",
+      "actual": 86.1,
+      "predicted": 85.5
+    },
+    {
+      "station_id": "delhi_jahangirpuri",
+      "station_name": "Jahangirpuri, Delhi",
+      "actual": 90.3,
+      "predicted": 90.2
+    },
+    {
+      "station_id": "delhi_jahangirpuri",
+      "station_name": "Jahangirpuri, Delhi",
+      "actual": 77.8,
+      "predicted": 78.0
+    },
+    {
+      "station_id": "delhi_jahangirpuri",
+      "station_name": "Jahangirpuri, Delhi",
+      "actual": 69.6,
+      "predicted": 69.6
+    },
+    {
+      "station_id": "delhi_jahangirpuri",
+      "station_name": "Jahangirpuri, Delhi",
+      "actual": 64.7,
+      "predicted": 64.8
+    },
+    {
+      "station_id": "delhi_jahangirpuri",
+      "station_name": "Jahangirpuri, Delhi",
+      "actual": 65.7,
+      "predicted": 65.6
+    },
+    {
+      "station_id": "delhi_jahangirpuri",
+      "station_name": "Jahangirpuri, Delhi",
+      "actual": 56.6,
+      "predicted": 56.6
+    },
+    {
+      "station_id": "delhi_jahangirpuri",
+      "station_name": "Jahangirpuri, Delhi",
+      "actual": 60.3,
+      "predicted": 60.3
+    },
+    {
+      "station_id": "delhi_jahangirpuri",
+      "station_name": "Jahangirpuri, Delhi",
+      "actual": 57.0,
+      "predicted": 57.0
+    },
+    {
+      "station_id": "delhi_rohini",
+      "station_name": "Rohini Sector 16, Delhi",
+      "actual": 88.0,
+      "predicted": 88.1
+    },
+    {
+      "station_id": "delhi_rohini",
+      "station_name": "Rohini Sector 16, Delhi",
+      "actual": 88.2,
+      "predicted": 88.2
+    },
+    {
+      "station_id": "delhi_rohini",
+      "station_name": "Rohini Sector 16, Delhi",
+      "actual": 72.2,
+      "predicted": 72.2
+    },
+    {
+      "station_id": "delhi_rohini",
+      "station_name": "Rohini Sector 16, Delhi",
+      "actual": 89.6,
+      "predicted": 89.5
+    },
+    {
+      "station_id": "delhi_rohini",
+      "station_name": "Rohini Sector 16, Delhi",
+      "actual": 98.3,
+      "predicted": 98.3
+    },
+    {
+      "station_id": "delhi_rohini",
+      "station_name": "Rohini Sector 16, Delhi",
+      "actual": 104.3,
+      "predicted": 104.3
+    },
+    {
+      "station_id": "delhi_rohini",
+      "station_name": "Rohini Sector 16, Delhi",
+      "actual": 84.5,
+      "predicted": 84.7
+    },
+    {
+      "station_id": "delhi_rohini",
+      "station_name": "Rohini Sector 16, Delhi",
+      "actual": 86.1,
+      "predicted": 86.0
+    },
+    {
+      "station_id": "delhi_rohini",
+      "station_name": "Rohini Sector 16, Delhi",
+      "actual": 95.9,
+      "predicted": 95.9
+    },
+    {
+      "station_id": "delhi_rohini",
+      "station_name": "Rohini Sector 16, Delhi",
+      "actual": 54.7,
+      "predicted": 54.8
+    },
+    {
+      "station_id": "delhi_rohini",
+      "station_name": "Rohini Sector 16, Delhi",
+      "actual": 69.6,
+      "predicted": 69.6
+    },
+    {
+      "station_id": "delhi_rohini",
+      "station_name": "Rohini Sector 16, Delhi",
+      "actual": 64.3,
+      "predicted": 64.3
+    },
+    {
+      "station_id": "delhi_rohini",
+      "station_name": "Rohini Sector 16, Delhi",
+      "actual": 72.4,
+      "predicted": 72.4
+    },
+    {
+      "station_id": "delhi_rohini",
+      "station_name": "Rohini Sector 16, Delhi",
+      "actual": 60.1,
+      "predicted": 60.1
+    },
+    {
+      "station_id": "delhi_rohini",
+      "station_name": "Rohini Sector 16, Delhi",
+      "actual": 57.3,
+      "predicted": 57.3
+    },
+    {
+      "station_id": "delhi_rohini",
+      "station_name": "Rohini Sector 16, Delhi",
+      "actual": 56.6,
+      "predicted": 56.6
+    },
+    {
+      "station_id": "delhi_rohini",
+      "station_name": "Rohini Sector 16, Delhi",
+      "actual": 60.3,
+      "predicted": 60.3
+    },
+    {
+      "station_id": "delhi_rohini",
+      "station_name": "Rohini Sector 16, Delhi",
+      "actual": 58.2,
+      "predicted": 58.2
+    },
+    {
+      "station_id": "delhi_rohini",
+      "station_name": "Rohini Sector 16, Delhi",
+      "actual": 49.4,
+      "predicted": 49.4
+    },
+    {
+      "station_id": "delhi_rohini",
+      "station_name": "Rohini Sector 16, Delhi",
+      "actual": 51.1,
+      "predicted": 51.1
+    },
+    {
+      "station_id": "delhi_rohini",
+      "station_name": "Rohini Sector 16, Delhi",
+      "actual": 57.0,
+      "predicted": 57.0
+    },
+    {
+      "station_id": "delhi_narela",
+      "station_name": "Narela, Delhi",
+      "actual": 72.2,
+      "predicted": 72.3
+    },
+    {
+      "station_id": "delhi_narela",
+      "station_name": "Narela, Delhi",
+      "actual": 89.6,
+      "predicted": 87.8
+    },
+    {
+      "station_id": "delhi_narela",
+      "station_name": "Narela, Delhi",
+      "actual": 105.5,
+      "predicted": 103.6
+    },
+    {
+      "station_id": "delhi_narela",
+      "station_name": "Narela, Delhi",
+      "actual": 101.7,
+      "predicted": 99.8
+    },
+    {
+      "station_id": "delhi_narela",
+      "station_name": "Narela, Delhi",
+      "actual": 99.2,
+      "predicted": 97.8
+    },
+    {
+      "station_id": "delhi_narela",
+      "station_name": "Narela, Delhi",
+      "actual": 86.1,
+      "predicted": 85.8
+    },
+    {
+      "station_id": "delhi_narela",
+      "station_name": "Narela, Delhi",
+      "actual": 71.0,
+      "predicted": 70.9
+    },
+    {
+      "station_id": "delhi_narela",
+      "station_name": "Narela, Delhi",
+      "actual": 60.1,
+      "predicted": 60.0
+    },
+    {
+      "station_id": "delhi_narela",
+      "station_name": "Narela, Delhi",
+      "actual": 66.6,
+      "predicted": 66.7
+    },
+    {
+      "station_id": "delhi_narela",
+      "station_name": "Narela, Delhi",
+      "actual": 79.2,
+      "predicted": 76.4
+    },
+    {
+      "station_id": "delhi_narela",
+      "station_name": "Narela, Delhi",
+      "actual": 54.8,
+      "predicted": 54.6
+    },
+    {
+      "station_id": "delhi_narela",
+      "station_name": "Narela, Delhi",
+      "actual": 56.3,
+      "predicted": 56.2
+    },
+    {
+      "station_id": "delhi_narela",
+      "station_name": "Narela, Delhi",
+      "actual": 54.8,
+      "predicted": 55.0
+    },
+    {
+      "station_id": "delhi_narela",
+      "station_name": "Narela, Delhi",
+      "actual": 58.2,
+      "predicted": 57.8
+    },
+    {
+      "station_id": "delhi_narela",
+      "station_name": "Narela, Delhi",
+      "actual": 58.6,
+      "predicted": 58.5
+    },
+    {
+      "station_id": "delhi_patparganj",
+      "station_name": "Patparganj, Delhi",
+      "actual": 79.9,
+      "predicted": 79.9
+    },
+    {
+      "station_id": "delhi_patparganj",
+      "station_name": "Patparganj, Delhi",
+      "actual": 70.5,
+      "predicted": 71.1
+    },
+    {
+      "station_id": "delhi_patparganj",
+      "station_name": "Patparganj, Delhi",
+      "actual": 72.6,
+      "predicted": 73.7
+    },
+    {
+      "station_id": "delhi_patparganj",
+      "station_name": "Patparganj, Delhi",
+      "actual": 79.4,
+      "predicted": 80.5
+    },
+    {
+      "station_id": "delhi_patparganj",
+      "station_name": "Patparganj, Delhi",
+      "actual": 66.8,
+      "predicted": 66.2
+    },
+    {
+      "station_id": "delhi_patparganj",
+      "station_name": "Patparganj, Delhi",
+      "actual": 51.0,
+      "predicted": 50.4
+    },
+    {
+      "station_id": "delhi_patparganj",
+      "station_name": "Patparganj, Delhi",
+      "actual": 54.8,
+      "predicted": 53.7
+    },
+    {
+      "station_id": "delhi_patparganj",
+      "station_name": "Patparganj, Delhi",
+      "actual": 57.6,
+      "predicted": 60.5
+    },
+    {
+      "station_id": "delhi_patparganj",
+      "station_name": "Patparganj, Delhi",
+      "actual": 83.1,
+      "predicted": 84.7
+    },
+    {
+      "station_id": "delhi_patparganj",
+      "station_name": "Patparganj, Delhi",
+      "actual": 70.8,
+      "predicted": 72.9
+    },
+    {
+      "station_id": "delhi_patparganj",
+      "station_name": "Patparganj, Delhi",
+      "actual": 69.8,
+      "predicted": 70.9
+    },
+    {
+      "station_id": "delhi_patparganj",
+      "station_name": "Patparganj, Delhi",
+      "actual": 69.4,
+      "predicted": 77.9
+    },
+    {
+      "station_id": "delhi_patparganj",
+      "station_name": "Patparganj, Delhi",
+      "actual": 64.7,
+      "predicted": 64.4
+    },
+    {
+      "station_id": "delhi_patparganj",
+      "station_name": "Patparganj, Delhi",
+      "actual": 62.9,
+      "predicted": 61.5
+    },
+    {
+      "station_id": "delhi_patparganj",
+      "station_name": "Patparganj, Delhi",
+      "actual": 71.0,
+      "predicted": 71.1
+    },
+    {
+      "station_id": "delhi_patparganj",
+      "station_name": "Patparganj, Delhi",
+      "actual": 72.4,
+      "predicted": 73.4
+    },
+    {
+      "station_id": "delhi_patparganj",
+      "station_name": "Patparganj, Delhi",
+      "actual": 71.2,
+      "predicted": 71.0
+    },
+    {
+      "station_id": "delhi_sonia_vihar",
+      "station_name": "Sonia Vihar, Delhi",
+      "actual": 72.6,
+      "predicted": 71.8
+    },
+    {
+      "station_id": "delhi_sonia_vihar",
+      "station_name": "Sonia Vihar, Delhi",
+      "actual": 72.9,
+      "predicted": 72.7
+    },
+    {
+      "station_id": "delhi_sonia_vihar",
+      "station_name": "Sonia Vihar, Delhi",
+      "actual": 74.7,
+      "predicted": 74.4
+    },
+    {
+      "station_id": "delhi_sonia_vihar",
+      "station_name": "Sonia Vihar, Delhi",
+      "actual": 71.7,
+      "predicted": 71.2
+    },
+    {
+      "station_id": "delhi_sonia_vihar",
+      "station_name": "Sonia Vihar, Delhi",
+      "actual": 67.5,
+      "predicted": 67.3
+    },
+    {
+      "station_id": "delhi_sonia_vihar",
+      "station_name": "Sonia Vihar, Delhi",
+      "actual": 68.0,
+      "predicted": 68.0
+    },
+    {
+      "station_id": "delhi_sonia_vihar",
+      "station_name": "Sonia Vihar, Delhi",
+      "actual": 56.3,
+      "predicted": 55.9
+    },
+    {
+      "station_id": "delhi_sonia_vihar",
+      "station_name": "Sonia Vihar, Delhi",
+      "actual": 57.3,
+      "predicted": 57.3
+    },
+    {
+      "station_id": "delhi_sonia_vihar",
+      "station_name": "Sonia Vihar, Delhi",
+      "actual": 58.1,
+      "predicted": 58.1
+    },
+    {
+      "station_id": "delhi_sonia_vihar",
+      "station_name": "Sonia Vihar, Delhi",
+      "actual": 56.6,
+      "predicted": 56.7
+    },
+    {
+      "station_id": "delhi_major_dhyan_chand",
+      "station_name": "Major Dhyan Chand National Stadium, Delhi",
+      "actual": 72.2,
+      "predicted": 71.8
+    },
+    {
+      "station_id": "delhi_major_dhyan_chand",
+      "station_name": "Major Dhyan Chand National Stadium, Delhi",
+      "actual": 72.6,
+      "predicted": 72.7
+    },
+    {
+      "station_id": "delhi_major_dhyan_chand",
+      "station_name": "Major Dhyan Chand National Stadium, Delhi",
+      "actual": 83.6,
+      "predicted": 84.0
+    },
+    {
+      "station_id": "delhi_major_dhyan_chand",
+      "station_name": "Major Dhyan Chand National Stadium, Delhi",
+      "actual": 90.3,
+      "predicted": 91.4
+    },
+    {
+      "station_id": "delhi_major_dhyan_chand",
+      "station_name": "Major Dhyan Chand National Stadium, Delhi",
+      "actual": 79.4,
+      "predicted": 81.9
+    },
+    {
+      "station_id": "delhi_major_dhyan_chand",
+      "station_name": "Major Dhyan Chand National Stadium, Delhi",
+      "actual": 63.6,
+      "predicted": 64.0
+    },
+    {
+      "station_id": "delhi_major_dhyan_chand",
+      "station_name": "Major Dhyan Chand National Stadium, Delhi",
+      "actual": 69.2,
+      "predicted": 69.4
+    },
+    {
+      "station_id": "delhi_major_dhyan_chand",
+      "station_name": "Major Dhyan Chand National Stadium, Delhi",
+      "actual": 49.1,
+      "predicted": 49.1
+    },
+    {
+      "station_id": "delhi_major_dhyan_chand",
+      "station_name": "Major Dhyan Chand National Stadium, Delhi",
+      "actual": 70.8,
+      "predicted": 71.1
+    },
+    {
+      "station_id": "delhi_major_dhyan_chand",
+      "station_name": "Major Dhyan Chand National Stadium, Delhi",
+      "actual": 71.9,
+      "predicted": 71.6
+    },
+    {
+      "station_id": "delhi_major_dhyan_chand",
+      "station_name": "Major Dhyan Chand National Stadium, Delhi",
+      "actual": 70.3,
+      "predicted": 70.3
+    },
+    {
+      "station_id": "delhi_major_dhyan_chand",
+      "station_name": "Major Dhyan Chand National Stadium, Delhi",
+      "actual": 64.7,
+      "predicted": 65.5
+    },
+    {
+      "station_id": "delhi_major_dhyan_chand",
+      "station_name": "Major Dhyan Chand National Stadium, Delhi",
+      "actual": 71.0,
+      "predicted": 71.1
+    },
+    {
+      "station_id": "delhi_major_dhyan_chand",
+      "station_name": "Major Dhyan Chand National Stadium, Delhi",
+      "actual": 72.6,
+      "predicted": 72.8
+    },
+    {
+      "station_id": "delhi_major_dhyan_chand",
+      "station_name": "Major Dhyan Chand National Stadium, Delhi",
+      "actual": 55.8,
+      "predicted": 56.1
+    },
+    {
+      "station_id": "delhi_major_dhyan_chand",
+      "station_name": "Major Dhyan Chand National Stadium, Delhi",
+      "actual": 58.6,
+      "predicted": 58.9
+    },
+    {
+      "station_id": "delhi_lodhi_road",
+      "station_name": "Lodhi Road, Delhi",
+      "actual": 74.5,
+      "predicted": 72.9
+    },
+    {
+      "station_id": "delhi_lodhi_road",
+      "station_name": "Lodhi Road, Delhi",
+      "actual": 82.2,
+      "predicted": 81.9
+    },
+    {
+      "station_id": "delhi_lodhi_road",
+      "station_name": "Lodhi Road, Delhi",
+      "actual": 122.9,
+      "predicted": 119.1
+    },
+    {
+      "station_id": "delhi_lodhi_road",
+      "station_name": "Lodhi Road, Delhi",
+      "actual": 152.3,
+      "predicted": 130.4
+    },
+    {
+      "station_id": "delhi_lodhi_road",
+      "station_name": "Lodhi Road, Delhi",
+      "actual": 65.9,
+      "predicted": 64.4
+    },
+    {
+      "station_id": "delhi_lodhi_road",
+      "station_name": "Lodhi Road, Delhi",
+      "actual": 113.4,
+      "predicted": 95.9
+    },
+    {
+      "station_id": "delhi_lodhi_road",
+      "station_name": "Lodhi Road, Delhi",
+      "actual": 109.9,
+      "predicted": 91.6
+    },
+    {
+      "station_id": "delhi_lodhi_road",
+      "station_name": "Lodhi Road, Delhi",
+      "actual": 115.9,
+      "predicted": 105.9
+    },
+    {
+      "station_id": "delhi_lodhi_road",
+      "station_name": "Lodhi Road, Delhi",
+      "actual": 52.3,
+      "predicted": 46.4
+    },
+    {
+      "station_id": "delhi_jawaharlal_nehru",
+      "station_name": "JLN Stadium, Delhi",
+      "actual": 85.7,
+      "predicted": 90.7
+    },
+    {
+      "station_id": "delhi_jawaharlal_nehru",
+      "station_name": "JLN Stadium, Delhi",
+      "actual": 127.1,
+      "predicted": 136.1
+    },
+    {
+      "station_id": "delhi_jawaharlal_nehru",
+      "station_name": "JLN Stadium, Delhi",
+      "actual": 122.9,
+      "predicted": 136.0
+    },
+    {
+      "station_id": "delhi_jawaharlal_nehru",
+      "station_name": "JLN Stadium, Delhi",
+      "actual": 76.4,
+      "predicted": 88.2
+    },
+    {
+      "station_id": "delhi_jawaharlal_nehru",
+      "station_name": "JLN Stadium, Delhi",
+      "actual": 78.5,
+      "predicted": 85.8
+    },
+    {
+      "station_id": "delhi_jawaharlal_nehru",
+      "station_name": "JLN Stadium, Delhi",
+      "actual": 147.6,
+      "predicted": 146.1
+    },
+    {
+      "station_id": "delhi_jawaharlal_nehru",
+      "station_name": "JLN Stadium, Delhi",
+      "actual": 128.1,
+      "predicted": 142.0
+    },
+    {
+      "station_id": "delhi_jawaharlal_nehru",
+      "station_name": "JLN Stadium, Delhi",
+      "actual": 134.1,
+      "predicted": 150.4
+    },
+    {
+      "station_id": "delhi_jawaharlal_nehru",
+      "station_name": "JLN Stadium, Delhi",
+      "actual": 62.4,
+      "predicted": 68.8
+    },
+    {
+      "station_id": "delhi_pusa",
+      "station_name": "Pusa, Delhi",
+      "actual": 88.2,
+      "predicted": 88.0
+    },
+    {
+      "station_id": "delhi_pusa",
+      "station_name": "Pusa, Delhi",
+      "actual": 84.5,
+      "predicted": 84.2
+    },
+    {
+      "station_id": "delhi_pusa",
+      "station_name": "Pusa, Delhi",
+      "actual": 74.7,
+      "predicted": 74.9
+    },
+    {
+      "station_id": "delhi_pusa",
+      "station_name": "Pusa, Delhi",
+      "actual": 84.5,
+      "predicted": 84.1
+    },
+    {
+      "station_id": "delhi_pusa",
+      "station_name": "Pusa, Delhi",
+      "actual": 90.3,
+      "predicted": 90.4
+    },
+    {
+      "station_id": "delhi_pusa",
+      "station_name": "Pusa, Delhi",
+      "actual": 79.4,
+      "predicted": 79.3
+    },
+    {
+      "station_id": "delhi_pusa",
+      "station_name": "Pusa, Delhi",
+      "actual": 79.4,
+      "predicted": 79.3
+    },
+    {
+      "station_id": "delhi_pusa",
+      "station_name": "Pusa, Delhi",
+      "actual": 63.6,
+      "predicted": 63.7
+    },
+    {
+      "station_id": "delhi_pusa",
+      "station_name": "Pusa, Delhi",
+      "actual": 69.2,
+      "predicted": 69.3
+    },
+    {
+      "station_id": "delhi_pusa",
+      "station_name": "Pusa, Delhi",
+      "actual": 51.8,
+      "predicted": 51.8
+    },
+    {
+      "station_id": "delhi_pusa",
+      "station_name": "Pusa, Delhi",
+      "actual": 72.9,
+      "predicted": 72.9
+    },
+    {
+      "station_id": "delhi_pusa",
+      "station_name": "Pusa, Delhi",
+      "actual": 63.6,
+      "predicted": 63.7
+    },
+    {
+      "station_id": "delhi_pusa",
+      "station_name": "Pusa, Delhi",
+      "actual": 60.3,
+      "predicted": 60.4
+    },
+    {
+      "station_id": "delhi_pusa",
+      "station_name": "Pusa, Delhi",
+      "actual": 57.0,
+      "predicted": 57.0
+    },
+    {
+      "station_id": "delhi_pusa",
+      "station_name": "Pusa, Delhi",
+      "actual": 39.1,
+      "predicted": 39.4
+    },
+    {
+      "station_id": "delhi_aya_nagar",
+      "station_name": "Aya Nagar, Delhi",
+      "actual": 92.4,
+      "predicted": 92.3
+    },
+    {
+      "station_id": "delhi_aya_nagar",
+      "station_name": "Aya Nagar, Delhi",
+      "actual": 123.4,
+      "predicted": 123.8
+    },
+    {
+      "station_id": "delhi_aya_nagar",
+      "station_name": "Aya Nagar, Delhi",
+      "actual": 158.8,
+      "predicted": 159.3
+    },
+    {
+      "station_id": "delhi_aya_nagar",
+      "station_name": "Aya Nagar, Delhi",
+      "actual": 129.0,
+      "predicted": 130.2
+    },
+    {
+      "station_id": "delhi_aya_nagar",
+      "station_name": "Aya Nagar, Delhi",
+      "actual": 127.1,
+      "predicted": 128.1
+    },
+    {
+      "station_id": "delhi_aya_nagar",
+      "station_name": "Aya Nagar, Delhi",
+      "actual": 95.2,
+      "predicted": 96.1
+    },
+    {
+      "station_id": "delhi_aya_nagar",
+      "station_name": "Aya Nagar, Delhi",
+      "actual": 62.2,
+      "predicted": 61.9
+    },
+    {
+      "station_id": "delhi_aya_nagar",
+      "station_name": "Aya Nagar, Delhi",
+      "actual": 75.2,
+      "predicted": 75.5
+    },
+    {
+      "station_id": "delhi_aya_nagar",
+      "station_name": "Aya Nagar, Delhi",
+      "actual": 186.7,
+      "predicted": 184.2
+    },
+    {
+      "station_id": "delhi_aya_nagar",
+      "station_name": "Aya Nagar, Delhi",
+      "actual": 59.4,
+      "predicted": 59.6
+    },
+    {
+      "station_id": "delhi_aya_nagar",
+      "station_name": "Aya Nagar, Delhi",
+      "actual": 101.3,
+      "predicted": 102.5
+    },
+    {
+      "station_id": "delhi_aya_nagar",
+      "station_name": "Aya Nagar, Delhi",
+      "actual": 118.5,
+      "predicted": 119.0
+    },
+    {
+      "station_id": "delhi_aya_nagar",
+      "station_name": "Aya Nagar, Delhi",
+      "actual": 116.6,
+      "predicted": 116.9
+    },
+    {
+      "station_id": "delhi_aya_nagar",
+      "station_name": "Aya Nagar, Delhi",
+      "actual": 62.4,
+      "predicted": 62.6
+    },
+    {
+      "station_id": "delhi_aya_nagar",
+      "station_name": "Aya Nagar, Delhi",
+      "actual": 41.9,
+      "predicted": 42.0
+    },
+    {
+      "station_id": "delhi_dr_karni_singh",
+      "station_name": "Dr. Karni Singh Range, Delhi",
+      "actual": 99.4,
+      "predicted": 100.2
+    },
+    {
+      "station_id": "delhi_dr_karni_singh",
+      "station_name": "Dr. Karni Singh Range, Delhi",
+      "actual": 97.6,
+      "predicted": 97.5
+    },
+    {
+      "station_id": "delhi_dr_karni_singh",
+      "station_name": "Dr. Karni Singh Range, Delhi",
+      "actual": 131.8,
+      "predicted": 131.2
+    },
+    {
+      "station_id": "delhi_dr_karni_singh",
+      "station_name": "Dr. Karni Singh Range, Delhi",
+      "actual": 135.5,
+      "predicted": 135.9
+    },
+    {
+      "station_id": "delhi_dr_karni_singh",
+      "station_name": "Dr. Karni Singh Range, Delhi",
+      "actual": 127.1,
+      "predicted": 126.6
+    },
+    {
+      "station_id": "delhi_dr_karni_singh",
+      "station_name": "Dr. Karni Singh Range, Delhi",
+      "actual": 85.0,
+      "predicted": 85.7
+    },
+    {
+      "station_id": "delhi_dr_karni_singh",
+      "station_name": "Dr. Karni Singh Range, Delhi",
+      "actual": 99.2,
+      "predicted": 99.5
+    },
+    {
+      "station_id": "delhi_dr_karni_singh",
+      "station_name": "Dr. Karni Singh Range, Delhi",
+      "actual": 92.7,
+      "predicted": 93.1
+    },
+    {
+      "station_id": "delhi_dr_karni_singh",
+      "station_name": "Dr. Karni Singh Range, Delhi",
+      "actual": 76.4,
+      "predicted": 77.0
+    },
+    {
+      "station_id": "delhi_dr_karni_singh",
+      "station_name": "Dr. Karni Singh Range, Delhi",
+      "actual": 75.2,
+      "predicted": 75.0
+    },
+    {
+      "station_id": "delhi_dr_karni_singh",
+      "station_name": "Dr. Karni Singh Range, Delhi",
+      "actual": 186.7,
+      "predicted": 178.3
+    },
+    {
+      "station_id": "delhi_dr_karni_singh",
+      "station_name": "Dr. Karni Singh Range, Delhi",
+      "actual": 153.7,
+      "predicted": 154.2
+    },
+    {
+      "station_id": "delhi_dr_karni_singh",
+      "station_name": "Dr. Karni Singh Range, Delhi",
+      "actual": 118.5,
+      "predicted": 118.5
+    },
+    {
+      "station_id": "delhi_dr_karni_singh",
+      "station_name": "Dr. Karni Singh Range, Delhi",
+      "actual": 113.4,
+      "predicted": 114.1
+    },
+    {
+      "station_id": "delhi_mundka",
+      "station_name": "Mundka, Delhi",
+      "actual": 81.0,
+      "predicted": 81.3
+    },
+    {
+      "station_id": "delhi_mundka",
+      "station_name": "Mundka, Delhi",
+      "actual": 70.3,
+      "predicted": 70.5
+    },
+    {
+      "station_id": "delhi_mundka",
+      "station_name": "Mundka, Delhi",
+      "actual": 84.5,
+      "predicted": 84.8
+    },
+    {
+      "station_id": "delhi_mundka",
+      "station_name": "Mundka, Delhi",
+      "actual": 90.3,
+      "predicted": 90.8
+    },
+    {
+      "station_id": "delhi_mundka",
+      "station_name": "Mundka, Delhi",
+      "actual": 79.6,
+      "predicted": 79.4
+    },
+    {
+      "station_id": "delhi_mundka",
+      "station_name": "Mundka, Delhi",
+      "actual": 79.4,
+      "predicted": 78.8
+    },
+    {
+      "station_id": "delhi_mundka",
+      "station_name": "Mundka, Delhi",
+      "actual": 55.9,
+      "predicted": 56.0
+    },
+    {
+      "station_id": "delhi_mundka",
+      "station_name": "Mundka, Delhi",
+      "actual": 60.1,
+      "predicted": 60.1
+    },
+    {
+      "station_id": "delhi_mundka",
+      "station_name": "Mundka, Delhi",
+      "actual": 60.8,
+      "predicted": 60.8
+    },
+    {
+      "station_id": "delhi_mundka",
+      "station_name": "Mundka, Delhi",
+      "actual": 62.9,
+      "predicted": 62.9
+    },
+    {
+      "station_id": "delhi_mundka",
+      "station_name": "Mundka, Delhi",
+      "actual": 68.0,
+      "predicted": 67.7
+    },
+    {
+      "station_id": "delhi_mundka",
+      "station_name": "Mundka, Delhi",
+      "actual": 56.6,
+      "predicted": 56.6
+    },
+    {
+      "station_id": "delhi_mundka",
+      "station_name": "Mundka, Delhi",
+      "actual": 58.2,
+      "predicted": 58.2
+    },
+    {
+      "station_id": "delhi_najafgarh",
+      "station_name": "Najafgarh, Delhi",
+      "actual": 86.6,
+      "predicted": 115.7
+    },
+    {
+      "station_id": "delhi_najafgarh",
+      "station_name": "Najafgarh, Delhi",
+      "actual": 98.7,
+      "predicted": 138.3
+    },
+    {
+      "station_id": "delhi_najafgarh",
+      "station_name": "Najafgarh, Delhi",
+      "actual": 88.9,
+      "predicted": 88.2
+    },
+    {
+      "station_id": "delhi_najafgarh",
+      "station_name": "Najafgarh, Delhi",
+      "actual": 98.3,
+      "predicted": 75.1
+    },
+    {
+      "station_id": "delhi_najafgarh",
+      "station_name": "Najafgarh, Delhi",
+      "actual": 87.8,
+      "predicted": 95.9
+    },
+    {
+      "station_id": "delhi_najafgarh",
+      "station_name": "Najafgarh, Delhi",
+      "actual": 55.4,
+      "predicted": 50.4
+    },
+    {
+      "station_id": "delhi_najafgarh",
+      "station_name": "Najafgarh, Delhi",
+      "actual": 146.2,
+      "predicted": 184.1
+    },
+    {
+      "station_id": "delhi_najafgarh",
+      "station_name": "Najafgarh, Delhi",
+      "actual": 170.4,
+      "predicted": 161.0
+    },
+    {
+      "station_id": "delhi_najafgarh",
+      "station_name": "Najafgarh, Delhi",
+      "actual": 92.2,
+      "predicted": 128.1
+    },
+    {
+      "station_id": "delhi_najafgarh",
+      "station_name": "Najafgarh, Delhi",
+      "actual": 121.1,
+      "predicted": 130.1
+    },
+    {
+      "station_id": "delhi_najafgarh",
+      "station_name": "Najafgarh, Delhi",
+      "actual": 62.2,
+      "predicted": 62.3
+    },
+    {
+      "station_id": "delhi_okhla_phase2",
+      "station_name": "Okhla Phase-2, Delhi",
+      "actual": 93.6,
+      "predicted": 93.6
+    },
+    {
+      "station_id": "delhi_okhla_phase2",
+      "station_name": "Okhla Phase-2, Delhi",
+      "actual": 128.5,
+      "predicted": 129.2
+    },
+    {
+      "station_id": "delhi_okhla_phase2",
+      "station_name": "Okhla Phase-2, Delhi",
+      "actual": 92.2,
+      "predicted": 91.7
+    },
+    {
+      "station_id": "delhi_okhla_phase2",
+      "station_name": "Okhla Phase-2, Delhi",
+      "actual": 81.7,
+      "predicted": 81.2
+    },
+    {
+      "station_id": "delhi_okhla_phase2",
+      "station_name": "Okhla Phase-2, Delhi",
+      "actual": 74.5,
+      "predicted": 74.6
+    },
+    {
+      "station_id": "delhi_okhla_phase2",
+      "station_name": "Okhla Phase-2, Delhi",
+      "actual": 158.8,
+      "predicted": 158.1
+    },
+    {
+      "station_id": "delhi_okhla_phase2",
+      "station_name": "Okhla Phase-2, Delhi",
+      "actual": 146.7,
+      "predicted": 144.9
+    },
+    {
+      "station_id": "delhi_okhla_phase2",
+      "station_name": "Okhla Phase-2, Delhi",
+      "actual": 127.1,
+      "predicted": 124.5
+    },
+    {
+      "station_id": "delhi_okhla_phase2",
+      "station_name": "Okhla Phase-2, Delhi",
+      "actual": 78.5,
+      "predicted": 78.0
+    },
+    {
+      "station_id": "delhi_okhla_phase2",
+      "station_name": "Okhla Phase-2, Delhi",
+      "actual": 83.6,
+      "predicted": 84.1
+    },
+    {
+      "station_id": "delhi_okhla_phase2",
+      "station_name": "Okhla Phase-2, Delhi",
+      "actual": 186.7,
+      "predicted": 180.5
+    },
+    {
+      "station_id": "delhi_okhla_phase2",
+      "station_name": "Okhla Phase-2, Delhi",
+      "actual": 162.5,
+      "predicted": 161.5
+    },
+    {
+      "station_id": "delhi_okhla_phase2",
+      "station_name": "Okhla Phase-2, Delhi",
+      "actual": 155.5,
+      "predicted": 154.4
+    },
+    {
+      "station_id": "delhi_okhla_phase2",
+      "station_name": "Okhla Phase-2, Delhi",
+      "actual": 120.6,
+      "predicted": 118.7
+    },
+    {
+      "station_id": "delhi_okhla_phase2",
+      "station_name": "Okhla Phase-2, Delhi",
+      "actual": 65.9,
+      "predicted": 66.4
+    },
+    {
+      "station_id": "delhi_okhla_phase2",
+      "station_name": "Okhla Phase-2, Delhi",
+      "actual": 128.1,
+      "predicted": 127.7
+    },
+    {
+      "station_id": "delhi_okhla_phase2",
+      "station_name": "Okhla Phase-2, Delhi",
+      "actual": 143.9,
+      "predicted": 143.5
+    },
+    {
+      "station_id": "delhi_okhla_phase2",
+      "station_name": "Okhla Phase-2, Delhi",
+      "actual": 116.6,
+      "predicted": 117.3
+    },
+    {
+      "station_id": "delhi_okhla_phase2",
+      "station_name": "Okhla Phase-2, Delhi",
+      "actual": 113.4,
+      "predicted": 113.3
+    },
+    {
+      "station_id": "delhi_okhla_phase2",
+      "station_name": "Okhla Phase-2, Delhi",
+      "actual": 41.9,
+      "predicted": 41.9
+    },
+    {
+      "station_id": "delhi_vivek_vihar",
+      "station_name": "Vivek Vihar, Delhi",
+      "actual": 70.3,
+      "predicted": 70.4
+    },
+    {
+      "station_id": "delhi_vivek_vihar",
+      "station_name": "Vivek Vihar, Delhi",
+      "actual": 102.4,
+      "predicted": 102.2
+    },
+    {
+      "station_id": "delhi_vivek_vihar",
+      "station_name": "Vivek Vihar, Delhi",
+      "actual": 84.5,
+      "predicted": 84.5
+    },
+    {
+      "station_id": "delhi_vivek_vihar",
+      "station_name": "Vivek Vihar, Delhi",
+      "actual": 82.7,
+      "predicted": 82.6
+    },
+    {
+      "station_id": "delhi_vivek_vihar",
+      "station_name": "Vivek Vihar, Delhi",
+      "actual": 79.4,
+      "predicted": 79.4
+    },
+    {
+      "station_id": "delhi_vivek_vihar",
+      "station_name": "Vivek Vihar, Delhi",
+      "actual": 63.6,
+      "predicted": 63.5
+    },
+    {
+      "station_id": "delhi_vivek_vihar",
+      "station_name": "Vivek Vihar, Delhi",
+      "actual": 51.8,
+      "predicted": 51.8
+    },
+    {
+      "station_id": "delhi_vivek_vihar",
+      "station_name": "Vivek Vihar, Delhi",
+      "actual": 79.9,
+      "predicted": 80.0
+    },
+    {
+      "station_id": "delhi_vivek_vihar",
+      "station_name": "Vivek Vihar, Delhi",
+      "actual": 69.8,
+      "predicted": 69.9
+    },
+    {
+      "station_id": "delhi_vivek_vihar",
+      "station_name": "Vivek Vihar, Delhi",
+      "actual": 71.9,
+      "predicted": 71.9
+    },
+    {
+      "station_id": "delhi_vivek_vihar",
+      "station_name": "Vivek Vihar, Delhi",
+      "actual": 69.4,
+      "predicted": 69.3
+    },
+    {
+      "station_id": "delhi_vivek_vihar",
+      "station_name": "Vivek Vihar, Delhi",
+      "actual": 71.0,
+      "predicted": 71.0
+    },
+    {
+      "station_id": "delhi_vivek_vihar",
+      "station_name": "Vivek Vihar, Delhi",
+      "actual": 72.6,
+      "predicted": 72.7
+    },
+    {
+      "station_id": "delhi_vivek_vihar",
+      "station_name": "Vivek Vihar, Delhi",
+      "actual": 60.1,
+      "predicted": 60.2
+    },
+    {
+      "station_id": "delhi_vivek_vihar",
+      "station_name": "Vivek Vihar, Delhi",
+      "actual": 56.3,
+      "predicted": 56.3
+    },
+    {
+      "station_id": "delhi_vivek_vihar",
+      "station_name": "Vivek Vihar, Delhi",
+      "actual": 58.2,
+      "predicted": 58.2
+    },
+    {
+      "station_id": "delhi_vivek_vihar",
+      "station_name": "Vivek Vihar, Delhi",
+      "actual": 57.0,
+      "predicted": 57.0
+    },
+    {
+      "station_id": "delhi_anand_parbat",
+      "station_name": "Anand Parbat, Delhi",
+      "actual": 87.8,
+      "predicted": 87.6
+    },
+    {
+      "station_id": "delhi_anand_parbat",
+      "station_name": "Anand Parbat, Delhi",
+      "actual": 89.6,
+      "predicted": 89.4
+    },
+    {
+      "station_id": "delhi_anand_parbat",
+      "station_name": "Anand Parbat, Delhi",
+      "actual": 99.2,
+      "predicted": 99.4
+    },
+    {
+      "station_id": "delhi_anand_parbat",
+      "station_name": "Anand Parbat, Delhi",
+      "actual": 79.9,
+      "predicted": 79.8
+    },
+    {
+      "station_id": "delhi_anand_parbat",
+      "station_name": "Anand Parbat, Delhi",
+      "actual": 64.7,
+      "predicted": 64.7
+    },
+    {
+      "station_id": "delhi_anand_parbat",
+      "station_name": "Anand Parbat, Delhi",
+      "actual": 62.9,
+      "predicted": 62.8
+    },
+    {
+      "station_id": "delhi_anand_parbat",
+      "station_name": "Anand Parbat, Delhi",
+      "actual": 63.6,
+      "predicted": 63.6
+    },
+    {
+      "station_id": "delhi_anand_parbat",
+      "station_name": "Anand Parbat, Delhi",
+      "actual": 60.3,
+      "predicted": 60.3
+    },
+    {
+      "station_id": "delhi_anand_parbat",
+      "station_name": "Anand Parbat, Delhi",
+      "actual": 55.8,
+      "predicted": 55.9
+    },
+    {
+      "station_id": "noida_sec62",
+      "station_name": "Sector 62, Noida",
+      "actual": 79.4,
+      "predicted": 79.4
+    },
+    {
+      "station_id": "noida_sec62",
+      "station_name": "Sector 62, Noida",
+      "actual": 79.9,
+      "predicted": 79.7
+    },
+    {
+      "station_id": "noida_sec62",
+      "station_name": "Sector 62, Noida",
+      "actual": 102.4,
+      "predicted": 102.0
+    },
+    {
+      "station_id": "noida_sec62",
+      "station_name": "Sector 62, Noida",
+      "actual": 66.6,
+      "predicted": 66.8
+    },
+    {
+      "station_id": "noida_sec62",
+      "station_name": "Sector 62, Noida",
+      "actual": 79.4,
+      "predicted": 79.4
+    },
+    {
+      "station_id": "noida_sec62",
+      "station_name": "Sector 62, Noida",
+      "actual": 79.4,
+      "predicted": 79.3
+    },
+    {
+      "station_id": "noida_sec62",
+      "station_name": "Sector 62, Noida",
+      "actual": 81.7,
+      "predicted": 81.6
+    },
+    {
+      "station_id": "noida_sec62",
+      "station_name": "Sector 62, Noida",
+      "actual": 65.7,
+      "predicted": 65.9
+    },
+    {
+      "station_id": "noida_sec62",
+      "station_name": "Sector 62, Noida",
+      "actual": 63.6,
+      "predicted": 63.5
+    },
+    {
+      "station_id": "noida_sec62",
+      "station_name": "Sector 62, Noida",
+      "actual": 60.3,
+      "predicted": 60.3
+    },
+    {
+      "station_id": "noida_sec62",
+      "station_name": "Sector 62, Noida",
+      "actual": 49.4,
+      "predicted": 49.0
+    },
+    {
+      "station_id": "noida_sec62",
+      "station_name": "Sector 62, Noida",
+      "actual": 58.6,
+      "predicted": 58.4
+    },
+    {
+      "station_id": "noida_sec125",
+      "station_name": "Sector 125, Noida",
+      "actual": 81.7,
+      "predicted": 75.9
+    },
+    {
+      "station_id": "noida_sec125",
+      "station_name": "Sector 125, Noida",
+      "actual": 111.1,
+      "predicted": 104.6
+    },
+    {
+      "station_id": "noida_sec125",
+      "station_name": "Sector 125, Noida",
+      "actual": 96.4,
+      "predicted": 88.9
+    },
+    {
+      "station_id": "noida_sec125",
+      "station_name": "Sector 125, Noida",
+      "actual": 50.4,
+      "predicted": 51.1
+    },
+    {
+      "station_id": "noida_sec125",
+      "station_name": "Sector 125, Noida",
+      "actual": 120.6,
+      "predicted": 108.6
+    },
+    {
+      "station_id": "noida_sec125",
+      "station_name": "Sector 125, Noida",
+      "actual": 116.4,
+      "predicted": 106.5
+    },
+    {
+      "station_id": "ghaziabad_vasundhara",
+      "station_name": "Vasundhara, Ghaziabad",
+      "actual": 88.0,
+      "predicted": 88.0
+    },
+    {
+      "station_id": "ghaziabad_vasundhara",
+      "station_name": "Vasundhara, Ghaziabad",
+      "actual": 72.2,
+      "predicted": 72.2
+    },
+    {
+      "station_id": "ghaziabad_vasundhara",
+      "station_name": "Vasundhara, Ghaziabad",
+      "actual": 72.2,
+      "predicted": 72.2
+    },
+    {
+      "station_id": "ghaziabad_vasundhara",
+      "station_name": "Vasundhara, Ghaziabad",
+      "actual": 95.5,
+      "predicted": 95.4
+    },
+    {
+      "station_id": "ghaziabad_vasundhara",
+      "station_name": "Vasundhara, Ghaziabad",
+      "actual": 85.2,
+      "predicted": 85.3
+    },
+    {
+      "station_id": "ghaziabad_vasundhara",
+      "station_name": "Vasundhara, Ghaziabad",
+      "actual": 70.5,
+      "predicted": 70.5
+    },
+    {
+      "station_id": "ghaziabad_vasundhara",
+      "station_name": "Vasundhara, Ghaziabad",
+      "actual": 55.9,
+      "predicted": 55.9
+    },
+    {
+      "station_id": "ghaziabad_vasundhara",
+      "station_name": "Vasundhara, Ghaziabad",
+      "actual": 54.8,
+      "predicted": 54.8
+    },
+    {
+      "station_id": "ghaziabad_vasundhara",
+      "station_name": "Vasundhara, Ghaziabad",
+      "actual": 72.9,
+      "predicted": 72.9
+    },
+    {
+      "station_id": "ghaziabad_vasundhara",
+      "station_name": "Vasundhara, Ghaziabad",
+      "actual": 65.7,
+      "predicted": 65.7
+    },
+    {
+      "station_id": "ghaziabad_vasundhara",
+      "station_name": "Vasundhara, Ghaziabad",
+      "actual": 63.6,
+      "predicted": 63.7
+    },
+    {
+      "station_id": "ghaziabad_vasundhara",
+      "station_name": "Vasundhara, Ghaziabad",
+      "actual": 56.6,
+      "predicted": 56.6
+    },
+    {
+      "station_id": "ghaziabad_vasundhara",
+      "station_name": "Vasundhara, Ghaziabad",
+      "actual": 60.3,
+      "predicted": 60.3
+    },
+    {
+      "station_id": "ghaziabad_vasundhara",
+      "station_name": "Vasundhara, Ghaziabad",
+      "actual": 56.2,
+      "predicted": 56.2
+    },
+    {
+      "station_id": "ghaziabad_indira",
+      "station_name": "Indirapuram, Ghaziabad",
+      "actual": 88.2,
+      "predicted": 88.0
+    },
+    {
+      "station_id": "ghaziabad_indira",
+      "station_name": "Indirapuram, Ghaziabad",
+      "actual": 72.2,
+      "predicted": 72.2
+    },
+    {
+      "station_id": "ghaziabad_indira",
+      "station_name": "Indirapuram, Ghaziabad",
+      "actual": 105.5,
+      "predicted": 104.9
+    },
+    {
+      "station_id": "ghaziabad_indira",
+      "station_name": "Indirapuram, Ghaziabad",
+      "actual": 86.1,
+      "predicted": 85.8
+    },
+    {
+      "station_id": "ghaziabad_indira",
+      "station_name": "Indirapuram, Ghaziabad",
+      "actual": 79.2,
+      "predicted": 79.3
+    },
+    {
+      "station_id": "ghaziabad_indira",
+      "station_name": "Indirapuram, Ghaziabad",
+      "actual": 56.3,
+      "predicted": 56.3
+    },
+    {
+      "station_id": "ghaziabad_indira",
+      "station_name": "Indirapuram, Ghaziabad",
+      "actual": 60.3,
+      "predicted": 60.4
+    },
+    {
+      "station_id": "gurugram_vikas_sadan",
+      "station_name": "Vikas Sadan, Gurugram",
+      "actual": 107.1,
+      "predicted": 100.8
+    },
+    {
+      "station_id": "gurugram_vikas_sadan",
+      "station_name": "Vikas Sadan, Gurugram",
+      "actual": 158.8,
+      "predicted": 153.5
+    },
+    {
+      "station_id": "gurugram_vikas_sadan",
+      "station_name": "Vikas Sadan, Gurugram",
+      "actual": 125.3,
+      "predicted": 123.6
+    },
+    {
+      "station_id": "gurugram_vikas_sadan",
+      "station_name": "Vikas Sadan, Gurugram",
+      "actual": 62.2,
+      "predicted": 60.4
+    },
+    {
+      "station_id": "gurugram_vikas_sadan",
+      "station_name": "Vikas Sadan, Gurugram",
+      "actual": 111.1,
+      "predicted": 103.7
+    },
+    {
+      "station_id": "gurugram_vikas_sadan",
+      "station_name": "Vikas Sadan, Gurugram",
+      "actual": 95.9,
+      "predicted": 92.1
+    },
+    {
+      "station_id": "gurugram_vikas_sadan",
+      "station_name": "Vikas Sadan, Gurugram",
+      "actual": 52.7,
+      "predicted": 53.1
+    },
+    {
+      "station_id": "gurugram_vikas_sadan",
+      "station_name": "Vikas Sadan, Gurugram",
+      "actual": 83.6,
+      "predicted": 82.5
+    },
+    {
+      "station_id": "gurugram_vikas_sadan",
+      "station_name": "Vikas Sadan, Gurugram",
+      "actual": 157.4,
+      "predicted": 157.2
+    },
+    {
+      "station_id": "gurugram_vikas_sadan",
+      "station_name": "Vikas Sadan, Gurugram",
+      "actual": 152.3,
+      "predicted": 153.6
+    },
+    {
+      "station_id": "gurugram_vikas_sadan",
+      "station_name": "Vikas Sadan, Gurugram",
+      "actual": 131.3,
+      "predicted": 132.8
+    },
+    {
+      "station_id": "gurugram_vikas_sadan",
+      "station_name": "Vikas Sadan, Gurugram",
+      "actual": 130.4,
+      "predicted": 132.6
+    },
+    {
+      "station_id": "gurugram_vikas_sadan",
+      "station_name": "Vikas Sadan, Gurugram",
+      "actual": 146.2,
+      "predicted": 147.4
+    },
+    {
+      "station_id": "gurugram_vikas_sadan",
+      "station_name": "Vikas Sadan, Gurugram",
+      "actual": 114.3,
+      "predicted": 112.6
+    },
+    {
+      "station_id": "gurugram_vikas_sadan",
+      "station_name": "Vikas Sadan, Gurugram",
+      "actual": 113.4,
+      "predicted": 112.6
+    },
+    {
+      "station_id": "gurugram_vikas_sadan",
+      "station_name": "Vikas Sadan, Gurugram",
+      "actual": 115.9,
+      "predicted": 108.7
+    },
+    {
+      "station_id": "gurugram_gwal_pahari",
+      "station_name": "Gwal Pahari, Gurugram",
+      "actual": 124.3,
+      "predicted": 124.3
+    },
+    {
+      "station_id": "gurugram_gwal_pahari",
+      "station_name": "Gwal Pahari, Gurugram",
+      "actual": 146.7,
+      "predicted": 146.5
+    },
+    {
+      "station_id": "gurugram_gwal_pahari",
+      "station_name": "Gwal Pahari, Gurugram",
+      "actual": 131.8,
+      "predicted": 131.7
+    },
+    {
+      "station_id": "gurugram_gwal_pahari",
+      "station_name": "Gwal Pahari, Gurugram",
+      "actual": 127.1,
+      "predicted": 127.2
+    },
+    {
+      "station_id": "gurugram_gwal_pahari",
+      "station_name": "Gwal Pahari, Gurugram",
+      "actual": 96.4,
+      "predicted": 96.4
+    },
+    {
+      "station_id": "gurugram_gwal_pahari",
+      "station_name": "Gwal Pahari, Gurugram",
+      "actual": 186.7,
+      "predicted": 184.3
+    },
+    {
+      "station_id": "gurugram_gwal_pahari",
+      "station_name": "Gwal Pahari, Gurugram",
+      "actual": 157.9,
+      "predicted": 158.0
+    },
+    {
+      "station_id": "gurugram_gwal_pahari",
+      "station_name": "Gwal Pahari, Gurugram",
+      "actual": 160.2,
+      "predicted": 160.5
+    },
+    {
+      "station_id": "gurugram_gwal_pahari",
+      "station_name": "Gwal Pahari, Gurugram",
+      "actual": 162.5,
+      "predicted": 162.8
+    },
+    {
+      "station_id": "gurugram_gwal_pahari",
+      "station_name": "Gwal Pahari, Gurugram",
+      "actual": 157.4,
+      "predicted": 157.4
+    },
+    {
+      "station_id": "gurugram_gwal_pahari",
+      "station_name": "Gwal Pahari, Gurugram",
+      "actual": 109.9,
+      "predicted": 110.0
+    },
+    {
+      "station_id": "gurugram_gwal_pahari",
+      "station_name": "Gwal Pahari, Gurugram",
+      "actual": 57.4,
+      "predicted": 57.4
+    },
+    {
+      "station_id": "faridabad_sec16a",
+      "station_name": "Sector 16A, Faridabad",
+      "actual": 92.2,
+      "predicted": 91.7
+    },
+    {
+      "station_id": "faridabad_sec16a",
+      "station_name": "Sector 16A, Faridabad",
+      "actual": 74.5,
+      "predicted": 74.1
+    },
+    {
+      "station_id": "faridabad_sec16a",
+      "station_name": "Sector 16A, Faridabad",
+      "actual": 97.6,
+      "predicted": 97.9
+    },
+    {
+      "station_id": "faridabad_sec16a",
+      "station_name": "Sector 16A, Faridabad",
+      "actual": 87.1,
+      "predicted": 84.8
+    },
+    {
+      "station_id": "faridabad_sec16a",
+      "station_name": "Sector 16A, Faridabad",
+      "actual": 105.5,
+      "predicted": 105.5
+    },
+    {
+      "station_id": "faridabad_sec16a",
+      "station_name": "Sector 16A, Faridabad",
+      "actual": 96.4,
+      "predicted": 96.9
+    },
+    {
+      "station_id": "faridabad_sec16a",
+      "station_name": "Sector 16A, Faridabad",
+      "actual": 83.1,
+      "predicted": 82.6
+    },
+    {
+      "station_id": "faridabad_sec16a",
+      "station_name": "Sector 16A, Faridabad",
+      "actual": 86.6,
+      "predicted": 87.3
+    },
+    {
+      "station_id": "faridabad_sec16a",
+      "station_name": "Sector 16A, Faridabad",
+      "actual": 87.5,
+      "predicted": 88.2
+    },
+    {
+      "station_id": "faridabad_sec16a",
+      "station_name": "Sector 16A, Faridabad",
+      "actual": 98.5,
+      "predicted": 99.3
+    },
+    {
+      "station_id": "faridabad_sec16a",
+      "station_name": "Sector 16A, Faridabad",
+      "actual": 186.7,
+      "predicted": 178.0
+    },
+    {
+      "station_id": "faridabad_sec16a",
+      "station_name": "Sector 16A, Faridabad",
+      "actual": 59.4,
+      "predicted": 59.6
+    },
+    {
+      "station_id": "faridabad_sec16a",
+      "station_name": "Sector 16A, Faridabad",
+      "actual": 131.8,
+      "predicted": 132.5
+    },
+    {
+      "station_id": "faridabad_sec16a",
+      "station_name": "Sector 16A, Faridabad",
+      "actual": 146.2,
+      "predicted": 146.0
+    },
+    {
+      "station_id": "faridabad_sec16a",
+      "station_name": "Sector 16A, Faridabad",
+      "actual": 62.4,
+      "predicted": 62.3
+    },
+    {
+      "station_id": "faridabad_sec16a",
+      "station_name": "Sector 16A, Faridabad",
+      "actual": 41.9,
+      "predicted": 42.1
+    },
+    {
+      "station_id": "faridabad_sec30",
+      "station_name": "Sector 30, Faridabad",
+      "actual": 107.1,
+      "predicted": 109.2
+    },
+    {
+      "station_id": "faridabad_sec30",
+      "station_name": "Sector 30, Faridabad",
+      "actual": 124.3,
+      "predicted": 125.2
+    },
+    {
+      "station_id": "faridabad_sec30",
+      "station_name": "Sector 30, Faridabad",
+      "actual": 128.5,
+      "predicted": 128.9
+    },
+    {
+      "station_id": "faridabad_sec30",
+      "station_name": "Sector 30, Faridabad",
+      "actual": 135.5,
+      "predicted": 134.9
+    },
+    {
+      "station_id": "faridabad_sec30",
+      "station_name": "Sector 30, Faridabad",
+      "actual": 95.2,
+      "predicted": 95.6
+    },
+    {
+      "station_id": "faridabad_sec30",
+      "station_name": "Sector 30, Faridabad",
+      "actual": 62.2,
+      "predicted": 61.6
+    },
+    {
+      "station_id": "faridabad_sec30",
+      "station_name": "Sector 30, Faridabad",
+      "actual": 96.4,
+      "predicted": 96.2
+    },
+    {
+      "station_id": "faridabad_sec30",
+      "station_name": "Sector 30, Faridabad",
+      "actual": 83.1,
+      "predicted": 82.8
+    },
+    {
+      "station_id": "faridabad_sec30",
+      "station_name": "Sector 30, Faridabad",
+      "actual": 86.6,
+      "predicted": 86.3
+    },
+    {
+      "station_id": "faridabad_sec30",
+      "station_name": "Sector 30, Faridabad",
+      "actual": 165.3,
+      "predicted": 170.2
+    },
+    {
+      "station_id": "faridabad_sec30",
+      "station_name": "Sector 30, Faridabad",
+      "actual": 160.2,
+      "predicted": 159.9
+    },
+    {
+      "station_id": "faridabad_sec30",
+      "station_name": "Sector 30, Faridabad",
+      "actual": 82.0,
+      "predicted": 82.8
+    },
+    {
+      "station_id": "faridabad_sec30",
+      "station_name": "Sector 30, Faridabad",
+      "actual": 124.3,
+      "predicted": 123.7
+    },
+    {
+      "station_id": "faridabad_sec30",
+      "station_name": "Sector 30, Faridabad",
+      "actual": 119.7,
+      "predicted": 119.1
+    },
+    {
+      "station_id": "faridabad_sec30",
+      "station_name": "Sector 30, Faridabad",
+      "actual": 103.8,
+      "predicted": 104.2
+    },
+    {
+      "station_id": "faridabad_sec30",
+      "station_name": "Sector 30, Faridabad",
+      "actual": 52.3,
+      "predicted": 52.2
     }
   ],
-  "data_start_utc": "2024-12-31T23:00:00+00:00",
-  "data_end_utc": "2025-12-31T22:00:00+00:00",
-  "created_at_utc": "2026-10-11T16:51:15.472748+00:00"
+  "data_start_utc": "2026-10-07T00:00:00+00:00",
+  "data_end_utc": "2026-10-11T17:00:00+00:00",
+  "created_at_utc": "2026-10-11T17:18:29.060299+00:00"
 }

@@ -7,7 +7,7 @@ const METRIC_HELP = {
   mae: 'Mean Absolute Error: the average size of the prediction error, ignoring direction. Lower is better.',
   rmse: 'Root Mean Squared Error: like MAE but penalises large errors more heavily. Lower is better.',
   bias: 'Mean of (predicted − actual). Positive means the model tends to over-estimate, negative means under-estimate. Closer to zero is better.',
-  r2: 'Coefficient of determination: the share of variation in measured PM2.5 explained by the model. 1 is perfect; 0 is no better than predicting the mean.',
+  r2: 'Coefficient of determination: the share of variation in the actual PM2.5 values explained by the model. 1 is perfect; 0 is no better than predicting the mean.',
 }
 
 function Tile({ label, help, value, unit }: { label: string; help: string; value: string; unit?: string }) {

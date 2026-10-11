@@ -1,5 +1,6 @@
 import json
 import math
+import os
 import time
 from pathlib import Path
 import requests
@@ -99,6 +100,9 @@ def get_geo_features(lat, lon):
     key = f"{round(float(lat), 4)},{round(float(lon), 4)}"
 
     if key not in cache:
+        if os.getenv("GEO_OFFLINE", "").strip().lower() in {"1", "true", "yes"}:
+            # Cache-only mode (CI, bulk training): unknown roads stay unknown instead of waiting on Overpass.
+            return {"road_density_2km": float("nan"), "dist_to_major_road_m": float("nan")}
         print(f"Fetching OpenStreetMap data for location {key}...")
         features = fetch_overpass_features(lat, lon)
         # Be polite to the Overpass API by pacing requests

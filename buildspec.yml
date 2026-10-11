@@ -1,0 +1,83 @@
+version: 0.2
+
+env:
+  variables:
+    APP_ENV: "production"
+    PYTHONPATH: "."
+    AWS_DEFAULT_REGION: "ap-south-1"
+  exported-variables:
+    - IMAGE_TAG
+    - REPOSITORY_URI
+
+phases:
+  install:
+    runtime-versions:
+      python: 3.12
+    commands:
+      - echo "=== [AWS CodeBuild] Step 1: Installing Runtime Dependencies ==="
+      - python --version
+      - python -m pip install --upgrade pip
+      - pip install -r requirements-dev.txt
+      - echo "Dependencies successfully installed."
+
+  pre_build:
+    commands:
+      - echo "=== [AWS CodeBuild] Step 2: Pre-Build Quality Gates & Linting ==="
+      - python -m compileall aerogrid tests
+      - ruff check aerogrid || echo "Ruff linting completed with warnings (non-fatal)"
+      - echo "=== [AWS CodeBuild] Setting up ECR Authentication ==="
+      - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+      - export IMAGE_TAG=${COMMIT_HASH:=latest}
+      - |
+        if [ -n "$AWS_ACCOUNT_ID" ] && [ -n "$IMAGE_REPO_NAME" ]; then
+          export REPOSITORY_URI="$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME"
+          echo "Logging into Amazon ECR: $REPOSITORY_URI"
+          aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
+        else
+          export REPOSITORY_URI="aerogrid-backend"
+          echo "ECR repository variables not set. Building local image tag: $REPOSITORY_URI:$IMAGE_TAG"
+        fi
+
+  build:
+    commands:
+      - echo "=== [AWS CodeBuild] Step 3: Executing Automated Backend Test Suite ==="
+      - mkdir -p reports
+      - pytest tests --junitxml=reports/test-results.xml --cov=aerogrid --cov-report=xml:reports/coverage.xml --cov-report=term-missing
+      - echo "=== [AWS CodeBuild] Step 4: Building Backend Container Image ==="
+      - docker build -t $REPOSITORY_URI:latest -t $REPOSITORY_URI:$IMAGE_TAG -f Dockerfile .
+
+  post_build:
+    commands:
+      - echo "=== [AWS CodeBuild] Step 5: Post-Build Packaging & ECR Push ==="
+      - |
+        if [ -n "$AWS_ACCOUNT_ID" ] && [ -n "$IMAGE_REPO_NAME" ]; then
+          echo "Pushing Docker images to Amazon ECR..."
+          docker push $REPOSITORY_URI:latest
+          docker push $REPOSITORY_URI:$IMAGE_TAG
+        fi
+      - echo "=== [AWS CodeBuild] Generating Deployment Manifests ==="
+      - printf '[{"name":"aerogrid-backend","imageUri":"%s"}]' "$REPOSITORY_URI:$IMAGE_TAG" > imagedefinitions.json
+      - echo "Generated imagedefinitions.json successfully:"
+      - cat imagedefinitions.json
+      - echo "Build finished on $(date)"
+
+reports:
+  test-reports:
+    files:
+      - test-results.xml
+    base-directory: reports
+    file-format: JUNITXML
+  coverage-reports:
+    files:
+      - coverage.xml
+    base-directory: reports
+    file-format: COBERTURAXML
+
+artifacts:
+  files:
+    - imagedefinitions.json
+    - appspec.yaml
+    - appspec.ec2.yaml
+    - taskdef.json
+    - aws/**/*
+    - reports/**/*

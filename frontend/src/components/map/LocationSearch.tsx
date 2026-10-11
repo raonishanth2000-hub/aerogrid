@@ -2,6 +2,7 @@ import { Crosshair, MapPin, Search } from 'lucide-react'
 import { useEffect, useId, useMemo, useRef, useState } from 'react'
 import { useApp } from '../../app/appContext'
 import { formatConcentration, stationLabel } from '../../utils/formatters'
+import { KIND_LABEL } from '../../utils/stationKind'
 import { parseCoordinateInput } from '../../utils/validation'
 
 type Option =
@@ -50,7 +51,7 @@ export function LocationSearch({ allowCoordinates = true }: { allowCoordinates?:
           kind: 'station',
           id: s.id,
           label: stationLabel(s),
-          detail: s.value === null ? 'Measured · unavailable' : `Measured · ${formatConcentration(s.value)} ${s.unit}`,
+          detail: s.value === null ? `${KIND_LABEL[s.source_type]} · unavailable` : `${KIND_LABEL[s.source_type]} · ${formatConcentration(s.value)} ${s.unit}`,
         })
       }
       if (out.length >= 8) break

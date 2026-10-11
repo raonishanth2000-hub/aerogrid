@@ -1,4 +1,4 @@
-"""Train and evaluate a spatial/weather baseline for PM2.5 or PM10."""
+"""Train and evaluate a spatial/weather baseline for PM2.5."""
 from __future__ import annotations
 
 import argparse
@@ -25,8 +25,8 @@ def normalize_pollutant(value: str) -> str:
     if compact in {"pm25", "pm2"}:
         return "pm25"
     if compact == "pm10":
-        return "pm10"
-    raise ValueError("Pollutant must be 'pm25' or 'pm10'.")
+        raise ValueError("PM10 has been removed: under station-held-out validation it was no better than predicting the typical value.")
+    raise ValueError("Pollutant must be 'pm25'.")
 
 
 def metrics(y_true: np.ndarray, y_pred: np.ndarray) -> dict[str, float]:
@@ -178,7 +178,7 @@ def train(pollutant: str) -> dict:
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--pollutant", choices=["pm25", "pm10"], default="pm25")
+    parser.add_argument("--pollutant", choices=["pm25"], default="pm25")
     args = parser.parse_args()
     train(args.pollutant)
 

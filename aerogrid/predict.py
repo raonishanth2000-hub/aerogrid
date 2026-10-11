@@ -1,4 +1,4 @@
-"""Predict PM2.5/PM10 at a user-supplied coordinate and time."""
+"""Predict PM2.5 at a user-supplied coordinate and time."""
 from __future__ import annotations
 
 from datetime import datetime, timezone
@@ -86,9 +86,9 @@ def load_model(pollutant: str) -> dict[str, Any]:
     if pollutant == "pm25":
         pollutant = "pm25"
     elif pollutant == "pm10":
-        pollutant = "pm10"
+        raise ValueError("PM10 has been removed: under station-held-out validation it was no better than predicting the typical value.")
     else:
-        raise ValueError("Pollutant must be pm25 or pm10.")
+        raise ValueError("Pollutant must be pm25.")
     path = MODEL_DIR / f"{pollutant}_model.joblib"
     if not path.exists():
         raise FileNotFoundError(f"Model not found at {path}. Run python -m aerogrid.train --pollutant {pollutant} first.")
@@ -217,8 +217,8 @@ def main() -> None:
     import argparse
     import json
 
-    parser = argparse.ArgumentParser(description="Predict PM2.5/PM10 at a latitude/longitude.")
-    parser.add_argument("--pollutant", choices=["pm25", "pm10"], default="pm25")
+    parser = argparse.ArgumentParser(description="Predict PM2.5 at a latitude/longitude.")
+    parser.add_argument("--pollutant", choices=["pm25"], default="pm25")
     parser.add_argument("--lat", type=float, required=True)
     parser.add_argument("--lon", type=float, required=True)
     parser.add_argument("--datetime", required=True, help="Local datetime, e.g. 2026-10-10T14:00")

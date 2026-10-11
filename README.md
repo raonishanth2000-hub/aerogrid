@@ -1,12 +1,12 @@
 # AeroGrid — Antigravity starter project
 
-A beginner-friendly research prototype for estimating PM2.5/PM10 at an unmonitored coordinate using real monitoring observations, weather and geographic/time features.
+A beginner-friendly research prototype for estimating PM2.5 at an unmonitored coordinate using real monitoring observations, weather and geographic/time features.
 
 **This is a working code scaffold, not a claim that a city-specific model has already been trained.** You must download real observations, train it and inspect the measured validation metrics before relying on results. Coverage in the selected area may be too sparse for a valid model.
 
 ## What the first version does
 
-1. Downloads hourly PM2.5/PM10 observations from OpenAQ in a radius around a configurable study-area centre.
+1. Downloads hourly PM2.5 (and PM10, unused) observations from OpenAQ in a radius around a configurable study-area centre.
 2. Downloads historical weather from Open-Meteo for each station location and joins it to the hourly observations.
 3. Trains a Random Forest regression model using coordinates, weather, time features and same-time readings from nearby stations.
 4. Evaluates on monitoring locations held out from training when at least four locations are available. With fewer locations it clearly marks validation as weaker.
@@ -95,13 +95,9 @@ Train PM2.5 first:
 python -m aerogrid.train --pollutant pm25
 ```
 
-Optionally train PM10 if the dataset has sufficient PM10 records:
+PM10 is not supported. It was evaluated with spatial cross-validation (`python -m aerogrid.experiments`) and no model beat predicting the typical value, so it was removed.
 
-```bash
-python -m aerogrid.train --pollutant pm10
-```
-
-The script prints MAE, RMSE, bias, R² and a median baseline. It saves a model in `models/pm25_model.joblib` or `models/pm10_model.joblib`, metrics JSON under `models/`, and held-out predictions under `data/`.
+The script prints MAE, RMSE, bias, R² and a median baseline. It saves a model in `models/pm25_model.joblib`, metrics JSON under `models/`, and held-out predictions under `data/`.
 
 **How to read validation:**
 
@@ -118,7 +114,7 @@ streamlit run app.py
 
 The browser dashboard allows you to:
 
-1. Select PM2.5 or PM10.
+1. Select PM2.5.
 2. Enter a target latitude/longitude for a location without a station.
 3. Choose local date/time.
 4. Click **Estimate pollution at this location**.
@@ -166,7 +162,17 @@ It uses real PM observations as target labels. It does not claim to measure air 
 
 ## REST API for the web frontend
 
-`api.py` serves the AeroGrid web frontend (`frontend/`). Start it with `uvicorn aerogrid.api:app --port 8000`.
+`aerogrid/api.py` serves the AeroGrid web frontend (`frontend/`). To run both locally:
+
+```bash
+python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
+.venv/bin/uvicorn aerogrid.api:app --port 8000      # backend
+cd frontend && npm install && npm run dev          # frontend, in a second terminal
+```
+
+Open http://localhost:5173 and choose **AeroGrid model** in the top bar. Station markers need `data/training_dataset.csv`, and estimates need the full pipeline (`aerogrid/features.py`, `aerogrid/fetch_data.py`); until then the site says which part is missing.
+
+Project layout: Python package in `aerogrid/`, trained models and metrics in `models/`, tests in `tests/`, data in `data/`.
 
 | Endpoint | Purpose |
 | --- | --- |

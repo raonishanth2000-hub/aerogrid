@@ -1,6 +1,6 @@
 pandas>=2.1,<3.0
 numpy>=1.26,<3.0
-scikit-learn==1.6.1  # must match the version used to save pm25_model.joblib / pm10_model.joblib
+scikit-learn==1.6.1  # must match the version used to save models/pm25_model.joblib
 joblib>=1.3,<2.0
 requests>=2.31,<3.0
 python-dotenv>=1.0,<2.0

@@ -29,7 +29,7 @@ from aerogrid.config import CENTER_LAT, CENTER_LON, DATA_DIR, MODEL_DIR, SEARCH_
 
 app = FastAPI(
     title="AeroGrid Air Quality Prediction API",
-    description="Backend API serving ML-based PM2.5 and PM10 predictions for frontend clients.",
+    description="Backend API serving ML-based PM2.5 predictions for frontend clients.",
     version="1.0.0",
 )
 
@@ -43,7 +43,7 @@ app.add_middleware(
 )
 
 DATASET_PATH = DATA_DIR / "training_dataset.csv"
-POLLUTANT_LABELS = {"pm25": "PM2.5", "pm10": "PM10"}
+POLLUTANT_LABELS = {"pm25": "PM2.5"}
 
 # The model only saw stations within SEARCH_RADIUS_M of the study-area centre. Estimates further
 # away than this (search radius plus a margin) are refused instead of returning meaningless values.
@@ -51,7 +51,7 @@ MAX_DISTANCE_FROM_CENTRE_KM = SEARCH_RADIUS_M / 1000 + 15
 
 
 class PredictionRequest(BaseModel):
-    pollutant: str = Field("pm25", description="Target pollutant: 'pm25' or 'pm10'")
+    pollutant: str = Field("pm25", description="Target pollutant: 'pm25' (the only supported pollutant)")
     latitude: float = Field(..., description="Target latitude (e.g. 12.9716)")
     longitude: float = Field(..., description="Target longitude (e.g. 77.5946)")
     timestamp: Optional[str] = Field(
@@ -60,7 +60,12 @@ class PredictionRequest(BaseModel):
 
 
 def _normalize_pollutant(value: str) -> str:
-    return "pm25" if "2" in value.lower() else "pm10"
+    compact = "".join(ch for ch in value.lower() if ch.isalnum())
+    if compact in {"pm25", "pm2"}:
+        return "pm25"
+    if compact == "pm10":
+        raise HTTPException(status_code=404, detail="PM10 has been removed: under station-held-out validation it was no better than predicting the typical value.")
+    raise HTTPException(status_code=422, detail="Unsupported pollutant. Use 'pm25'.")
 
 
 def _haversine_km(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
@@ -99,7 +104,13 @@ def _parse_timestamp(value: Optional[str]) -> datetime:
 def _run_prediction(pollutant: str, latitude: float, longitude: float, target_dt: datetime) -> dict[str, Any]:
     # Imported lazily so /api/health, /api/stations and /api/metrics keep working even when
     # the prediction dependencies (features, fetch_data) are unavailable.
-    from aerogrid.predict import predict_location
+    try:
+        from aerogrid.predict import predict_location
+    except ModuleNotFoundError as exc:
+        raise HTTPException(
+            status_code=503,
+            detail=f"The prediction pipeline is not installed on the server yet ({exc.name} is missing), so no estimate can be made.",
+        )
 
     return predict_location(
         pollutant=pollutant,
@@ -130,7 +141,7 @@ def root():
         "service": "AeroGrid Backend API",
         "status": "online",
         "docs_url": "/docs",
-        "supported_pollutants": ["pm25", "pm10"],
+        "supported_pollutants": ["pm25"],
     }
 
 
@@ -159,7 +170,7 @@ _station_cache: dict[tuple[str, float], dict[str, Any]] = {}
 
 @app.get("/api/stations")
 def stations(
-    pollutant: str = Query("pm25", description="Pollutant: pm25 or pm10"),
+    pollutant: str = Query("pm25", description="Pollutant: pm25"),
     history_days: int = Query(30, ge=0, le=90, description="Days of history per station (0 for none)"),
 ):
     """Latest measured reading per monitoring station, with recent history.
@@ -220,10 +231,38 @@ def stations(
 
 
 @app.get("/api/metrics")
-def metrics_for_frontend(pollutant: str = Query("pm25", description="Pollutant: pm25 or pm10")):
+def metrics_for_frontend(pollutant: str = Query("pm25", description="Pollutant: pm25")):
     """Validation metrics in the frontend contract shape. Only measured results are reported."""
     p = _normalize_pollutant(pollutant)
     m = _read_metrics(p)
+    trained = m.get("created_at_utc") if m else None
+    model_version = f"{p}-hgb-{trained[:10]}" if trained else None
+
+    # Prefer station-held-out cross-validation (every station tested once; see aerogrid/experiments.py)
+    # over the single train/test split recorded at training time.
+    validation_path = MODEL_DIR / f"{p}_validation.json"
+    if validation_path.exists():
+        v = json.loads(validation_path.read_text(encoding="utf-8"))
+        vm = {k: _finite(val) for k, val in v["metrics"].items()}
+        start, end = v.get("data_start_utc"), v.get("data_end_utc")
+        return {
+            "model_name": "AeroGrid model (gradient boosting)",
+            "model_version": model_version,
+            "evaluation_method": f"{v['evaluation_type']}; {v['n_locations']} stations",
+            "sample_count": v.get("n_rows"),
+            "mae": vm.get("mae_ugm3"),
+            "rmse": vm.get("rmse_ugm3"),
+            "bias": vm.get("bias_ugm3"),
+            "r2": vm.get("r2"),
+            "evaluated_at": v.get("created_at_utc"),
+            "training_period": f"{start[:10]} – {end[:10]}" if start and end else None,
+            "baselines": [
+                {"method": b["method"], "mae": _finite(b.get("mae_ugm3")), "rmse": _finite(b.get("rmse_ugm3")), "bias": _finite(b.get("bias_ugm3"))}
+                for b in v.get("baselines") or []
+            ],
+            "held_out_predictions": v.get("held_out_predictions"),
+        }
+
     if m is None:
         raise HTTPException(status_code=404, detail=f"Metrics for {p} not found.")
 
@@ -245,10 +284,9 @@ def metrics_for_frontend(pollutant: str = Query("pm25", description="Pollutant: 
         ]
 
     start, end = m.get("data_start_utc"), m.get("data_end_utc")
-    trained = m.get("created_at_utc")
     return {
-        "model_name": "Gradient-boosted trees (HistGradientBoostingRegressor)",
-        "model_version": f"{p}-hgb-{trained[:10]}" if trained else None,
+        "model_name": "AeroGrid model (gradient boosting)",
+        "model_version": model_version,
         "evaluation_method": m.get("evaluation_type"),
         "sample_count": m.get("n_test"),
         "mae": m.get("mae_ugm3"),
@@ -258,8 +296,10 @@ def metrics_for_frontend(pollutant: str = Query("pm25", description="Pollutant: 
         "evaluated_at": trained,
         "training_period": f"{start[:10]} – {end[:10]}" if start and end else None,
         "baselines": [
-            {"method": "Training median (constant)", "mae": m.get("training_median_baseline_mae_ugm3"), "rmse": None, "bias": None}
-        ],
+            {"method": b.get("method"), "mae": _finite(b.get("mae_ugm3")), "rmse": _finite(b.get("rmse_ugm3")), "bias": _finite(b.get("bias_ugm3"))}
+            for b in m.get("baselines") or []
+        ]
+        or [{"method": "Training median (constant)", "mae": m.get("training_median_baseline_mae_ugm3"), "rmse": None, "bias": None}],
         "held_out_predictions": held_out,
     }
 
@@ -311,7 +351,7 @@ def predict_for_frontend(
     lon: Optional[float] = Query(None, description="Longitude"),
     latitude: Optional[float] = Query(None, description="Alias of lat"),
     longitude: Optional[float] = Query(None, description="Alias of lon"),
-    pollutant: str = Query("pm25", description="Pollutant: pm25 or pm10"),
+    pollutant: str = Query("pm25", description="Pollutant: pm25"),
     timestamp: Optional[str] = Query(None, description="ISO timestamp (optional, defaults to now)"),
 ):
     """Model estimate in the frontend contract shape. It is an estimate, never a measurement."""

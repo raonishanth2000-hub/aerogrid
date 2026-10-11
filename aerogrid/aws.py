@@ -725,7 +725,7 @@ def main() -> None:
 
     # SageMaker commands
     p_sm_train = subparsers.add_parser("sagemaker-train", help="Launch a training job on Amazon SageMaker AI")
-    p_sm_train.add_argument("--pollutant", choices=["pm25", "pm10"], default="pm25", help="Target pollutant")
+    p_sm_train.add_argument("--pollutant", choices=["pm25"], default="pm25", help="Target pollutant")
     p_sm_train.add_argument("--instance-type", default="ml.m5.large", help="SageMaker EC2 instance type")
     p_sm_train.add_argument("--bucket", help="S3 bucket name")
     p_sm_train.add_argument("--role", help="SageMaker Execution IAM Role ARN")

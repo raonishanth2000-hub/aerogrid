@@ -1,0 +1,23 @@
+{
+  "data_mode": "demo",
+  "ml_provider": "model",
+  "stale_after_minutes": 180,
+  "alert_cooldown_minutes": 60,
+  "alert_hysteresis_factor": 0.9,
+  "cpcb_aqi_enabled": true,
+  "maintenance_mode": false,
+  "flags": {
+    "enable_experimental_ml_forecasting": {
+      "enabled": true,
+      "description": "Expose 24h diurnal Random Forest spatial-temporal forecasting"
+    },
+    "enable_emergency_broadcast_webhook": {
+      "enabled": false,
+      "description": "Trigger external webhooks for severe AQI air quality emergency spikes"
+    },
+    "enable_station_density_penalty": {
+      "enabled": true,
+      "description": "Apply spatial uncertainty penalty when stations are sparse (>25km)"
+    }
+  }
+}

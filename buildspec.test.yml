@@ -1,0 +1,39 @@
+version: 0.2
+
+env:
+  variables:
+    APP_ENV: "test"
+    PYTHONPATH: "."
+
+phases:
+  install:
+    runtime-versions:
+      python: 3.12
+    commands:
+      - echo "=== [AWS CodeBuild PR-Gate] Installing Test Dependencies ==="
+      - python -m pip install --upgrade pip
+      - pip install -r backend/requirements.txt pytest-cov ruff
+
+  pre_build:
+    commands:
+      - echo "=== [AWS CodeBuild PR-Gate] Python Syntax & Lint Verification ==="
+      - python -m compileall backend/app backend/tests
+      - ruff check backend/app || true
+
+  build:
+    commands:
+      - echo "=== [AWS CodeBuild PR-Gate] Running Pytest Suite ==="
+      - mkdir -p reports
+      - pytest backend/tests --junitxml=reports/test-results.xml --cov=backend/app --cov-report=xml:reports/coverage.xml --cov-report=term
+
+reports:
+  pr-test-reports:
+    files:
+      - test-results.xml
+    base-directory: reports
+    file-format: JUNITXML
+  pr-coverage-reports:
+    files:
+      - coverage.xml
+    base-directory: reports
+    file-format: COBERTURAXML

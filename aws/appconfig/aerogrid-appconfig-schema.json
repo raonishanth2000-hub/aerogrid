@@ -1,0 +1,55 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "AeroGridRuntimeConfiguration",
+  "type": "object",
+  "properties": {
+    "data_mode": {
+      "type": "string",
+      "enum": ["demo", "api"],
+      "description": "Switch between synthetic offline fixtures and live OpenAQ/CPCB ingestion."
+    },
+    "ml_provider": {
+      "type": "string",
+      "enum": ["unavailable", "demo", "model"],
+      "description": "Active Machine Learning inference provider."
+    },
+    "stale_after_minutes": {
+      "type": "integer",
+      "minimum": 15,
+      "maximum": 1440,
+      "description": "Threshold in minutes before station observations are flagged stale."
+    },
+    "alert_cooldown_minutes": {
+      "type": "integer",
+      "minimum": 5,
+      "maximum": 720,
+      "description": "Cooldown between repeated alert triggers for the same location."
+    },
+    "alert_hysteresis_factor": {
+      "type": "number",
+      "minimum": 0.5,
+      "maximum": 1.0,
+      "description": "Fractional hysteresis threshold to avoid rapid flapping."
+    },
+    "cpcb_aqi_enabled": {
+      "type": "boolean",
+      "description": "Enable Central Pollution Control Board (CPCB) NAQI calculation."
+    },
+    "maintenance_mode": {
+      "type": "boolean",
+      "description": "Put platform into read-only maintenance mode."
+    },
+    "flags": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "enabled": { "type": "boolean" },
+          "description": { "type": "string" }
+        },
+        "required": ["enabled"]
+      }
+    }
+  },
+  "additionalProperties": true
+}

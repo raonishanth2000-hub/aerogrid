@@ -1,0 +1,18 @@
+{
+  "12.9,77.5": {
+    "road_density_2km": 420.5,
+    "dist_to_major_road_m": 85.0
+  },
+  "12.9716,77.5946": {
+    "road_density_2km": 850.2,
+    "dist_to_major_road_m": 45.0
+  },
+  "28.6139,77.209": {
+    "road_density_2km": 1250.0,
+    "dist_to_major_road_m": 35.0
+  },
+  "28.6,77.2": {
+    "road_density_2km": 0.0,
+    "dist_to_major_road_m": 1000.0
+  }
+}

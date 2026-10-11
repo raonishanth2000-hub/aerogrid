@@ -3,18 +3,23 @@ network call (weather, road data) would otherwise be needed."""
 from __future__ import annotations
 
 import json
+from dataclasses import replace
 
 import pandas as pd
 import pytest
 from fastapi.testclient import TestClient
 
 import aerogrid.api as api
-from aerogrid.config import CENTER_LAT, CENTER_LON
+from aerogrid.config import CITIES, get_city
+
+CITY = get_city()
+CENTER_LAT, CENTER_LON = CITY.latitude, CITY.longitude
 
 
 @pytest.fixture()
 def client():
     api._station_cache.clear()
+    api._latest_time_cache.clear()
     return TestClient(api.app)
 
 
@@ -32,7 +37,7 @@ def dataset(tmp_path, monkeypatch):
                      timestamp_utc=(now + pd.Timedelta(hours=6)).isoformat(), pollutant="pm25", value_ugm3=999.0))
     path = tmp_path / "training_dataset.csv"
     pd.DataFrame(rows).to_csv(path, index=False)
-    monkeypatch.setattr(api, "DATASET_PATH", path)
+    monkeypatch.setitem(CITIES, CITY.id, replace(CITY, dataset_path=path))
     return path
 
 
@@ -54,12 +59,13 @@ def test_stations_exclude_forecasts_and_label_kind(client, dataset):
     s0 = stations["S0"]
     assert s0["value"] != 999.0, "a future (forecast) row must not be reported as the latest value"
     assert pd.Timestamp(s0["timestamp"]) <= pd.Timestamp.now(tz="UTC")
-    assert s0["source_type"] in {"measured", "modelled"}
+    assert s0["source_type"] == CITY.data_kind
+    assert s0["data_source"] == CITY.data_source
     assert all(p["value"] != 999.0 for p in s0["history"])
 
 
 def test_stations_unavailable_without_dataset(client, tmp_path, monkeypatch):
-    monkeypatch.setattr(api, "DATASET_PATH", tmp_path / "missing.csv")
+    monkeypatch.setitem(CITIES, CITY.id, replace(CITY, dataset_path=tmp_path / "missing.csv"))
     r = client.get("/api/stations")
     assert r.status_code == 503
 
@@ -83,9 +89,9 @@ def test_predict_rejects_invalid_coordinates(client):
 
 
 def test_predict_contract_and_calibrated_interval(client, tmp_path, monkeypatch):
-    monkeypatch.setattr(api, "_run_prediction", lambda p, la, lo, dt: {"ml_prediction_ugm3": 50.0, "trained_at_utc": "2026-10-11T00:00:00+00:00"})
+    monkeypatch.setattr(api, "_run_prediction", lambda p, c, la, lo, dt: {"ml_prediction_ugm3": 50.0, "trained_at_utc": "2026-10-11T00:00:00+00:00"})
     validation = {"interval_90": {"level": 0.9, "low_ratio": 0.8, "high_ratio": 1.3, "empirical_coverage": 0.9}}
-    monkeypatch.setattr(api, "_read_validation", lambda p: validation)
+    monkeypatch.setattr(api, "_read_validation", lambda p, c: validation)
     body = client.get("/api/predict", params={"lat": CENTER_LAT, "lon": CENTER_LON}).json()
     assert body["source_type"] == "estimated"
     assert body["pollutant"] == "PM2.5"
@@ -94,8 +100,8 @@ def test_predict_contract_and_calibrated_interval(client, tmp_path, monkeypatch)
 
 
 def test_predict_without_calibration_reports_no_interval(client, monkeypatch):
-    monkeypatch.setattr(api, "_run_prediction", lambda p, la, lo, dt: {"ml_prediction_ugm3": 50.0, "trained_at_utc": None})
-    monkeypatch.setattr(api, "_read_validation", lambda p: None)
+    monkeypatch.setattr(api, "_run_prediction", lambda p, c, la, lo, dt: {"ml_prediction_ugm3": 50.0, "trained_at_utc": None})
+    monkeypatch.setattr(api, "_read_validation", lambda p, c: None)
     body = client.get("/api/predict", params={"lat": CENTER_LAT, "lon": CENTER_LON}).json()
     assert body["uncertainty"] is None
 
@@ -110,9 +116,48 @@ def test_metrics_prefers_cross_validation(client, tmp_path, monkeypatch):
         "created_at_utc": "2026-01-03T00:00:00+00:00",
     }
     (tmp_path / "pm25_validation.json").write_text(json.dumps(validation))
-    monkeypatch.setattr(api, "MODEL_DIR", tmp_path)
+    monkeypatch.setitem(CITIES, CITY.id, replace(CITY, model_dir=tmp_path))
     body = client.get("/api/metrics").json()
     assert body["mae"] == 5.0
     assert body["sample_count"] == 100
     assert body["baselines"][0]["method"] == "IDW interpolation"
     assert len(body["held_out_predictions"]) == 1
+
+
+def test_cities_lists_each_study_area(client):
+    body = client.get("/api/cities").json()
+    ids = {c["id"] for c in body["cities"]}
+    assert {"delhi", "bengaluru"} <= ids
+    kinds = {c["id"]: c["data_kind"] for c in body["cities"]}
+    assert kinds["delhi"] == "modelled" and kinds["bengaluru"] == "measured"
+
+
+def test_unknown_city_is_404(client):
+    for path in ("/api/stations?city=atlantis", "/api/metrics?city=atlantis", "/api/health?city=atlantis"):
+        assert client.get(path).status_code == 404
+
+
+def test_study_area_follows_city(client, monkeypatch):
+    calls = []
+    monkeypatch.setattr(api, "_run_prediction", lambda p, c, la, lo, dt: calls.append(c.id) or {"ml_prediction_ugm3": 30.0})
+    monkeypatch.setattr(api, "_read_validation", lambda p, c: None)
+    blr = CITIES["bengaluru"]
+    assert client.get("/api/predict", params={"lat": blr.latitude, "lon": blr.longitude}).status_code == 422
+    r = client.get("/api/predict", params={"lat": blr.latitude, "lon": blr.longitude, "city": "bengaluru"})
+    assert r.status_code == 200
+    assert calls == ["bengaluru"]
+
+
+def test_predict_defaults_to_latest_data_hour(client, dataset, monkeypatch):
+    seen = {}
+
+    def fake(p, c, la, lo, dt):
+        seen["dt"] = pd.Timestamp(dt)
+        return {"ml_prediction_ugm3": 30.0, "timestamp_utc": pd.Timestamp(dt).isoformat()}
+
+    monkeypatch.setattr(api, "_run_prediction", fake)
+    monkeypatch.setattr(api, "_read_validation", lambda p, c: None)
+    body = client.get("/api/predict", params={"lat": CENTER_LAT, "lon": CENTER_LON}).json()
+    latest = pd.Timestamp.now(tz="UTC").floor("h") - pd.Timedelta(hours=1)
+    assert seen["dt"] == latest, "the estimate should use the latest hour that has station data, not a forecast hour"
+    assert pd.Timestamp(body["observation_timestamp"]) == latest

@@ -33,8 +33,7 @@ npm run dev                   # http://localhost:5173
 | --- | --- | --- |
 | `VITE_DATA_MODE` | no | `mock` (synthetic DEMO data) or `api`. Unset → `mock` in dev, `api` in production builds. |
 | `VITE_API_BASE_URL` | in api mode | Backend base URL, no trailing slash. |
-| `VITE_DEFAULT_CITY` | no | City id from `CITIES` in `src/config/index.ts` (default `bengaluru`, the model's study area). |
-| `VITE_API_CITIES` | no | API mode: comma-separated city ids the backend serves (default: the default city only). Only list cities the model was trained on. |
+| `VITE_DEFAULT_CITY` | no | City id selected on load (default `delhi`). In model mode the city list comes from the backend's `GET /api/cities`. |
 | `VITE_STALE_AFTER_MINUTES` | no | Age at which observations are flagged stale (default 180). |
 | `VITE_TILE_URL`, `VITE_TILE_ATTRIBUTION` | no | Basemap override. Default: Esri dark-grey canvas (keyless). Check provider terms before production traffic. |
 
@@ -123,7 +122,7 @@ Error responses: any non-2xx status. A JSON body with `detail` or `message` is s
 - Validation metrics, baselines and held-out predictions.
 - A coverage / under-monitored-area analysis. The Monitoring Gaps page shows "Coverage analysis pending" and computes only station counts and spacing.
 - AWS architecture and dataset attribution for the About page. Edit `src/data/projectInfo.ts`; it is empty rather than guessed.
-- Multi-city data: the stations contract has no city parameter yet. Agree one (e.g. `?city=`), then list served cities in `VITE_API_CITIES`. Additional pollutants: add to `POLLUTANTS` in the same file.
+- Additional cities: register them in `CITIES` in `aerogrid/config.py` (backend); the city selector picks them up from `GET /api/cities`. Additional pollutants: add to `POLLUTANTS` in `src/config/index.ts`.
 
 ## Structure
 

@@ -16,7 +16,7 @@ grid cell, not the station's sensor reading. We checked this three ways:
 **How the project handles this:**
 - `data/ingest.py` labels every record `data_kind: "modelled"` and
   `is_verified_measurement: false`, and flags forecasts with `is_forecast`.
-- The API reports `source_type: "modelled"` (setting `STATION_DATA_KIND`) and drops future rows.
+- The API reports `source_type: "modelled"` (Delhi's `data_kind` in `aerogrid/config.py`) and drops future rows.
 - The website labels stations "Modelled", not "Measured".
 
 Station names and coordinates are real CPCB, DPCC and IMD sites. The pollutant values are not
@@ -28,13 +28,19 @@ those stations' readings.
 [OpenAQ](https://openaq.org) for 2025. It was downloaded with `python -m aerogrid.fetch_data`,
 which needs `OPENAQ_API_KEY`.
 
-To switch the project to real measurements:
+It is served as its own city (`?city=bengaluru`), labelled "Measured", with its own model in
+`models/bengaluru/`. The data ends on 31 Dec 2025, so Bengaluru estimates are made for the last
+hour with station data; the API reports that hour as `observation_timestamp`.
 
-```bash
-cp data/bengaluru_openaq_2025.csv data/training_dataset.csv
-export CENTER_LAT=12.9716 CENTER_LON=77.5946 STATION_DATA_KIND=measured STATION_DATA_SOURCE=OpenAQ
-python -m aerogrid.train && python -m aerogrid.experiments --publish
-```
+## Adding a city
+
+1. Get a dataset with the same columns as `data/training_dataset.csv`. For real sensors, use
+   `CENTER_LAT=… CENTER_LON=… python -m aerogrid.fetch_data`.
+2. Register the city in `CITIES` in `aerogrid/config.py`: its centre, dataset, model folder and
+   `data_kind` ("measured" or "modelled").
+3. Run `python -m aerogrid.train --city <id>` and `python -m aerogrid.experiments --city <id> --publish`.
+
+The website's city selector lists it automatically, via `GET /api/cities`.
 
 ## Features
 

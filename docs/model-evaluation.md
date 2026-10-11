@@ -58,18 +58,28 @@ to predicted values, using the 5th and 95th percentiles:
 
 When no calibration has been published, `uncertainty` is `null`; the API never invents a range.
 
-## Archived results: Bengaluru, real sensors (OpenAQ)
+## Bengaluru, real sensors (OpenAQ)
 
-15 stations, 70,500 station-hours, 2025. Artefacts are in `models/archive/bengaluru/`.
+15 stations, 70,500 station-hours, 2025. Artefacts are in `models/bengaluru/`, served as `?city=bengaluru`.
+Reproduce with `python -m aerogrid.experiments --city bengaluru --publish`.
 
-| Method | MAE | RMSE | R² |
-| --- | --- | --- | --- |
-| AeroGrid model | **14.28** | **26.66** | 0.024 |
-| IDW interpolation | 14.59 | 28.78 | −0.137 |
-| Training median | 14.87 | 27.42 | −0.032 |
-| Nearest station | 17.36 | 34.13 | −0.600 |
+| Method | MAE | RMSE | Bias | R² |
+| --- | --- | --- | --- | --- |
+| AeroGrid model | **13.17** | **26.05** | −3.05 | **0.068** |
+| IDW interpolation | 14.59 | 28.78 | −1.20 | −0.137 |
+| Training median | 14.87 | 27.42 | −4.27 | −0.032 |
+| Nearest station | 17.36 | 34.13 | +0.93 | −0.600 |
 
-On real measurements the model is the best method, but only about 2% better than IDW. This is the
-honest starting point for improving the model.
+On real measurements the model is the best method: its error is 10% lower than IDW. That is a
+real but modest gain. Copying the nearest station is worst, because real PM2.5 varies a lot
+between nearby sites. The model and these results use the same inputs:
+- weather, time and neighbour readings;
+- no road, elevation or aerosol values, which this dataset doesn't have (`GEO_OFFLINE=1`).
+
+The 90% interval is wide: 0.30× to 2.87× the estimate. That is the honest spread for real
+sensors. Bengaluru data ends on 31 Dec 2025, so estimates are for that hour.
+
+An earlier version of this model (MAE 14.28) was trained with different road-feature inputs than
+its validation; it was retrained so the deployed model is exactly the one evaluated.
 
 PM10 was dropped after the same evaluation: no model beat predicting the median.

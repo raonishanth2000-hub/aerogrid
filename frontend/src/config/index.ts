@@ -17,10 +17,9 @@ function city(id: string, name: string, lat: number, lon: number, zoom = 11): Ci
 }
 
 /**
- * Cities known to the frontend. In API mode only those listed in VITE_API_CITIES
- * (default: the default city, Delhi) are offered, because the model is trained
- * for one study area and the /api/stations contract has no city parameter. In mock mode every city is available with
- * synthetic DEMO data, so the UI can be tested across air-quality levels.
+ * Cities with map framing. In mock mode every city is available with synthetic DEMO data, so the
+ * UI can be tested across air-quality levels. In API mode the backend's GET /api/cities decides
+ * which cities are offered (each has its own station data and model); see availableCities().
  */
 export const CITIES: CityConfig[] = [
   { ...city('delhi', 'Delhi', 28.6139, 77.209), bounds: [[28.4, 76.84], [28.88, 77.35]] },
@@ -82,10 +81,13 @@ export function cityById(id: string): CityConfig {
   return CITIES.find((c) => c.id === id) ?? CITIES[0]
 }
 
-/** Cities the selector may offer in the given data mode. */
-export function availableCities(mode: DataMode): CityConfig[] {
+/**
+ * Cities the selector may offer in the given data mode. In API mode these are the cities the
+ * backend reports (`apiCities`), framed with the built-in map settings where known; until that
+ * list has loaded, only the default city is offered.
+ */
+export function availableCities(mode: DataMode, apiCities?: readonly { id: string; name: string; latitude: number; longitude: number }[]): CityConfig[] {
   if (mode === 'mock') return CITIES
-  const ids = (env.VITE_API_CITIES ?? '').split(',').map((c) => c.trim().toLowerCase()).filter(Boolean)
-  const allowed = CITIES.filter((c) => (ids.length ? ids.includes(c.id) : c.id === config.defaultCityId))
-  return allowed.length ? allowed : [cityById(config.defaultCityId)]
+  if (!apiCities?.length) return [cityById(config.defaultCityId)]
+  return apiCities.map((c) => CITIES.find((known) => known.id === c.id) ?? city(c.id, c.name, c.latitude, c.longitude))
 }

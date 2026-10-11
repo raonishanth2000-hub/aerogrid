@@ -3,7 +3,9 @@
 Provides standard HTTP JSON endpoints for external frontend applications
 (React, Vue, Next.js, mobile apps, or custom dashboards).
 
-Endpoints used by the AeroGrid web frontend (see frontend/README.md for the contract):
+Endpoints used by the AeroGrid web frontend (see docs/api-contract.md). Each takes an optional
+`city` (see GET /api/cities); without it the default city (AEROGRID_CITY, Delhi) is used.
+- GET /api/cities
 - GET /api/health
 - GET /api/stations
 - GET /api/predict?lat=&lon=
@@ -25,9 +27,7 @@ from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
-from aerogrid.config import (
-    CENTER_LAT, CENTER_LON, DATA_DIR, MODEL_DIR, SEARCH_RADIUS_M, STATION_DATA_KIND, STATION_DATA_SOURCE,
-)
+from aerogrid.config import CITIES, DATA_DIR, SEARCH_RADIUS_M, City, get_city
 from aerogrid.features import drop_future_rows
 
 app = FastAPI(
@@ -45,7 +45,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-DATASET_PATH = DATA_DIR / "training_dataset.csv"
 POLLUTANT_LABELS = {"pm25": "PM2.5"}
 
 # The model only saw stations within SEARCH_RADIUS_M of the study-area centre. Estimates further
@@ -60,6 +59,14 @@ class PredictionRequest(BaseModel):
     timestamp: Optional[str] = Field(
         None, description="ISO format datetime (e.g. '2025-06-15T12:00:00'). Defaults to current time."
     )
+    city: Optional[str] = Field(None, description="City id from GET /api/cities (default: the default city)")
+
+
+def _city(city_id: Optional[str]) -> City:
+    try:
+        return get_city(city_id)
+    except KeyError:
+        raise HTTPException(status_code=404, detail=f"Unknown city '{city_id}'. Available: {', '.join(sorted(CITIES))}.")
 
 
 def _normalize_pollutant(value: str) -> str:
@@ -77,16 +84,16 @@ def _haversine_km(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
     return 2 * 6371.0088 * math.asin(math.sqrt(min(1.0, a)))
 
 
-def _check_study_area(latitude: float, longitude: float) -> None:
+def _check_study_area(city: City, latitude: float, longitude: float) -> None:
     if not (-90 <= latitude <= 90 and -180 <= longitude <= 180):
         raise HTTPException(status_code=422, detail="Latitude must be -90…90 and longitude -180…180.")
-    distance = _haversine_km(CENTER_LAT, CENTER_LON, latitude, longitude)
+    distance = _haversine_km(city.latitude, city.longitude, latitude, longitude)
     if distance > MAX_DISTANCE_FROM_CENTRE_KM:
         raise HTTPException(
             status_code=422,
             detail=(
-                f"The model was trained on stations within {SEARCH_RADIUS_M / 1000:.0f} km of "
-                f"({CENTER_LAT:.4f}, {CENTER_LON:.4f}). This point is {distance:.0f} km away, "
+                f"The {city.name} model was trained on stations within {SEARCH_RADIUS_M / 1000:.0f} km of "
+                f"({city.latitude:.4f}, {city.longitude:.4f}). This point is {distance:.0f} km away, "
                 "so no estimate is returned."
             ),
         )
@@ -104,7 +111,7 @@ def _parse_timestamp(value: Optional[str]) -> datetime:
         )
 
 
-def _run_prediction(pollutant: str, latitude: float, longitude: float, target_dt: datetime) -> dict[str, Any]:
+def _run_prediction(pollutant: str, city: City, latitude: float, longitude: float, target_dt: datetime) -> dict[str, Any]:
     # Imported lazily so /api/health, /api/stations and /api/metrics keep working even when
     # the prediction dependencies (features, fetch_data) are unavailable.
     try:
@@ -120,6 +127,7 @@ def _run_prediction(pollutant: str, latitude: float, longitude: float, target_dt
         latitude=latitude,
         longitude=longitude,
         local_datetime=target_dt,
+        city=city,
     )
 
 
@@ -130,16 +138,16 @@ def _finite(value: Any) -> Any:
     return value
 
 
-def _read_validation(pollutant: str) -> dict[str, Any] | None:
-    path = MODEL_DIR / f"{pollutant}_validation.json"
+def _read_validation(pollutant: str, city: City) -> dict[str, Any] | None:
+    path = city.model_dir / f"{pollutant}_validation.json"
     return json.loads(path.read_text(encoding="utf-8")) if path.exists() else None
 
 
-def _calibrated_interval(pollutant: str, value: float | None) -> dict[str, Any] | None:
+def _calibrated_interval(pollutant: str, city: City, value: float | None) -> dict[str, Any] | None:
     """90% interval from held-out station errors (see experiments.interval_calibration)."""
     if value is None:
         return None
-    v = _read_validation(pollutant)
+    v = _read_validation(pollutant, city)
     cal = (v or {}).get("interval_90")
     if not cal:
         return None
@@ -150,8 +158,8 @@ def _calibrated_interval(pollutant: str, value: float | None) -> dict[str, Any] 
     }
 
 
-def _read_metrics(pollutant: str) -> dict[str, Any] | None:
-    path = MODEL_DIR / f"{pollutant}_metrics.json"
+def _read_metrics(pollutant: str, city: City) -> dict[str, Any] | None:
+    path = city.model_dir / f"{pollutant}_metrics.json"
     if not path.exists():
         return None
     return {k: _finite(v) for k, v in json.loads(path.read_text(encoding="utf-8")).items()}
@@ -165,65 +173,109 @@ def root():
         "status": "online",
         "docs_url": "/docs",
         "supported_pollutants": ["pm25"],
+        "cities": sorted(CITIES),
     }
 
 
-@app.get("/api/health")
-def health():
-    """Service status for the frontend: 'ok' only when stations, model and predictor are all usable."""
+def _predictor_available() -> bool:
     try:
         import aerogrid.predict  # noqa: F401
-
-        predictor_available = True
     except Exception:
-        predictor_available = False
-    model_available = (MODEL_DIR / "pm25_model.joblib").exists()
-    station_data_available = DATASET_PATH.exists()
-    ok = predictor_available and model_available and station_data_available
+        return False
+    return True
+
+
+def _city_status(city: City, predictor_available: bool) -> dict[str, Any]:
+    model_available = (city.model_dir / "pm25_model.joblib").exists()
     return {
-        "status": "ok" if ok else "degraded",
         "model_available": model_available,
-        "station_data_available": station_data_available,
+        "station_data_available": city.dataset_path.exists(),
         "prediction_available": predictor_available and model_available,
     }
 
 
-_station_cache: dict[tuple[str, float], dict[str, Any]] = {}
+@app.get("/api/cities")
+def cities():
+    """Study areas the backend can serve, each with its own station data and model."""
+    predictor = _predictor_available()
+    return {
+        "cities": [
+            {
+                "id": c.id,
+                "name": c.name,
+                "latitude": c.latitude,
+                "longitude": c.longitude,
+                "data_kind": c.data_kind,
+                "data_source": c.data_source,
+                **_city_status(c, predictor),
+            }
+            for c in CITIES.values()
+        ]
+    }
+
+
+@app.get("/api/health")
+def health(city: Optional[str] = Query(None, description="City id (default: the default city)")):
+    """Service status for the frontend: 'ok' only when stations, model and predictor are all usable."""
+    status = _city_status(_city(city), _predictor_available())
+    ok = status["station_data_available"] and status["prediction_available"]
+    return {"status": "ok" if ok else "degraded", **status}
+
+
+def _load_city_frame(city: City, pollutant: str) -> pd.DataFrame:
+    """Station rows for one city and pollutant, without forecasts or unparseable rows, oldest first."""
+    frame = pd.read_csv(
+        city.dataset_path,
+        usecols=lambda c: c in {"location_id", "location_name", "latitude", "longitude", "timestamp_utc", "pollutant", "value_ugm3"},
+    )
+    frame = frame.loc[frame["pollutant"].astype(str).str.lower() == pollutant].copy()
+    frame = drop_future_rows(frame)
+    frame["timestamp_utc"] = pd.to_datetime(frame["timestamp_utc"], utc=True, errors="coerce")
+    frame["value_ugm3"] = pd.to_numeric(frame["value_ugm3"], errors="coerce")
+    frame = frame.dropna(subset=["location_id", "latitude", "longitude", "timestamp_utc"])
+    return frame.sort_values("timestamp_utc")
+
+
+_station_cache: dict[tuple, dict[str, Any]] = {}
+_latest_time_cache: dict[tuple, Optional[pd.Timestamp]] = {}
+
+
+def _latest_data_time(city: City, pollutant: str) -> Optional[pd.Timestamp]:
+    """Most recent observation hour in a city's dataset (forecasts excluded)."""
+    if not city.dataset_path.exists():
+        return None
+    key = (city.id, pollutant, city.dataset_path.stat().st_mtime, pd.Timestamp.now(tz="UTC").floor("h"))
+    if key not in _latest_time_cache:
+        frame = _load_city_frame(city, pollutant).dropna(subset=["value_ugm3"])
+        _latest_time_cache.clear()
+        _latest_time_cache[key] = None if frame.empty else frame["timestamp_utc"].max().floor("h")
+    return _latest_time_cache[key]
 
 
 @app.get("/api/stations")
 def stations(
     pollutant: str = Query("pm25", description="Pollutant: pm25"),
     history_days: int = Query(30, ge=0, le=90, description="Days of history per station (0 for none)"),
+    city: Optional[str] = Query(None, description="City id (default: the default city)"),
 ):
     """Latest value per monitoring station, with recent history.
 
-    Values come from data/training_dataset.csv. `source_type` says whether they are sensor
-    measurements or modelled values (STATION_DATA_KIND); forecast rows dated after now are
-    excluded. Nothing is interpolated or filled in.
+    `source_type` says whether values are sensor measurements or modelled values (the city's
+    data_kind); forecast rows dated after now are excluded. Nothing is interpolated or filled in.
     """
     p = _normalize_pollutant(pollutant)
-    if not DATASET_PATH.exists():
+    c = _city(city)
+    if not c.dataset_path.exists():
         raise HTTPException(
             status_code=503,
-            detail="Station data is not available on the server (data/training_dataset.csv not found). Run fetch_data first.",
+            detail=f"Station data for {c.name} is not available on the server ({c.dataset_path.name} not found).",
         )
     # The hour is part of the key because forecast rows become usable observations as time passes.
-    cache_key = (f"{p}:{history_days}:{pd.Timestamp.now(tz='UTC').floor('h').isoformat()}", DATASET_PATH.stat().st_mtime)
+    cache_key = (c.id, p, history_days, pd.Timestamp.now(tz="UTC").floor("h"), c.dataset_path.stat().st_mtime)
     if cache_key in _station_cache:
         return _station_cache[cache_key]
 
-    frame = pd.read_csv(
-        DATASET_PATH,
-        usecols=lambda c: c in {"location_id", "location_name", "latitude", "longitude", "timestamp_utc", "pollutant", "value_ugm3"},
-    )
-    frame = frame.loc[frame["pollutant"].astype(str).str.lower() == p].copy()
-    frame = drop_future_rows(frame)
-    frame["timestamp_utc"] = pd.to_datetime(frame["timestamp_utc"], utc=True, errors="coerce")
-    frame["value_ugm3"] = pd.to_numeric(frame["value_ugm3"], errors="coerce")
-    frame = frame.dropna(subset=["location_id", "latitude", "longitude", "timestamp_utc"])
-    frame = frame.sort_values("timestamp_utc")
-
+    frame = _load_city_frame(c, p)
     result = []
     for location_id, rows in frame.groupby("location_id", sort=False):
         valid = rows.dropna(subset=["value_ugm3"])
@@ -244,29 +296,35 @@ def stations(
             "pollutant": POLLUTANT_LABELS[p],
             "value": None if latest is None else round(float(latest["value_ugm3"]), 1),
             "unit": "µg/m³",
-            "source_type": STATION_DATA_KIND,
+            "source_type": c.data_kind,
             "timestamp": None if latest is None else latest["timestamp_utc"].isoformat(),
-            "data_source": STATION_DATA_SOURCE,
+            "data_source": c.data_source,
             "history": history,
         })
 
     payload = {"stations": result}
-    _station_cache.clear()
+    # Keep one entry per city so switching cities does not re-read the CSV.
+    for key in [k for k in _station_cache if k[0] == c.id]:
+        del _station_cache[key]
     _station_cache[cache_key] = payload
     return payload
 
 
 @app.get("/api/metrics")
-def metrics_for_frontend(pollutant: str = Query("pm25", description="Pollutant: pm25")):
+def metrics_for_frontend(
+    pollutant: str = Query("pm25", description="Pollutant: pm25"),
+    city: Optional[str] = Query(None, description="City id (default: the default city)"),
+):
     """Validation metrics in the frontend contract shape. Only measured results are reported."""
     p = _normalize_pollutant(pollutant)
-    m = _read_metrics(p)
+    c = _city(city)
+    m = _read_metrics(p, c)
     trained = m.get("created_at_utc") if m else None
     model_version = f"{p}-hgb-{trained[:10]}" if trained else None
 
     # Prefer station-held-out cross-validation (every station tested once; see aerogrid/experiments.py)
     # over the single train/test split recorded at training time.
-    v = _read_validation(p)
+    v = _read_validation(p, c)
     if v is not None:
         vm = {k: _finite(val) for k, val in v["metrics"].items()}
         start, end = v.get("data_start_utc"), v.get("data_end_utc")
@@ -289,10 +347,10 @@ def metrics_for_frontend(pollutant: str = Query("pm25", description="Pollutant: 
         }
 
     if m is None:
-        raise HTTPException(status_code=404, detail=f"Metrics for {p} not found.")
+        raise HTTPException(status_code=404, detail=f"Metrics for {p} in {c.name} not found.")
 
     held_out = None
-    holdout_path = DATA_DIR / f"holdout_predictions_{p}.csv"
+    holdout_path = DATA_DIR / f"holdout_predictions_{p}{c.file_suffix}.csv"
     if holdout_path.exists():
         rows = pd.read_csv(holdout_path)
         rows = rows.dropna(subset=["value_ugm3", "predicted_ugm3"])
@@ -330,10 +388,10 @@ def metrics_for_frontend(pollutant: str = Query("pm25", description="Pollutant: 
 
 
 @app.get("/api/metrics/{pollutant}")
-def get_model_metrics(pollutant: str):
+def get_model_metrics(pollutant: str, city: Optional[str] = Query(None, description="City id")):
     """Return model accuracy and validation metrics for the specified pollutant."""
     p = _normalize_pollutant(pollutant)
-    data = _read_metrics(p)
+    data = _read_metrics(p, _city(city))
     if data is None:
         raise HTTPException(status_code=404, detail=f"Metrics for {pollutant} not found.")
     return {"pollutant": p, "metrics": data}
@@ -343,11 +401,12 @@ def get_model_metrics(pollutant: str):
 def predict_pollution(req: PredictionRequest):
     """Estimate pollutant concentration at an unmonitored location."""
     p = _normalize_pollutant(req.pollutant)
-    _check_study_area(req.latitude, req.longitude)
+    c = _city(req.city)
+    _check_study_area(c, req.latitude, req.longitude)
     target_dt = _parse_timestamp(req.timestamp)
 
     try:
-        result = _run_prediction(p, req.latitude, req.longitude, target_dt)
+        result = _run_prediction(p, c, req.latitude, req.longitude, target_dt)
     except HTTPException:
         raise
     except Exception as exc:
@@ -355,6 +414,7 @@ def predict_pollution(req: PredictionRequest):
     return {
         "status": "success",
         "pollutant": p,
+        "city": c.id,
         "prediction_ugm3": result.get("ml_prediction_ugm3"),
         "unit": "µg/m³",
         "target": {
@@ -377,19 +437,32 @@ def predict_for_frontend(
     latitude: Optional[float] = Query(None, description="Alias of lat"),
     longitude: Optional[float] = Query(None, description="Alias of lon"),
     pollutant: str = Query("pm25", description="Pollutant: pm25"),
-    timestamp: Optional[str] = Query(None, description="ISO timestamp (optional, defaults to now)"),
+    timestamp: Optional[str] = Query(None, description="ISO timestamp (optional, defaults to the city's latest data hour)"),
+    city: Optional[str] = Query(None, description="City id (default: the default city)"),
 ):
-    """Model estimate in the frontend contract shape. It is an estimate, never a measurement."""
+    """Model estimate in the frontend contract shape. It is an estimate, never a measurement.
+
+    Without a timestamp the estimate is for the latest hour with station data, so it can be
+    compared with the station values on the map and uses real neighbour readings. For a city
+    whose dataset is historical (e.g. Bengaluru, 2025) that hour is in the past;
+    `observation_timestamp` reports it.
+    """
     lat_value = lat if lat is not None else latitude
     lon_value = lon if lon is not None else longitude
     if lat_value is None or lon_value is None:
         raise HTTPException(status_code=422, detail="Provide lat and lon query parameters.")
     p = _normalize_pollutant(pollutant)
-    _check_study_area(lat_value, lon_value)
-    target_dt = _parse_timestamp(timestamp)
+    c = _city(city)
+    _check_study_area(c, lat_value, lon_value)
+    if timestamp:
+        target_dt = _parse_timestamp(timestamp)
+    else:
+        latest = _latest_data_time(c, p)
+        now = pd.Timestamp.now(tz="UTC").floor("h")
+        target_dt = (latest if latest is not None and latest < now else now).to_pydatetime()
 
     try:
-        result = _run_prediction(p, lat_value, lon_value, target_dt)
+        result = _run_prediction(p, c, lat_value, lon_value, target_dt)
     except HTTPException:
         raise
     except Exception as exc:
@@ -405,9 +478,8 @@ def predict_for_frontend(
         "source_type": "estimated",
         "timestamp": datetime.now(timezone.utc).isoformat(),
         # Empirical interval calibrated on held-out stations; omitted if no calibration is published.
-        "uncertainty": _calibrated_interval(p, None if value is None else float(value)),
+        "uncertainty": _calibrated_interval(p, c, None if value is None else float(value)),
         "model_version": f"{p}-hgb-{trained[:10]}" if trained else None,
-        # The model's neighbour readings come from the downloaded dataset; their times are not
-        # returned by predict_location yet, so this stays unavailable rather than guessed.
-        "observation_timestamp": None,
+        # The hour of station data (neighbour readings and weather) the estimate is for.
+        "observation_timestamp": result.get("timestamp_utc"),
     }

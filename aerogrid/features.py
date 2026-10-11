@@ -21,11 +21,13 @@ def drop_future_rows(frame: pd.DataFrame, column: str = "timestamp_utc") -> pd.D
     return frame.loc[stamps <= pd.Timestamp.now(tz="UTC")].copy()
 
 
-def make_features(frame: pd.DataFrame, timezone: str = LOCAL_TIMEZONE) -> pd.DataFrame:
+def make_features(frame: pd.DataFrame, timezone: str = LOCAL_TIMEZONE,
+                  center: tuple[float, float] = (CENTER_LAT, CENTER_LON)) -> pd.DataFrame:
     """Build a consistent feature matrix from observation or prediction rows.
 
     Required input columns: latitude, longitude, timestamp_utc and weather variables.
     Missing weather data is left as NaN so the model pipeline can impute it.
+    `center` is the study-area centre used for dist_to_center_km; it must match training.
     """
     required = {"latitude", "longitude", "timestamp_utc"}
     missing = required.difference(frame.columns)
@@ -68,7 +70,7 @@ def make_features(frame: pd.DataFrame, timezone: str = LOCAL_TIMEZONE) -> pd.Dat
     output["wind_v"] = -output["wind_speed_10m"] * output["wind_direction_cos"]
 
     output["dist_to_center_km"] = _haversine_vector(
-        CENTER_LAT, CENTER_LON,
+        center[0], center[1],
         output["latitude"].to_numpy(), output["longitude"].to_numpy()
     )
 
@@ -183,9 +185,10 @@ def make_neighbor_features(target_frame: pd.DataFrame, reference_frame: pd.DataF
 
 
 def make_model_features(target_frame: pd.DataFrame, reference_frame: pd.DataFrame,
-                        timezone: str = LOCAL_TIMEZONE) -> pd.DataFrame:
+                        timezone: str = LOCAL_TIMEZONE,
+                        center: tuple[float, float] = (CENTER_LAT, CENTER_LON)) -> pd.DataFrame:
     """Combine coordinate/weather/time and leakage-safe nearby-measurement features."""
-    base = make_features(target_frame, timezone)
+    base = make_features(target_frame, timezone, center)
     neighbors = make_neighbor_features(target_frame, reference_frame)
     for column in neighbors.columns:
         base[column] = neighbors[column]

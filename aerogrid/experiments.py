@@ -5,6 +5,7 @@ held out from training, and optionally saves the best model if it genuinely wins
 
     python -m aerogrid.experiments --pollutant pm25
     python -m aerogrid.experiments --pollutant pm25 --save-best
+    python -m aerogrid.experiments --city bengaluru --publish
 
 (PM10 was evaluated with this script and removed: no candidate beat a constant baseline.)
 
@@ -30,7 +31,7 @@ from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 from sklearn.model_selection import GroupKFold
 from sklearn.pipeline import Pipeline
 
-from aerogrid.config import DATA_DIR, FEATURE_COLUMNS, LOCAL_TIMEZONE, MODEL_DIR
+from aerogrid.config import CITIES, DATA_DIR, FEATURE_COLUMNS, LOCAL_TIMEZONE, City, get_city
 from aerogrid.features import drop_future_rows, make_model_features
 from aerogrid.train import make_model, normalize_pollutant
 
@@ -142,8 +143,8 @@ def interval_calibration(y_true: np.ndarray, y_pred: np.ndarray, level: float = 
     return {"level": level, "low_ratio": low, "high_ratio": high, "empirical_coverage": float(covered.mean())}
 
 
-def load_frame(pollutant: str) -> pd.DataFrame:
-    path = DATA_DIR / "training_dataset.csv"
+def load_frame(pollutant: str, city: City) -> pd.DataFrame:
+    path = city.dataset_path
     if not path.exists():
         raise FileNotFoundError(f"{path} not found. Add the dataset first.")
     frame = pd.read_csv(path)
@@ -158,9 +159,11 @@ def load_frame(pollutant: str) -> pd.DataFrame:
     return frame
 
 
-def evaluate(pollutant: str, folds: int = 5, verbose: bool = True) -> dict:
+def evaluate(pollutant: str, folds: int = 5, verbose: bool = True, city: City | None = None) -> dict:
     pollutant = normalize_pollutant(pollutant)
-    frame = load_frame(pollutant)
+    city = city or get_city()
+    center = (city.latitude, city.longitude)
+    frame = load_frame(pollutant, city)
     groups = frame["location_id"].astype(str).to_numpy()
     n_locations = len(set(groups))
     if n_locations < 3:
@@ -173,8 +176,8 @@ def evaluate(pollutant: str, folds: int = 5, verbose: bool = True) -> dict:
 
     for fold, (train_idx, test_idx) in enumerate(GroupKFold(n_splits=k).split(frame, y, groups), start=1):
         train_frame, test_frame = frame.iloc[train_idx], frame.iloc[test_idx]
-        X_train = make_model_features(train_frame, train_frame, LOCAL_TIMEZONE)
-        X_test = make_model_features(test_frame, train_frame, LOCAL_TIMEZONE)
+        X_train = make_model_features(train_frame, train_frame, LOCAL_TIMEZONE, center)
+        X_test = make_model_features(test_frame, train_frame, LOCAL_TIMEZONE, center)
         median = float(np.median(y[train_idx]))
         nearest = X_test["nearest_neighbor_pm"].to_numpy(dtype=float)
         idw = X_test["idw_neighbor_pm"].to_numpy(dtype=float)
@@ -205,6 +208,7 @@ def evaluate(pollutant: str, folds: int = 5, verbose: bool = True) -> dict:
     ]
     report = {
         "pollutant": pollutant,
+        "city": city.id,
         "evaluation_type": f"grouped {k}-fold spatial cross-validation (every station held out once)",
         "n_rows": int(len(y)),
         "n_locations": int(n_locations),
@@ -215,9 +219,9 @@ def evaluate(pollutant: str, folds: int = 5, verbose: bool = True) -> dict:
         "data_end_utc": frame["timestamp_utc"].max().isoformat(),
         "created_at_utc": datetime.now(timezone.utc).isoformat(),
     }
-    (DATA_DIR / f"experiments_{pollutant}.json").write_text(json.dumps(report, indent=2), encoding="utf-8")
+    (DATA_DIR / f"experiments_{pollutant}{city.file_suffix}.json").write_text(json.dumps(report, indent=2), encoding="utf-8")
     if verbose:
-        print(f"\n{pollutant.upper()} — {report['evaluation_type']}; {n_locations} stations, {len(y):,} rows; "
+        print(f"\n{city.name} {pollutant.upper()} — {report['evaluation_type']}; {n_locations} stations, {len(y):,} rows; "
               f"neighbour readings available for {report['neighbour_coverage']:.0%} of rows")
         print(f"{'method':32} {'MAE':>7} {'RMSE':>7} {'bias':>7} {'R²':>6}")
         for name, m in sorted(results.items(), key=lambda kv: kv[1]["mae_ugm3"]):
@@ -239,13 +243,15 @@ def save_best(report: dict) -> str | None:
               f"(MAE {current_mae:.2f}) and every baseline (best baseline MAE {baseline_mae:.2f}).")
         return None
 
-    frame = load_frame(pollutant)
+    city = get_city(report["city"])
+    center = (city.latitude, city.longitude)
+    frame = load_frame(pollutant, city)
     y = frame["value_ugm3"].to_numpy(dtype=float)
-    X_all = make_model_features(frame, frame, LOCAL_TIMEZONE)
+    X_all = make_model_features(frame, frame, LOCAL_TIMEZONE, center)
     model = clone(candidates()[best]).fit(X_all, y)
 
-    model_path = MODEL_DIR / f"{pollutant}_model.joblib"
-    metrics_path = MODEL_DIR / f"{pollutant}_metrics.json"
+    model_path = city.model_dir / f"{pollutant}_model.joblib"
+    metrics_path = city.model_dir / f"{pollutant}_metrics.json"
     for path in (model_path, metrics_path):
         if path.exists():
             shutil.copy2(path, path.with_name(path.stem + ".previous" + path.suffix))
@@ -268,6 +274,7 @@ def save_best(report: dict) -> str | None:
         "spatially_validated": True,
         "model_variant": best,
         "pollutant": pollutant,
+        "city": city.id,
         "unit": "µg/m³",
         "data_start_utc": frame["timestamp_utc"].min().isoformat(),
         "data_end_utc": frame["timestamp_utc"].max().isoformat(),
@@ -277,11 +284,13 @@ def save_best(report: dict) -> str | None:
         "model": model,
         "feature_columns": FEATURE_COLUMNS,
         "pollutant": pollutant,
+        "city": city.id,
+        "center": center,
         "timezone": LOCAL_TIMEZONE,
         "metrics": metrics,
         "training_median": float(np.median(y)),
         "trained_at_utc": metrics["created_at_utc"],
-        "training_data_path": str(DATA_DIR / "training_dataset.csv"),
+        "training_data_path": str(city.dataset_path),
     }
     joblib.dump(bundle, model_path)
     metrics_path.write_text(json.dumps(metrics, indent=2), encoding="utf-8")
@@ -295,6 +304,7 @@ def publish_validation(report: dict, model_name: str) -> None:
     results = report["results"]
     payload = {
         "pollutant": pollutant,
+        "city": report["city"],
         "model_variant": model_name,
         "evaluation_type": report["evaluation_type"],
         "n_rows": report["n_rows"],
@@ -314,7 +324,7 @@ def publish_validation(report: dict, model_name: str) -> None:
         "data_end_utc": report["data_end_utc"],
         "created_at_utc": report["created_at_utc"],
     }
-    path = MODEL_DIR / f"{pollutant}_validation.json"
+    path = get_city(report["city"]).model_dir / f"{pollutant}_validation.json"
     path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
     print(f"Published cross-validation results to {path}")
 
@@ -322,12 +332,13 @@ def publish_validation(report: dict, model_name: str) -> None:
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--pollutant", choices=["pm25"], default="pm25")
+    parser.add_argument("--city", choices=sorted(CITIES), default=None, help="Study area (default: AEROGRID_CITY or delhi)")
     parser.add_argument("--folds", type=int, default=5)
     parser.add_argument("--save-best", action="store_true", help="Save the best model if it beats the current one and all baselines")
     parser.add_argument("--publish", action="store_true",
-                        help="Write the cross-validation results to models/<pollutant>_validation.json for the API and website")
+                        help="Write the cross-validation results to the city's model folder (<pollutant>_validation.json) for the API and website")
     args = parser.parse_args()
-    report = evaluate(args.pollutant, args.folds)
+    report = evaluate(args.pollutant, args.folds, city=get_city(args.city))
     saved = save_best(report) if args.save_best else None
     if args.publish:
         publish_validation(report, saved or "current (all features)")

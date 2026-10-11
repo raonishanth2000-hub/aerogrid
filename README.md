@@ -7,8 +7,17 @@ weather, road and time features in a gradient-boosting model. The project has th
 - a React dashboard;
 - AWS deployment configuration.
 
-**Status (Delhi, PM2.5).** The station data is CAMS model output, not sensor measurements. See
-[docs/data-sources.md](docs/data-sources.md).
+**Cities.** Each city has its own station data and model. Pick one with the city selector, or with
+`?city=` on the API.
+
+| City | Station data | Period |
+| --- | --- | --- |
+| Delhi (default) | CAMS model output for 38 station sites, labelled "Modelled" | live, last few days |
+| Bengaluru | Real OpenAQ sensor readings from 15 stations, labelled "Measured" | 2025 |
+
+See [docs/data-sources.md](docs/data-sources.md); it also explains how to add a city.
+
+**Delhi status (PM2.5).**
 
 On station-held-out cross-validation:
 
@@ -18,7 +27,8 @@ On station-held-out cross-validation:
 | Copying the nearest station | 1.50 |
 | IDW | 3.19 |
 
-On real Bengaluru sensor data the model is the best method, but only about 2% better than IDW.
+On real Bengaluru sensor data the model is the best method: MAE 13.17, against 14.59 for IDW and
+17.36 for copying the nearest station.
 Full results are in [docs/model-evaluation.md](docs/model-evaluation.md). Estimates are labelled as
 estimates, and modelled station values as modelled.
 
@@ -28,7 +38,7 @@ estimates, and modelled station values as modelled.
 aerogrid/            Python package: API (api.py), data fetch, features, road features (geo.py),
                      training (train.py), spatial cross-validation (experiments.py), prediction, AWS helpers
 models/              Trained model, training metrics, cross-validation results (pm25_validation.json)
-  archive/bengaluru/ Model and results from real Bengaluru sensor data
+  bengaluru/         Bengaluru model and results (real sensor data)
 data/                training_dataset.csv (Delhi CAMS), bengaluru_openaq_2025.csv (real sensors),
                      stations.json, ingest.py (Open-Meteo ingestion)
 frontend/            React + TypeScript + Vite dashboard (see frontend/README.md)
@@ -67,12 +77,13 @@ API on port 8000.
 
 | Endpoint | Purpose |
 | --- | --- |
+| `GET /api/cities` | Cities served, each with its data kind and whether its model is available |
 | `GET /api/health` | `ok`, or `degraded` with the missing component |
 | `GET /api/stations` | Latest value and history per station, labelled `measured` or `modelled`; forecasts excluded |
 | `GET /api/predict?lat=&lon=` | Model estimate with a calibrated 90% interval; `422` outside the study area |
 | `GET /api/metrics` | Station-held-out cross-validation with baselines |
 
-Details: [docs/api-contract.md](docs/api-contract.md). Only PM2.5 is supported: PM10 was evaluated,
+All endpoints take an optional `?city=` (default `delhi`). Details: [docs/api-contract.md](docs/api-contract.md). Only PM2.5 is supported: PM10 was evaluated,
 no model beat a constant, and it was removed.
 
 ## Train and validate
@@ -83,6 +94,7 @@ python -m aerogrid.fetch_data --start 2025-01-01 --end 2025-12-31   # real senso
 python -m aerogrid.train                                       # trains models/pm25_model.joblib
 python -m aerogrid.experiments --publish                       # spatial CV, baselines, 90% interval
 python -m aerogrid.experiments --save-best                     # replace the model only if a variant beats everything
+python -m aerogrid.train --city bengaluru                      # any command takes --city (default: AEROGRID_CITY or delhi)
 python -m aerogrid.predict --lat 28.61 --lon 77.21 --datetime 2026-10-11T14:00
 ```
 
@@ -99,7 +111,7 @@ cd frontend && npm run typecheck && npm run lint && npm test && npm run build
 
 - Delhi values are CAMS model output on a grid of about 40 km. Validation on them shows agreement
   with CAMS, not real-world accuracy.
-- With real sensors (Bengaluru), the model only slightly beats IDW. Its estimates are rough guidance,
+- With real sensors (Bengaluru), the model beats IDW by about 10%, and its 90% range is wide. Its estimates are rough guidance,
   not official readings or health advice.
 - Each prediction calls Open-Meteo for weather, so the backend needs internet access.
 

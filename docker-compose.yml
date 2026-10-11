@@ -7,8 +7,8 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - STATION_DATA_KIND=modelled
-      - STATION_DATA_SOURCE=CAMS model (Copernicus) via Open-Meteo
+      # Default city when a request has no ?city= (see GET /api/cities).
+      - AEROGRID_CITY=delhi
     restart: unless-stopped
 
   frontend:

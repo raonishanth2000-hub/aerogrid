@@ -1,7 +1,7 @@
 import { Menu, RefreshCw } from 'lucide-react'
 import { NAV_ITEMS, type RouteId } from '../../app/navigation'
 import { useApp } from '../../app/appContext'
-import { POLLUTANTS, availableCities, type PollutantId } from '../../config'
+import { POLLUTANTS, type PollutantId } from '../../config'
 import { CityAirChip } from '../dashboard/CityAirChip'
 import { DataFreshness } from '../dashboard/DataFreshness'
 import { DataSourceSwitch } from './DataSourceSwitch'
@@ -12,9 +12,8 @@ interface TopbarProps {
 }
 
 export function Topbar({ route, onOpenMenu }: TopbarProps) {
-  const { city, setCityId, pollutant, setPollutant, refreshAll, isRefreshing, dataMode } = useApp()
+  const { city, cities, setCityId, pollutant, setPollutant, refreshAll, isRefreshing, dataMode } = useApp()
   const page = NAV_ITEMS.find((n) => n.id === route)
-  const cities = availableCities(dataMode)
 
   return (
     <header className="topbar">
@@ -41,7 +40,7 @@ export function Topbar({ route, onOpenMenu }: TopbarProps) {
                   ? 'The AeroGrid model is trained for this city only'
                   : dataMode === 'mock'
                     ? 'Demo mode: each city uses synthetic data at a different pollution level'
-                    : undefined
+                    : 'Each city has its own station data and AeroGrid model'
               }
             >
               {cities.map((c) => (

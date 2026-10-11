@@ -13,7 +13,9 @@ RUN pip install -r requirements-api.txt
 
 COPY aerogrid/ aerogrid/
 COPY models/ models/
-COPY data/training_dataset.csv data/geo_cache.json data/
+# Station data for each city in aerogrid/config.py. The road-feature cache is optional (not in git);
+# the [n] pattern lets the build succeed without it.
+COPY data/training_dataset.csv data/bengaluru_openaq_2025.csv data/geo_cache.jso[n] data/
 
 RUN useradd --create-home --uid 1000 aerogrid && chown -R aerogrid:aerogrid /app
 USER aerogrid

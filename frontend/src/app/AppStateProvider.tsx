@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } fro
 import { availableCities, config, type DataMode, type PollutantId } from '../config'
 import { useResource } from '../hooks/useResource'
 import { isAbortError } from '../services/api'
+import { fetchCities } from '../services/citiesService'
 import { fetchHealth } from '../services/healthService'
 import { fetchMetrics } from '../services/metricsService'
 import { fetchPrediction } from '../services/predictionService'
@@ -29,14 +30,21 @@ function readStoredMode(): DataMode {
 export function AppStateProvider({ children }: { children: ReactNode }) {
   const [dataMode, setDataModeState] = useState<DataMode>(readStoredMode)
   const [cityId, setCityId] = useState(config.defaultCityId)
+  // In model mode the backend says which cities it serves; demo mode needs no request.
+  const citiesFetcher = useCallback(
+    (signal: AbortSignal) => (dataMode === 'api' ? fetchCities(signal) : Promise.resolve([])),
+    [dataMode],
+  )
+  const apiCities = useResource(citiesFetcher)
+  const apiCityList = apiCities.data
+  const cities = useMemo(() => availableCities(dataMode, apiCityList), [dataMode, apiCityList])
   // A city chosen in demo mode may not be served by the model; fall back to the mode's default.
-  const cities = availableCities(dataMode)
-  const city = cities.find((c) => c.id === cityId) ?? cities[0]
+  const city = cities.find((c) => c.id === cityId) ?? cities.find((c) => c.id === config.defaultCityId) ?? cities[0]
 
   // Fetchers change with the data source, which clears stale data from the other source.
   const stationsFetcher = useCallback((signal: AbortSignal) => fetchStations(dataMode, city.id, signal), [dataMode, city.id])
-  const metricsFetcher = useCallback((signal: AbortSignal) => fetchMetrics(dataMode, signal), [dataMode])
-  const healthFetcher = useCallback((signal: AbortSignal) => fetchHealth(dataMode, signal), [dataMode])
+  const metricsFetcher = useCallback((signal: AbortSignal) => fetchMetrics(dataMode, city.id, signal), [dataMode, city.id])
+  const healthFetcher = useCallback((signal: AbortSignal) => fetchHealth(dataMode, city.id, signal), [dataMode, city.id])
   const stations = useResource(stationsFetcher)
   const metrics = useResource(metricsFetcher)
   const health = useResource(healthFetcher)
@@ -109,6 +117,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
   const { reload: reloadStations } = stations
   const { reload: reloadMetrics } = metrics
   const { reload: reloadHealth } = health
+  const { reload: reloadCities } = apiCities
   const clearEstimates = useCallback(() => {
     inflight.current.forEach((c) => c.abort())
     inflight.current.clear()
@@ -121,10 +130,11 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const refreshAll = useCallback(() => {
+    reloadCities()
     reloadStations()
     reloadMetrics()
     reloadHealth()
-  }, [reloadStations, reloadMetrics, reloadHealth])
+  }, [reloadCities, reloadStations, reloadMetrics, reloadHealth])
 
   // Selections, estimates and comparisons belong to one city and one data source, so they are cleared on change.
   const resetLocalState = useCallback(() => {
@@ -164,6 +174,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
     dataMode,
     setDataMode,
     city,
+    cities,
     setCityId: changeCity,
     pollutant,
     setPollutant,

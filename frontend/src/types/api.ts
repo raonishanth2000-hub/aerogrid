@@ -6,6 +6,19 @@
 
 import type { DataMode } from '../config'
 
+/** One study area from GET /api/cities; each has its own station data and model. */
+export interface CityInfo {
+  id: string
+  name: string
+  latitude: number
+  longitude: number
+  /** Whether the city's station values are sensor measurements or model output (e.g. CAMS). */
+  data_kind: 'measured' | 'modelled'
+  data_source: string | null
+  station_data_available: boolean
+  prediction_available: boolean
+}
+
 /** GET /api/health */
 export interface HealthResponse {
   status: string

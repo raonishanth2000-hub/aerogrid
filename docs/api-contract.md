@@ -4,6 +4,21 @@ Served by `aerogrid/api.py` (`uvicorn aerogrid.api:app --port 8000`). All endpoi
 noted, return JSON, and allow CORS. Interactive docs: `http://localhost:8000/docs`.
 Only PM2.5 is supported; any `pollutant=pm10` request returns `404` with the reason it was removed.
 
+Every endpoint below takes an optional `city` (e.g. `?city=bengaluru`). Without it, the default city
+is used (`AEROGRID_CITY`, Delhi). An unknown city returns `404`.
+
+## `GET /api/cities`
+```json
+{
+  "cities": [{
+    "id": "bengaluru", "name": "Bengaluru", "latitude": 12.9716, "longitude": 77.5946,
+    "data_kind": "measured", "data_source": "OpenAQ (CPCB / KSPCB sensors)",
+    "model_available": true, "station_data_available": true, "prediction_available": true
+  }]
+}
+```
+Each city has its own station dataset and model. The website's city selector is built from this list.
+
 ## `GET /api/health`
 ```json
 { "status": "ok", "model_available": true, "station_data_available": true, "prediction_available": true }
@@ -11,7 +26,7 @@ Only PM2.5 is supported; any `pollutant=pm10` request returns `404` with the rea
 `status` is `"ok"` only when all three components are available, otherwise `"degraded"`.
 
 ## `GET /api/stations?pollutant=pm25&history_days=30`
-Latest value per station from `data/training_dataset.csv`, with up to 90 days of history.
+Latest value per station from the city's dataset, with up to 90 days of history.
 Rows dated after the current time (forecasts) are excluded. Returns `503` if the dataset is missing.
 ```json
 {
@@ -26,11 +41,14 @@ Rows dated after the current time (forecasts) are excluded. Returns `503` if the
   }]
 }
 ```
-`source_type` is `"measured"` for sensor data or `"modelled"` for model output such as CAMS. It is
-set by `STATION_DATA_KIND` (default `modelled`) because the dataset itself has no provenance column.
+`source_type` is `"measured"` for sensor data (Bengaluru) or `"modelled"` for model output such as
+CAMS (Delhi). It comes from the city's `data_kind` in `aerogrid/config.py`, because the dataset itself
+has no provenance column.
 
-## `GET /api/predict?lat={lat}&lon={lon}[&timestamp=ISO]`
-An AeroGrid model estimate, never a measurement. `422` for invalid coordinates or points more than
+## `GET /api/predict?lat={lat}&lon={lon}[&city=id][&timestamp=ISO]`
+An AeroGrid model estimate, never a measurement. Without `timestamp`, it is for the latest hour with
+station data (the current hour for live data; 31 Dec 2025 for Bengaluru). That hour is returned as
+`observation_timestamp`. `422` for invalid coordinates or points more than
 (search radius + 15 km) from the study-area centre; `503` if the prediction pipeline is unavailable.
 ```json
 {
@@ -40,7 +58,7 @@ An AeroGrid model estimate, never a measurement. `422` for invalid coordinates o
   "timestamp": "2026-10-11T16:20:00+00:00",
   "uncertainty": { "lower": 61.2, "upper": 86.0, "confidence_level": 0.9 },
   "model_version": "pm25-hgb-2026-10-11",
-  "observation_timestamp": null
+  "observation_timestamp": "2026-10-11T16:00:00+00:00"
 }
 ```
 `uncertainty` is an empirical 90% interval calibrated on held-out stations (see

@@ -11,6 +11,8 @@ export interface AppState {
   /** Switch between demo fixtures and the AeroGrid model backend. */
   setDataMode: (mode: DataMode) => void
   city: CityConfig
+  /** Cities the selector offers: every demo city, or those the backend serves in model mode. */
+  cities: CityConfig[]
   setCityId: (id: string) => void
   pollutant: PollutantId
   setPollutant: (p: PollutantId) => void

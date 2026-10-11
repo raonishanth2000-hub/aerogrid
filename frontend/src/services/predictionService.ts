@@ -10,7 +10,7 @@ export async function fetchPrediction(mode: DataMode, lat: number, lon: number, 
     await demoDelay(signal, 450)
     return wrap(demoPrediction(lat, lon, cityId), 'mock')
   }
-  const qs = new URLSearchParams({ lat: lat.toFixed(6), lon: lon.toFixed(6) })
+  const qs = new URLSearchParams({ lat: lat.toFixed(6), lon: lon.toFixed(6), city: cityId })
   // The model fetches weather, elevation and road data per point; a first request can take ~20 s.
   return wrap(await getJson(`/api/predict?${qs}`, parsePrediction, { signal, timeoutMs: 60_000 }), 'api')
 }

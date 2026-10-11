@@ -33,8 +33,8 @@ npm run dev                   # http://localhost:5173
 | --- | --- | --- |
 | `VITE_DATA_MODE` | no | `mock` (synthetic DEMO data) or `api`. Unset → `mock` in dev, `api` in production builds. |
 | `VITE_API_BASE_URL` | in api mode | Backend base URL, no trailing slash. |
-| `VITE_DEFAULT_CITY` | no | City id from `CITIES` in `src/config/index.ts` (default `delhi`). |
-| `VITE_API_CITIES` | no | API mode: comma-separated city ids the backend serves (default: the default city only). |
+| `VITE_DEFAULT_CITY` | no | City id from `CITIES` in `src/config/index.ts` (default `bengaluru`, the model's study area). |
+| `VITE_API_CITIES` | no | API mode: comma-separated city ids the backend serves (default: the default city only). Only list cities the model was trained on. |
 | `VITE_STALE_AFTER_MINUTES` | no | Age at which observations are flagged stale (default 180). |
 | `VITE_TILE_URL`, `VITE_TILE_ATTRIBUTION` | no | Basemap override. Default: Esri dark-grey canvas (keyless). Check provider terms before production traffic. |
 
@@ -47,6 +47,14 @@ npm run dev                   # http://localhost:5173
 - **api**: every request goes to the backend. Failures show error/retry states and **never** fall back to demo data. Missing values stay missing (shown as "—" / "Unavailable", never 0).
 
 ## Backend contract
+
+The FastAPI backend (`api.py` at the repo root) implements these endpoints. Run it and point the frontend at it:
+
+```bash
+VITE_DATA_MODE=api VITE_API_BASE_URL=http://localhost:8000 npm run dev
+```
+
+The current model is trained on Bengaluru stations only. In API mode the frontend offers only Bengaluru, and the backend refuses estimates more than ~40 km from the study-area centre.
 
 The backend should allow CORS from the frontend origin. Responses are validated at runtime in `src/utils/validation.ts`. Records with invalid IDs or coordinates are skipped and reported in the UI.
 

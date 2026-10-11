@@ -18,8 +18,8 @@ function city(id: string, name: string, lat: number, lon: number, zoom = 11): Ci
 
 /**
  * Cities known to the frontend. In API mode only those listed in VITE_API_CITIES
- * (default: the default city) are offered, because the current /api/stations
- * contract has no city parameter. In mock mode every city is available with
+ * (default: the default city, Bengaluru) are offered, because the model is trained
+ * for one study area and the /api/stations contract has no city parameter. In mock mode every city is available with
  * synthetic DEMO data, so the UI can be tested across air-quality levels.
  */
 export const CITIES: CityConfig[] = [
@@ -51,7 +51,8 @@ function parseNumber(raw: string | undefined, fallback: number): number {
 export const config = {
   dataMode: resolveMode(),
   apiBaseUrl: (env.VITE_API_BASE_URL ?? '').trim().replace(/\/+$/, ''),
-  defaultCityId: (env.VITE_DEFAULT_CITY ?? '').trim().toLowerCase() || CITIES[0].id,
+  // Bengaluru: the city the current model was trained and validated on.
+  defaultCityId: (env.VITE_DEFAULT_CITY ?? '').trim().toLowerCase() || 'bengaluru',
   staleAfterMinutes: parseNumber(env.VITE_STALE_AFTER_MINUTES, 180),
   requestTimeoutMs: 15_000,
   tiles: {

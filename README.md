@@ -164,6 +164,20 @@ It uses real PM observations as target labels. It does not claim to measure air 
 - Do not describe an estimate as an official CPCB/AQICN-style reading or as an emergency/health diagnostic.
 - A visually smooth map does not prove fine-scale accuracy. Report results only from held-out real measurements.
 
+## REST API for the web frontend
+
+`api.py` serves the AeroGrid web frontend (`frontend/`). Start it with `uvicorn aerogrid.api:app --port 8000`.
+
+| Endpoint | Purpose |
+| --- | --- |
+| `GET /api/health` | `ok` when the model, station data and prediction code are all available, otherwise `degraded` with details |
+| `GET /api/stations` | Latest measured reading per station from `data/training_dataset.csv`, with 30 days of history |
+| `GET /api/predict?lat=&lon=` | Model estimate in the frontend contract shape; refused (422) outside the study area |
+| `GET /api/metrics` | Validation metrics in the frontend contract shape |
+| `POST /api/predict`, `GET /api/metrics/{pollutant}` | Original endpoints, unchanged response shapes |
+
+Predictions are refused more than (search radius + 15 km) from `CENTER_LAT`/`CENTER_LON`, because the model has only seen stations inside the study area. `scikit-learn` is pinned to 1.6.1 in `requirements.txt` because the saved models only load with that version.
+
 ## Amazon Web Services (AWS) Integration
 
 AeroGrid includes native AWS support for cloud storage and managed model training:
